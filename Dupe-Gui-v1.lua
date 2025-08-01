@@ -1,5 +1,6 @@
 local lp = game:GetService("Players").LocalPlayer
 local textChatEnabled = true
+local currentPhrase = "Duping item to selected player..."
 
 local function gplr(String)
 	local Found = {}
@@ -12,20 +13,19 @@ local function gplr(String)
 	return Found
 end
 
-local function notify()
+local function notify(text)
 	game:GetService("StarterGui"):SetCore("SendNotification", {
-		Title = "Failed",
-		Text = "Couldn't dupe item to player. Possible reasons: Reanimation, Just failed.",
-		Duration = 3
+		Title = "+ Dupe GUI V1 +",
+		Text = text,
+		Duration = 3,
 	})
 end
 
 local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local ui = Instance.new("Frame")
+local ui = Instance.new("Frame", ScreenGui)
 ui.Name = "ui"
-ui.Parent = ScreenGui
 ui.Active = true
 ui.BackgroundColor3 = Color3.fromRGB(62, 0, 238)
 ui.BorderSizePixel = 0
@@ -63,7 +63,7 @@ Username.TextWrapped = true
 
 local ShowListBtn = Instance.new("TextButton", ui)
 ShowListBtn.Name = "ShowListBtn"
-ShowListBtn.BackgroundColor3 = Color3.fromRGB(90, 60, 255)
+ShowListBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 255)
 ShowListBtn.Position = UDim2.new(0.72, 0, 0.3, 0)
 ShowListBtn.Size = UDim2.new(0, 50, 0, 50)
 ShowListBtn.Text = "List"
@@ -96,14 +96,11 @@ ScrollingFrame.Position = UDim2.new(0, 0, 0, 25)
 ScrollingFrame.Size = UDim2.new(1, 0, 1, -25)
 ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
 ScrollingFrame.ScrollBarThickness = 5
-
-local UIListLayout = Instance.new("UIListLayout", ScrollingFrame)
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 2)
+Instance.new("UIListLayout", ScrollingFrame).Padding = UDim.new(0, 2)
 
 local Dupe = Instance.new("TextButton", ui)
 Dupe.Name = "Dupe"
-Dupe.BackgroundColor3 = Color3.fromRGB(90, 60, 255)
+Dupe.BackgroundColor3 = Color3.fromRGB(80, 40, 255)
 Dupe.Position = UDim2.new(0.25, 0, 0.62, 0)
 Dupe.Size = UDim2.new(0.5, 0, 0, 45)
 Dupe.Font = Enum.Font.Gotham
@@ -114,7 +111,7 @@ Dupe.TextWrapped = true
 
 local ToggleChat = Instance.new("TextButton", ui)
 ToggleChat.Name = "ToggleChat"
-ToggleChat.BackgroundColor3 = Color3.fromRGB(90, 60, 255)
+ToggleChat.BackgroundColor3 = Color3.fromRGB(80, 40, 255)
 ToggleChat.Position = UDim2.new(0.25, 0, 0.82, 0)
 ToggleChat.Size = UDim2.new(0.5, 0, 0, 30)
 ToggleChat.Font = Enum.Font.Gotham
@@ -126,7 +123,7 @@ ToggleChat.TextWrapped = true
 ToggleChat.MouseButton1Click:Connect(function()
 	textChatEnabled = not textChatEnabled
 	ToggleChat.Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
-	ToggleChat.BackgroundColor3 = textChatEnabled and Color3.fromRGB(90, 60, 255) or Color3.fromRGB(60, 60, 60)
+	ToggleChat.BackgroundColor3 = textChatEnabled and Color3.fromRGB(80, 40, 255) or Color3.fromRGB(60, 60, 60)
 end)
 
 local function updatePlayerList()
@@ -138,8 +135,8 @@ local function updatePlayerList()
 		if player ~= lp then
 			local btn = Instance.new("TextButton", ScrollingFrame)
 			btn.Size = UDim2.new(1, 0, 0, 25)
-			btn.BackgroundColor3 = Color3.fromRGB(90, 60, 255)
-			btn.TextColor3 = Color3.new(1, 1, 1)
+			btn.BackgroundColor3 = Color3.fromRGB(80, 40, 255)
+			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 			btn.Font = Enum.Font.SourceSans
 			btn.TextSize = 14
 			btn.Text = player.Name
@@ -164,53 +161,52 @@ end)
 
 Dupe.MouseButton1Click:Connect(function()
 	local Player = gplr(Username.Text)[1]
-	if not Player then return notify() end
-	if textChatEnabled then
-		game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Duping item to " .. Player.Name .. "...")
-		task.wait(0.1)
-	end
-
-	local LocalPlayer = lp
-	local Char = LocalPlayer.Character
-	if Char and Char.PrimaryPart and Player.Character and Player.Character.PrimaryPart then
-		local prev = Char.PrimaryPart.CFrame
-		Char.Archivable = true
-		local Clone = Char:Clone()
-		LocalPlayer.Character = Clone
-		task.wait(0.5)
-		LocalPlayer.Character = Char
-		task.wait(0.2)
-
-		if Char:FindFirstChildOfClass("Humanoid") then Char:FindFirstChildOfClass("Humanoid"):Destroy() end
-		local Humanoid = Instance.new("Humanoid", Char)
-		local Tool = Char:FindFirstChildOfClass("Tool") or LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
-		if Tool then
-			Tool.Parent = LocalPlayer.Backpack
-			Player.Character.HumanoidRootPart.Anchored = true
-			local Arm = Char["Right Arm"].CFrame * CFrame.new(0, -1, 0)
-			Tool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
-			Tool.Parent = Char
-			workspace.CurrentCamera.CameraSubject = Tool:FindFirstChild("Handle")
-			repeat task.wait() until not Tool or Tool.Parent == workspace or Tool.Parent == Player.Character
-			Player.Character.HumanoidRootPart.Anchored = false
+	if Player then
+		if textChatEnabled then
+			game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(currentPhrase)
 			task.wait(0.1)
-			Humanoid.Health = 0
-			LocalPlayer.Character = nil
-			spawn(function()
-				LocalPlayer.CharacterAdded:Wait()
+		end
+		local LocalPlayer = lp
+		if LocalPlayer.Character and Player.Character and Player.Character.PrimaryPart then
+			local prev = LocalPlayer.Character.PrimaryPart.CFrame
+			LocalPlayer.Character.Archivable = true
+			local Clone = LocalPlayer.Character:Clone()
+			LocalPlayer.Character = Clone
+			wait(0.5)
+			LocalPlayer.Character = LocalPlayer.Character
+			wait(0.2)
+			if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+				LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):Destroy()
+			end
+			local Humanoid = Instance.new("Humanoid", LocalPlayer.Character)
+			local Tool = LocalPlayer.Character:FindFirstChildOfClass("Tool") or LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
+			if Tool then
+				Tool.Parent = LocalPlayer.Backpack
+				Player.Character.HumanoidRootPart.Anchored = true
+				local Arm = LocalPlayer.Character["Right Arm"].CFrame * CFrame.new(0, -1, 0)
+				Tool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
+				Tool.Parent = LocalPlayer.Character
+				workspace.CurrentCamera.CameraSubject = Tool:FindFirstChild("Handle")
+				repeat wait() until not Tool or Tool.Parent == workspace or Tool.Parent == Player.Character
 				Player.Character.HumanoidRootPart.Anchored = false
-				if Player.Character:FindFirstChildOfClass("Humanoid").Health <= 15 then
-					repeat task.wait() until LocalPlayer.Character and LocalPlayer.Character.PrimaryPart
-					task.wait(0.4)
+				wait(0.1)
+				Humanoid.Health = 50
+				LocalPlayer.Character = nil
+				spawn(function()
+					LocalPlayer.CharacterAdded:Wait()
+					Player.Character.HumanoidRootPart.Anchored = false
+					notify("Duped item to requested user!")
+					repeat wait() until LocalPlayer.Character and LocalPlayer.Character.PrimaryPart
+					wait(0.4)
 					LocalPlayer.Character:SetPrimaryPartCFrame(prev)
-				else
-					notify()
-				end
-			end)
+				end)
+			else
+				notify("Couldn't dupe item to player. No tool found.")
+			end
 		else
-			notify()
+			notify("Couldn't dupe item to player. Invalid character.")
 		end
 	else
-		notify()
+		notify("Player not found.")
 	end
 end)
