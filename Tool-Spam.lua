@@ -1,36 +1,31 @@
 local plr = game.Players.LocalPlayer
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local spamming = true
+local spamming = false
 
-local function spamTools(c)
-	c.ChildAdded:Connect(function(child)
-		if child:IsA("Tool") and spamming then
-			local clone = child:Clone()
-			clone.Parent = plr.Backpack
-			task.wait(0.1)
+local equippedTool = nil
+
+local function startToolSpam(char)
+	RunService.RenderStepped:Connect(function()
+		if spamming and equippedTool and equippedTool.Parent == char then
+			equippedTool.Parent = plr.Backpack
+			task.wait()
+			equippedTool.Parent = char
+		end
+	end)
+
+	char.ChildAdded:Connect(function(child)
+		if child:IsA("Tool") then
+			equippedTool = child
 		end
 	end)
 end
 
-plr.CharacterAdded:Connect(function(char)
-	RunService.RenderStepped:Connect(function()
-		if spamming then
-			local hum = char:FindFirstChildOfClass("Humanoid")
-			if hum then
-				for _, tool in ipairs(plr.Backpack:GetChildren()) do
-					if tool:IsA("Tool") then
-						tool.Parent = char
-					end
-				end
-			end
-		end
-	end)
-	spamTools(char)
-end)
+if plr.Character then
+	startToolSpam(plr.Character)
+end
 
-spamTools(plr.Backpack)
-if plr:FindFirstChild("StarterGear") then spamTools(plr.StarterGear) end
+plr.CharacterAdded:Connect(startToolSpam)
 
 if CoreGui:FindFirstChild("ToolSpammerToggle") then
 	CoreGui.ToolSpammerToggle:Destroy()
@@ -46,7 +41,7 @@ btn.BackgroundColor3 = Color3.new(0, 0, 0)
 btn.TextColor3 = Color3.new(1, 1, 1)
 btn.Font = Enum.Font.GothamBold
 btn.TextSize = 18
-btn.Text = "Tool Spammer: ON"
+btn.Text = "Tool Spammer: OFF"
 btn.BorderSizePixel = 2
 btn.BorderColor3 = Color3.fromRGB(40, 40, 40)
 btn.Parent = screenGui
@@ -61,6 +56,5 @@ btn.MouseButton1Click:Connect(function()
 		btn.Text = "Tool Spammer: ON"
 	else
 		btn.Text = "Tool Spammer: OFF"
-		game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -rs ")
 	end
 end)
