@@ -77,7 +77,7 @@ myScriptsTab:CreateButton({Name = "Giant Krystal Dance (Only JAB)", Callback = f
 end})
 
 myScriptsTab:CreateButton({Name = "Epik R6 Dancezz Modded", Callback = function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/EpikR6DancezzReworked/refs/heads/main/EpikCode.txt"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Epik-R6-Dancezz-modded.lua"))()
 end})
 
 myScriptsTab:CreateButton({Name = "Dupe GUI V1", Callback = function()
