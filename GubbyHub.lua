@@ -86,7 +86,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScript
 end})
 
 myScriptsTab:CreateButton({Name = "Kill GUI v2", Callback = function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Kill-Gui-v2/refs/heads/main/KillGuiV2"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Kill-GUI-V2.lua"))()
 end})
 
 myScriptsTab:CreateButton({Name = "Anti Tool-Kill", Callback = function()
