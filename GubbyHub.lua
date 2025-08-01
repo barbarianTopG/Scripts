@@ -91,7 +91,7 @@ end})
 
 myScriptsTab:CreateButton({Name = "Anti Tool-Kill", Callback = function()
         return
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Anti-tool-kill/refs/heads/main/Anti-Tool-Kill.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Anti-Tool-Kill.lua"))()
 end})
 
 myScriptsTab:CreateButton({Name = "Tool-Spam", Callback = function()
