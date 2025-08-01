@@ -80,6 +80,11 @@ myScriptsTab:CreateButton({Name = "Epik R6 Dancezz Modded", Callback = function(
         return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/EpikR6DancezzReworked/refs/heads/main/EpikCode.txt"))()
 end})
 
+myScriptsTab:CreateButton({Name = "Dupe GUI V1", Callback = function()
+        return 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Dupe-Gui-v1.lua"))()
+end})
+
 myScriptsTab:CreateButton({Name = "Kill GUI v2", Callback = function()
         return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Kill-Gui-v2/refs/heads/main/KillGuiV2"))()
 end})
@@ -89,9 +94,9 @@ myScriptsTab:CreateButton({Name = "Anti Tool-Kill", Callback = function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Anti-tool-kill/refs/heads/main/Anti-Tool-Kill.lua"))()
 end})
 
-
-myScriptsTab:CreateButton({Name = "Simple Sprint", Callback = function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Simple-Sprint/refs/heads/main/Code"))()
+myScriptsTab:CreateButton({Name = "Tool-Spam", Callback = function()
+        return
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Tool-Spam.lua"))()
 end})
 
 if game.PlaceId == 10449761463 then
