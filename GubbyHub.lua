@@ -70,7 +70,7 @@ mm2Tab:CreateToggle({
         end
 })
 
-local myScriptsTab = Window:CreateTab("My Scripts")
+local myScriptsTab = Window:CreateTab("CatbyteHD's Scripts")
 
 myScriptsTab:CreateButton({Name = "Giant Krystal Dance (Only JAB)", Callback = function()
         return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Giant-Krystal-Dance.lua"))()
