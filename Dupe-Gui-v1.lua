@@ -47,7 +47,7 @@ local ui = Instance.new("Frame")
 ui.Name = "ui"
 ui.Parent = ScreenGui
 ui.Active = true
-ui.BackgroundColor3 = Color3.new(47, 0, 179)
+ui.BackgroundColor3 = Color3.fromRGB(33, 0, 84) -- Dark Purple
 ui.BackgroundTransparency = 0
 ui.BorderSizePixel = 0
 ui.Position = UDim2.new(0.254972845, 0, 0.419703096, 0)
@@ -66,13 +66,13 @@ title.Position = UDim2.new(0, 0, 0.02, 0)
 title.Size = UDim2.new(1, 0, 0, 50)
 title.Font = Enum.Font.SourceSans
 title.Text = "+ Dupe GUI V1 +"
-title.TextColor3 = Color3.new(0.2, 0.6, 1)
+title.TextColor3 = Color3.fromRGB(150, 0, 255) -- Purple
 title.TextScaled = true
 title.TextWrapped = true
 
 local Frame = Instance.new("Frame")
 Frame.Parent = title
-Frame.BackgroundColor3 = Color3.new(0.2, 0.6, 1)
+Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- Purple
 Frame.Position = UDim2.new(0.07, 0, 0.86, 0)
 Frame.Size = UDim2.new(0.85, 0, 0, 6)
 
@@ -92,25 +92,27 @@ Username.TextWrapped = true
 local ShowListBtn = Instance.new("TextButton")
 ShowListBtn.Name = "ShowListBtn"
 ShowListBtn.Parent = ui
-ShowListBtn.BackgroundColor3 = Color3.fromRGB(0, 60, 200)
+ShowListBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
 ShowListBtn.Position = UDim2.new(0.72, 0, 0.3, 0)
 ShowListBtn.Size = UDim2.new(0, 50, 0, 50)
 ShowListBtn.Text = "List"
 ShowListBtn.TextColor3 = Color3.new(1,1,1)
 ShowListBtn.TextScaled = true
 ShowListBtn.TextWrapped = true
+
 local btnCorner = Instance.new("UICorner")
 btnCorner.CornerRadius = UDim.new(0, 6)
 btnCorner.Parent = ShowListBtn
 
 local PlayerListBG = Instance.new("Frame")
 PlayerListBG.Parent = ui
-PlayerListBG.BackgroundColor3 = Color3.fromRGB(0, 0, 100)
+PlayerListBG.BackgroundColor3 = Color3.fromRGB(50, 0, 150) -- Darker Purple
 PlayerListBG.Position = UDim2.new(1, 10, 0.05, 0)
 PlayerListBG.Size = UDim2.new(0, 130, 0, 150)
 PlayerListBG.BorderSizePixel = 0
 PlayerListBG.Visible = false
 PlayerListBG.ClipsDescendants = true
+
 local playerListCorner = Instance.new("UICorner")
 playerListCorner.CornerRadius = UDim.new(0, 6)
 playerListCorner.Parent = PlayerListBG
@@ -142,7 +144,7 @@ UIListLayout.Padding = UDim.new(0, 2)
 local Kill = Instance.new("TextButton")
 Kill.Name = "Kill"
 Kill.Parent = ui
-Kill.BackgroundColor3 = Color3.new(62, 0, 238)
+Kill.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- Purple
 Kill.Position = UDim2.new(0.25, 0, 0.62, 0)
 Kill.Size = UDim2.new(0.5, 0, 0, 45)
 Kill.Font = Enum.Font.Gotham
@@ -154,7 +156,7 @@ Kill.TextWrapped = true
 local ToggleChat = Instance.new("TextButton")
 ToggleChat.Name = "ToggleChat"
 ToggleChat.Parent = ui
-ToggleChat.BackgroundColor3 = Color3.new(0.2, 0.4, 0.8)
+ToggleChat.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
 ToggleChat.Position = UDim2.new(0.25, 0, 0.82, 0)
 ToggleChat.Size = UDim2.new(0.5, 0, 0, 30)
 ToggleChat.Font = Enum.Font.Gotham
@@ -162,11 +164,10 @@ ToggleChat.Text = "Send Text: ON"
 ToggleChat.TextColor3 = Color3.new(1, 1, 1)
 ToggleChat.TextScaled = true
 ToggleChat.TextWrapped = true
-
 ToggleChat.MouseButton1Click:Connect(function()
     textChatEnabled = not textChatEnabled
     ToggleChat.Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
-    ToggleChat.BackgroundColor3 = textChatEnabled and Color3.new(0.2, 0.4, 0.8) or Color3.new(0.4, 0.4, 0.4)
+    ToggleChat.BackgroundColor3 = textChatEnabled and Color3.fromRGB(100, 0, 200) or Color3.fromRGB(50, 50, 50)
 end)
 
 local function updatePlayerList()
@@ -178,18 +179,15 @@ local function updatePlayerList()
         if player ~= lp then
             local btn = Instance.new("TextButton")
             btn.Size = UDim2.new(1, 0, 0, 25)
-            btn.BackgroundColor3 = Color3.fromRGB(0, 60, 200)
+            btn.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
             btn.TextColor3 = Color3.fromRGB(255, 255, 255)
             btn.Font = Enum.Font.SourceSans
             btn.TextSize = 14
             btn.Text = player.Name
-            
             local btnCorner = Instance.new("UICorner")
             btnCorner.CornerRadius = UDim.new(0, 6)
             btnCorner.Parent = btn
-            
             btn.Parent = ScrollingFrame
-            
             btn.MouseButton1Click:Connect(function()
                 Username.Text = player.Name
                 PlayerListBG.Visible = false
@@ -249,7 +247,6 @@ Kill.MouseButton1Click:Connect(function()
                     wait(0.1)
                     Humanoid.Health = 15
                     LocalPlayer.Character = nil
-
                     spawn(function()
                         LocalPlayer.CharacterAdded:Wait()
                         Player.Character.HumanoidRootPart.Anchored = false
