@@ -73,7 +73,7 @@ mm2Tab:CreateToggle({
 local myScriptsTab = Window:CreateTab("My Scripts")
 
 myScriptsTab:CreateButton({Name = "Giant Krystal Dance (Only JAB)", Callback = function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Giant-Krystal-Dance/refs/heads/main/Giant-Krystal-Dance.lua"))()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/Giant-Krystal-Dance.lua"))()
 end})
 
 myScriptsTab:CreateButton({Name = "Epik R6 Dancezz Modded", Callback = function()
