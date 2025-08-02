@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local Window = Rayfield:CreateWindow({
-        Name = "Gubby Hub™︱Official",
-        LoadingTitle = "Gubby Hub™︱Official",
+        Name = "Gubby Hub︱Official",
+        LoadingTitle = "Gubby Hub︱Official",
         LoadingSubtitle = "By CatbyteHD",
         Theme = "Ocean",
         ToggleUIKeybind = Enum.KeyCode.B,
