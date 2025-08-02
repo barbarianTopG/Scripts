@@ -1,2 +1,2 @@
-# MyScripts
-Folder of all my scripts.
+# My Scripts
+Repository for all of my scripts.
