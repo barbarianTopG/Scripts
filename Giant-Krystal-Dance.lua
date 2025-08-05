@@ -43,7 +43,7 @@ disclaimer.Font = Enum.Font.Gotham
 disclaimer.TextWrapped = true
 disclaimer.TextScaled = true
 disclaimer.TextYAlignment = Enum.TextYAlignment.Top
-disclaimer.Text = "Thanks for all the support you guys provided to me and all, but Roblox has removed r6 dances so all KDV3s are useless and u cannot fix it.\nIt was good while it lasted. 🥲"
+disclaimer.Text = "Thanks for all the support you guys provided to me and all, but Roblox has removed r6 dances so all KDV3s are useless and u cannot fix it.\nIt was good while it lasted."
 disclaimer.ZIndex = 11
 
 local executeButton = Instance.new("TextButton", frame)
