@@ -27,19 +27,24 @@ local function createTag(player)
 		local label = Instance.new("TextLabel")
 		label.Size = UDim2.new(1, 0, 1, 0)
 		label.BackgroundTransparency = 1
-		label.Text = "ChillbyteHD / Developer"
 		label.TextColor3 = Color3.new(1, 1, 0)
 		label.TextStrokeTransparency = 0
 		label.TextScaled = true
 		label.Font = Enum.Font.Sarpanch
 		label.Parent = billboard1
+
+		if player.Name == "Theo_TheoBenzo" then
+			label.Text = "Theo\nCool Guy :)"
+		else
+			label.Text = "ChillbyteHD / Developer"
+		end
 	end
 end
 
 task.spawn(function()
 	while true do
 		for _, player in pairs(Players:GetPlayers()) do
-			if TargetLookup[player.Name] then
+			if TargetLookup[player.Name] or player.Name == "Theo_TheoBenzo" then
 				createTag(player)
 			end
 		end
@@ -48,7 +53,7 @@ task.spawn(function()
 end)
 
 Players.PlayerAdded:Connect(function(player)
-	if TargetLookup[player.Name] then
+	if TargetLookup[player.Name] or player.Name == "Theo_TheoBenzo" then
 		player.CharacterAdded:Connect(function()
 			task.wait(1)
 			createTag(player)
