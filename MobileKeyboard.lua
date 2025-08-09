@@ -1,3 +1,6 @@
+--[[
+	I don't own this, creds to the owner
+]]
 local plr=game.Players.LocalPlayer
 local guiName="FullKB"
 
