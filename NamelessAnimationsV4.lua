@@ -7,26 +7,11 @@ game.StarterGui:SetCore("SendNotification", {
     Icon = "rbxassetid://108355382306271",
     Duration = 3
 })
-
 task.wait(3.1)
-
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Nameless animation v4.",
-    Text = "Loading PermaDeath...",
-    Icon = "rbxassetid://108355382306271",
-    Duration = 3
-})
-
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
-
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
 task.wait(1)
-
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Nameless animation v4.",
-    Text = "Loaded PermaDeath!",
-    Icon = "rbxassetid://108355382306271",
-    Duration = 3
-})
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
+task.wait(1)
 
 if "wanna use myworld reanimate" then
 
@@ -1275,11 +1260,16 @@ end)
 
 game.StarterGui:SetCore("SendNotification", {
     Title = "Nameless animation v4.",
-    Text = "Loading Keyboard...",
+    Text = "Loaded reanimation!",
     Icon = "rbxassetid://84736703480482",
-    Duration = 3
+    Duration = 2
 })
-
-task.wait(1)
-
+task.wait(1.9)
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Nameless animation v4.",
+    Text = "Loading Keyboard...",
+    Icon = "rbxassetid://108355382306271",
+    Duration = 2
+})
+task.wait(1.9)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt"))()
