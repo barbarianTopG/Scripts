@@ -27,10 +27,8 @@ local BODY_HEIGHT = BASE_BODY_HEIGHT * SCALE_OVERALL
 local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS
 local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS
 
--- Base purple: 122, 70, 234
 local basePurple = Color3.fromRGB(122, 70, 234)
 
--- Helper to make color darker
 local function darkenColor(color, factor)
     return Color3.new(
         math.clamp(color.R * factor, 0, 1),
