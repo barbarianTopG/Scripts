@@ -39,10 +39,9 @@ local function darkenColor(color, factor)
     )
 end
 
--- Colors adjusted
-local BACKGROUND_COLOR = darkenColor(basePurple, 0.6) -- darker background
-local KEY_BG_COLOR = basePurple                       -- keys original purple (122,70,234)
-local KEY_OUTLINE_COLOR = Color3.fromRGB(90, 44, 132) -- keep current key outline (darker purple)
+local BACKGROUND_COLOR = darkenColor(basePurple, 0.6)
+local KEY_BG_COLOR = basePurple
+local KEY_OUTLINE_COLOR = Color3.fromRGB(90, 44, 132)
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, KEYBOARD_WIDTH, 0, TITLE_HEIGHT + BODY_HEIGHT - 5)
