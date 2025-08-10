@@ -36,7 +36,7 @@ local function createTag(player)
 		if player.Name == "Theo_TheoBenzo" then
 			label.Text = "Theo\nCool Guy :)"
 		else
-			label.Text = "ChillbyteHD / Developer"
+			label.Text = "ChillbyteHD / Owner"
 		end
 	end
 end
