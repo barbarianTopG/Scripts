@@ -1261,7 +1261,7 @@ end)
 game.StarterGui:SetCore("SendNotification", {
     Title = "Nameless animation v4.",
     Text = "Loaded reanimation!",
-    Icon = "rbxassetid://84736703480482",
+    Icon = "rbxassetid://108355382306271",
     Duration = 2
 })
 task.wait(1.9)
@@ -1273,3 +1273,9 @@ game.StarterGui:SetCore("SendNotification", {
 })
 task.wait(1.9)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Xxtan31/Ata/main/deltakeyboardcrack.txt"))()
+game.StarterGui:SetCore("SendNotification", {
+    Title = "Nameless animation v4.",
+    Text = "Enjoy!",
+    Icon = "rbxassetid://108355382306271",
+    Duration = 2
+})
