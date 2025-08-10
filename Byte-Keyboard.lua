@@ -3,7 +3,6 @@
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService = game:GetService("TweenService")
-
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
@@ -14,19 +13,16 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local SCALE_KEYS = 0.683
 local SCALE_OVERALL = 1 / 1.37
-
 local BASE_KEYBOARD_WIDTH = 540
 local BASE_TITLE_HEIGHT = 40
 local BASE_BODY_HEIGHT = 235
 local BASE_KEY_HEIGHT = 40
 local BASE_KEY_SPACING = 6
-
 local KEYBOARD_WIDTH = BASE_KEYBOARD_WIDTH * SCALE_OVERALL * 1.2
 local TITLE_HEIGHT = BASE_TITLE_HEIGHT * SCALE_OVERALL
 local BODY_HEIGHT = BASE_BODY_HEIGHT * SCALE_OVERALL
 local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS
 local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS
-
 local basePurple = Color3.fromRGB(122, 70, 234)
 
 local function darkenColor(color, factor)
@@ -94,7 +90,6 @@ closeRound.Parent = closeBtn
 closeBtn.MouseEnter:Connect(function()
     closeBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 end)
-
 closeBtn.MouseLeave:Connect(function()
     closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 end)
@@ -160,23 +155,18 @@ for rowIndex, row in ipairs(keyMap) do
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
         btn.BackgroundColor3 = KEY_BG_COLOR
         btn.BorderSizePixel = 0
-
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 6 * SCALE_KEYS)
         corner.Parent = btn
-
         local outline = Instance.new("UIStroke")
         outline.Color = KEY_OUTLINE_COLOR
         outline.Thickness = 1
         outline.Parent = btn
-
         local textOutline = Instance.new("UIStroke")
         textOutline.Color = BACKGROUND_COLOR
         textOutline.Thickness = 1
         textOutline.Parent = btn
-
         btn.Parent = body
-
         btn.MouseButton1Click:Connect(function()
             local enumName = keyNameToEnum[keyText]
             if enumName and enumName ~= "Unknown" then
@@ -187,7 +177,6 @@ for rowIndex, row in ipairs(keyMap) do
                 end
             end
         end)
-
         x = x + width + KEY_SPACING
     end
 end
@@ -204,7 +193,6 @@ local minimizeBtn = Instance.new("TextButton")
 local scaleFactor = 1.8
 local baseSize = 24
 local btnSize = baseSize * scaleFactor
-
 minimizeBtn.Size = UDim2.new(0, btnSize, 0, btnSize)
 minimizeBtn.Position = UDim2.new(0.006, 10, 0, 7)
 minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.6) -- darker purple for minimizer background
@@ -249,7 +237,6 @@ mainFrame.Position = UDim2.new(-1, 0, 0.4, -(TITLE_HEIGHT + BODY_HEIGHT) / 2)
 tweenToCenter()
 
 local minimized = false
-
 minimizeBtn.MouseButton1Click:Connect(function()
     if minimized then
         tweenToCenter()
@@ -262,4 +249,9 @@ end)
 
 closeBtn.MouseButton1Click:Connect(function()
     gui:Destroy()
+end)
+
+plr.CharacterAdded:Connect(function()
+    local newPlayerGui = plr:WaitForChild("PlayerGui")
+    gui.Parent = newPlayerGui
 end)
