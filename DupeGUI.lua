@@ -129,7 +129,7 @@ DupeButton.MouseButton1Click:Connect(function()
     if target then
         local message = "Duping item to " .. target.DisplayName .. "..."
         TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        notify(message)
+        notify("Duped item to " .. target.DisplayName)
     else
         notify("Player not found.")
     end
