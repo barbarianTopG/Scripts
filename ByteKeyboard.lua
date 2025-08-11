@@ -7,6 +7,7 @@ local playerGui = plr:WaitForChild("PlayerGui")
 
 local gui = Instance.new("ScreenGui")
 gui.Name = "ByteKeyboard"
+gui.ResetOnSpawn = false
 gui.Parent = playerGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
@@ -36,7 +37,7 @@ end
 
 local BACKGROUND_COLOR = darkenColor(basePurple, 0.6)
 local KEY_BG_COLOR = basePurple
-local KEY_OUTLINE_COLOR = Color3.fromRGB(80, 46, 153) -- visible darker outline
+local KEY_OUTLINE_COLOR = Color3.fromRGB(80, 46, 153)
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, KEYBOARD_WIDTH, 0, TITLE_HEIGHT + BODY_HEIGHT - 5)
@@ -58,7 +59,7 @@ titleBar.Parent = mainFrame
 titleBar.ClipsDescendants = true
 
 local titleText = Instance.new("TextLabel")
-titleText.Size = UDim2.new(1, -60, 1, 0)
+titleText.Size = UDim2.new(1, -100, 1, 0)
 titleText.Position = UDim2.new(0, 10 * SCALE_OVERALL, 0, 0)
 titleText.BackgroundTransparency = 1
 titleText.Text = "Byte Keyboard"
@@ -71,12 +72,33 @@ titleText.Parent = titleBar
 local titleOutline = Instance.new("UIStroke")
 titleOutline.Color = BACKGROUND_COLOR
 titleOutline.Thickness = 1
-titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Bordert
 titleOutline.Parent = titleText
+
+local minimizeBtn = Instance.new("TextButton")
+minimizeBtn.Size = UDim2.new(0, 30 * SCALE_OVERALL, 1, 0)
+minimizeBtn.Position = UDim2.new(1, -90 * SCALE_OVERALL, 0, 0)
+minimizeBtn.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizeBtn.Font = Enum.Font.GothamBold
+minimizeBtn.TextSize = 24 * SCALE_OVERALL
+minimizeBtn.Text = "-"
+minimizeBtn.Parent = titleBar
+
+local minimizeRound = Instance.new("UICorner")
+minimizeRound.CornerRadius = UDim.new(0, 6 * SCALE_OVERALL)
+minimizeRound.Parent = minimizeBtn
+
+minimizeBtn.MouseEnter:Connect(function()
+    minimizeBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 255)
+end)
+minimizeBtn.MouseLeave:Connect(function()
+    minimizeBtn.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+end)
 
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30 * SCALE_OVERALL, 1, 0)
-closeBtn.Position = UDim2.new(1, -30 * SCALE_OVERALL, 0, 0)
+closeBtn.Position = UDim2.new(1, -50 * SCALE_OVERALL, 0, 0)
 closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 closeBtn.TextColor3 = Color3.new(1, 1, 1)
 closeBtn.Font = Enum.Font.GothamBold
@@ -142,6 +164,7 @@ local function getKeyWidth(key)
 end
 
 local startY = KEY_SPACING
+
 for rowIndex, row in ipairs(keyMap) do
     local x = KEY_SPACING
     for _, keyText in ipairs(row) do
@@ -187,45 +210,41 @@ for rowIndex, row in ipairs(keyMap) do
     end
 end
 
-local function lightenColor(color, amount)
-    return Color3.new(
-        math.min(color.R + amount, 1),
-        math.min(color.G + amount, 1),
-        math.min(color.B + amount, 1)
-    )
-end
+local minimizeScaleFactor = 1.8
+local minimizeBaseSize = 24
+local minimizeBtnSize = minimizeBaseSize * minimizeScaleFactor
 
-local minimizeBtn = Instance.new("TextButton")
-local scaleFactor = 1.8
-local baseSize = 24
-local btnSize = baseSize * scaleFactor
-minimizeBtn.Size = UDim2.new(0, btnSize, 0, btnSize)
-minimizeBtn.Position = UDim2.new(0.006, 10, 0, 7)
-minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.6)
-minimizeBtn.Text = "B"
-minimizeBtn.TextColor3 = Color3.new(1, 1, 1)
-minimizeBtn.Font = Enum.Font.GothamBold
-minimizeBtn.TextScaled = true
-minimizeBtn.Parent = gui
-minimizeBtn.AutoButtonColor = false
-minimizeBtn.Active = false
-minimizeBtn.Draggable = false
-minimizeBtn.BorderSizePixel = 0
-minimizeBtn.ZIndex = 1000
+local minimizerBtn = Instance.new("TextButton")
+minimizerBtn.Size = UDim2.new(0, minimizeBtnSize, 0, minimizeBtnSize)
+minimizerBtn.Position = UDim2.new(0.006, 10, 0, 7)
+minimizerBtn.BackgroundColor3 = darkenColor(basePurple, 0.6)
+minimizerBtn.Text = "B"
+minimizerBtn.TextColor3 = Color3.new(1, 1, 1)
+minimizerBtn.Font = Enum.Font.GothamBold
+minimizerBtn.TextScaled = true
+minimizerBtn.Parent = gui
+minimizerBtn.AutoButtonColor = false
+minimizerBtn.Active = false
+minimizerBtn.Draggable = false
+minimizerBtn.BorderSizePixel = 0
+minimizerBtn.ZIndex = 1000
 
-local minimizeRound = Instance.new("UICorner")
-minimizeRound.CornerRadius = UDim.new(0, btnSize / 4)
-minimizeRound.Parent = minimizeBtn
+local minimizerRound = Instance.new("UICorner")
+minimizerRound.CornerRadius = UDim.new(0, minimizeBtnSize / 4)
+minimizerRound.Parent = minimizerBtn
 
-local minimizeStroke = Instance.new("UIStroke")
-minimizeStroke.Color = KEY_OUTLINE_COLOR
-minimizeStroke.Thickness = 1
-minimizeStroke.Parent = minimizeBtn
+local minimizerStroke = Instance.new("UIStroke")
+minimizerStroke.Color = KEY_OUTLINE_COLOR
+minimizerStroke.Thickness = 1
+minimizerStroke.Parent = minimizerBtn
 
 local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
 
 local function tweenToCenter()
     gui.Enabled = true
+    mainFrame.Visible = true
+    minimizeBtn.Visible = true
+    minimizerBtn.Visible = false
     local targetPos = UDim2.new(0.5, -KEYBOARD_WIDTH / 2, 0.4, -(TITLE_HEIGHT + BODY_HEIGHT) / 2)
     TweenService:Create(mainFrame, tweenInfo, { Position = targetPos }):Play()
     body.Visible = true
@@ -236,21 +255,24 @@ local function tweenToLeftAndHide()
     local tween = TweenService:Create(mainFrame, tweenInfo, { Position = offscreenPos })
     tween:Play()
     tween.Completed:Wait()
+    mainFrame.Visible = false
+    minimizeBtn.Visible = false
+    minimizerBtn.Visible = true
     body.Visible = false
 end
 
-mainFrame.Position = UDim2.new(-1, 0, 0.4, -(TITLE_HEIGHT + BODY_HEIGHT) / 2)
-tweenToCenter()
+mainFrame.Position = UDim2.new(0.5, -KEYBOARD_WIDTH / 2, 0.4, -(TITLE_HEIGHT + BODY_HEIGHT) / 2)
+mainFrame.Visible = true
+minimizeBtn.Visible = true
+minimizerBtn.Visible = false
+body.Visible = true
 
-local minimized = false
 minimizeBtn.MouseButton1Click:Connect(function()
-    if minimized then
-        tweenToCenter()
-        minimized = false
-    else
-        tweenToLeftAndHide()
-        minimized = true
-    end
+    tweenToLeftAndHide()
+end)
+
+minimizerBtn.MouseButton1Click:Connect(function()
+    tweenToCenter()
 end)
 
 closeBtn.MouseButton1Click:Connect(function()
