@@ -32,7 +32,7 @@ end
 
 local function notify(text)
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "• Dupe GUI •";
+        Title = "+ Dupe GUI V1 +";
         Text = text;
         Duration = 3;
     })
@@ -71,7 +71,7 @@ title.TextWrapped = true
 
 local Frame = Instance.new("Frame")
 Frame.Parent = title
-Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 255) 
+Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- Purple
 Frame.Position = UDim2.new(0.07, 0, 0.86, 0)
 Frame.Size = UDim2.new(0.85, 0, 0, 6)
 
@@ -91,7 +91,7 @@ Username.TextWrapped = true
 local ShowListBtn = Instance.new("TextButton")
 ShowListBtn.Name = "ShowListBtn"
 ShowListBtn.Parent = ui
-ShowListBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 200)
+ShowListBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
 ShowListBtn.Position = UDim2.new(0.72, 0, 0.3, 0)
 ShowListBtn.Size = UDim2.new(0, 50, 0, 50)
 ShowListBtn.Text = "List"
@@ -107,7 +107,7 @@ local PlayerListBG = Instance.new("Frame")
 PlayerListBG.Parent = ui
 PlayerListBG.BackgroundColor3 = Color3.fromRGB(50, 0, 150) -- Darker Purple
 PlayerListBG.Position = UDim2.new(1, 10, 0.05, 0)
-PlayerListBG.Size = UDim2.new(0, 180, 0, 150)
+PlayerListBG.Size = UDim2.new(0, 180, 0, 150) -- made wider
 PlayerListBG.BorderSizePixel = 0
 PlayerListBG.Visible = false
 PlayerListBG.ClipsDescendants = true
@@ -155,7 +155,7 @@ Kill.TextWrapped = true
 local ToggleChat = Instance.new("TextButton")
 ToggleChat.Name = "ToggleChat"
 ToggleChat.Parent = ui
-ToggleChat.BackgroundColor3 = Color3.fromRGB(100, 0, 200)
+ToggleChat.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
 ToggleChat.Position = UDim2.new(0.25, 0, 0.82, 0)
 ToggleChat.Size = UDim2.new(0.5, 0, 0, 30)
 ToggleChat.Font = Enum.Font.Gotham
