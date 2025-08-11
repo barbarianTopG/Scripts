@@ -4,7 +4,6 @@ local TweenService = game:GetService("TweenService")
 
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
-
 local gui = Instance.new("ScreenGui")
 gui.Name = "ByteKeyboard"
 gui.ResetOnSpawn = false
@@ -26,7 +25,6 @@ local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS
 local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS
 
 local basePurple = Color3.fromRGB(122, 70, 234)
-
 local function darkenColor(color, factor)
     return Color3.new(
         math.clamp(color.R * factor, 0, 1),
@@ -78,7 +76,7 @@ titleOutline.Parent = titleText
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30 * SCALE_OVERALL, 1, 0)
 minimizeBtn.Position = UDim2.new(1, -90 * SCALE_OVERALL, 0, 0)
-minimizeBtn.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+minimizeBtn.BackgroundColor3 = KEY_BG_COLOR
 minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 minimizeBtn.Font = Enum.Font.GothamBold
 minimizeBtn.TextSize = 24 * SCALE_OVERALL
@@ -90,10 +88,11 @@ minimizeRound.CornerRadius = UDim.new(0, 6 * SCALE_OVERALL)
 minimizeRound.Parent = minimizeBtn
 
 minimizeBtn.MouseEnter:Connect(function()
-    minimizeBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 255)
+    minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.8)
 end)
+
 minimizeBtn.MouseLeave:Connect(function()
-    minimizeBtn.BackgroundColor3 = Color3.fromRGB(0, 85, 255)
+    minimizeBtn.BackgroundColor3 = KEY_BG_COLOR
 end)
 
 local closeBtn = Instance.new("TextButton")
@@ -113,6 +112,7 @@ closeRound.Parent = closeBtn
 closeBtn.MouseEnter:Connect(function()
     closeBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 end)
+
 closeBtn.MouseLeave:Connect(function()
     closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 end)
@@ -164,7 +164,6 @@ local function getKeyWidth(key)
 end
 
 local startY = KEY_SPACING
-
 for rowIndex, row in ipairs(keyMap) do
     local x = KEY_SPACING
     for _, keyText in ipairs(row) do
@@ -176,9 +175,14 @@ for rowIndex, row in ipairs(keyMap) do
         btn.Font = Enum.Font.GothamBold
         btn.TextScaled = true
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        btn.BackgroundColor3 = KEY_BG_COLOR
-        btn.BorderSizePixel = 0
 
+        if keyText == "-" then
+            btn.BackgroundColor3 = KEY_BG_COLOR
+        else
+            btn.BackgroundColor3 = KEY_BG_COLOR
+        end
+
+        btn.BorderSizePixel = 0
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 6 * SCALE_KEYS)
         corner.Parent = btn
