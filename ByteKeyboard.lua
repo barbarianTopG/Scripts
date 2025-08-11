@@ -1,8 +1,7 @@
--- Enjoy!
-
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService = game:GetService("TweenService")
+
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
@@ -13,16 +12,19 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local SCALE_KEYS = 0.683
 local SCALE_OVERALL = 1 / 1.37
+
 local BASE_KEYBOARD_WIDTH = 540
 local BASE_TITLE_HEIGHT = 40
 local BASE_BODY_HEIGHT = 235
 local BASE_KEY_HEIGHT = 40
 local BASE_KEY_SPACING = 6
+
 local KEYBOARD_WIDTH = BASE_KEYBOARD_WIDTH * SCALE_OVERALL * 1.2
 local TITLE_HEIGHT = BASE_TITLE_HEIGHT * SCALE_OVERALL
 local BODY_HEIGHT = BASE_BODY_HEIGHT * SCALE_OVERALL
 local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS
 local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS
+
 local basePurple = Color3.fromRGB(122, 70, 234)
 
 local function darkenColor(color, factor)
@@ -35,7 +37,7 @@ end
 
 local BACKGROUND_COLOR = darkenColor(basePurple, 0.6)
 local KEY_BG_COLOR = basePurple
-local KEY_OUTLINE_COLOR = Color3.fromRGB(90, 44, 132)
+local KEY_OUTLINE_COLOR = darkenColor(KEY_BG_COLOR, 0.8) -- slightly darker than keys, lighter than BG
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, KEYBOARD_WIDTH, 0, TITLE_HEIGHT + BODY_HEIGHT - 5)
@@ -70,8 +72,7 @@ titleText.Parent = titleBar
 local titleOutline = Instance.new("UIStroke")
 titleOutline.Color = BACKGROUND_COLOR
 titleOutline.Thickness = 1
-titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-titleOutline.Parent = titleText
+titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.BordertitleOutline.Parent = titleText
 
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30 * SCALE_OVERALL, 1, 0)
@@ -141,7 +142,6 @@ local function getKeyWidth(key)
 end
 
 local startY = KEY_SPACING
-
 for rowIndex, row in ipairs(keyMap) do
     local x = KEY_SPACING
     for _, keyText in ipairs(row) do
@@ -155,18 +155,23 @@ for rowIndex, row in ipairs(keyMap) do
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
         btn.BackgroundColor3 = KEY_BG_COLOR
         btn.BorderSizePixel = 0
+
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 6 * SCALE_KEYS)
         corner.Parent = btn
+
         local outline = Instance.new("UIStroke")
         outline.Color = KEY_OUTLINE_COLOR
-        outline.Thickness = 1
+        outline.Thickness = 0.7
         outline.Parent = btn
+
         local textOutline = Instance.new("UIStroke")
         textOutline.Color = BACKGROUND_COLOR
         textOutline.Thickness = 1
         textOutline.Parent = btn
+
         btn.Parent = body
+
         btn.MouseButton1Click:Connect(function()
             local enumName = keyNameToEnum[keyText]
             if enumName and enumName ~= "Unknown" then
@@ -177,6 +182,7 @@ for rowIndex, row in ipairs(keyMap) do
                 end
             end
         end)
+
         x = x + width + KEY_SPACING
     end
 end
@@ -193,6 +199,7 @@ local minimizeBtn = Instance.new("TextButton")
 local scaleFactor = 1.8
 local baseSize = 24
 local btnSize = baseSize * scaleFactor
+
 minimizeBtn.Size = UDim2.new(0, btnSize, 0, btnSize)
 minimizeBtn.Position = UDim2.new(0.006, 10, 0, 7)
 minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.6) -- darker purple for minimizer background
@@ -212,8 +219,8 @@ minimizeRound.CornerRadius = UDim.new(0, btnSize / 4) -- squircle shape
 minimizeRound.Parent = minimizeBtn
 
 local minimizeStroke = Instance.new("UIStroke")
-minimizeStroke.Color = KEY_BG_COLOR -- outline same color as keys (original purple)
-minimizeStroke.Thickness = 2
+minimizeStroke.Color = KEY_OUTLINE_COLOR
+minimizeStroke.Thickness = 0.7
 minimizeStroke.Parent = minimizeBtn
 
 local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
