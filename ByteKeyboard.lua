@@ -72,7 +72,7 @@ titleText.Parent = titleBar
 local titleOutline = Instance.new("UIStroke")
 titleOutline.Color = BACKGROUND_COLOR
 titleOutline.Thickness = 1
-titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Bordert
+titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 titleOutline.Parent = titleText
 
 local minimizeBtn = Instance.new("TextButton")
