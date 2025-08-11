@@ -53,6 +53,11 @@ local mainRound = Instance.new("UICorner")
 mainRound.CornerRadius = UDim.new(0, 20 * SCALE_OVERALL)
 mainRound.Parent = mainFrame
 
+local mainStroke = Instance.new("UIStroke")
+mainStroke.Color = KEY_OUTLINE_COLOR
+mainStroke.Thickness = 2
+mainStroke.Parent = mainFrame
+
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1, 0, 0, TITLE_HEIGHT)
 titleBar.BackgroundTransparency = 1
@@ -89,6 +94,11 @@ minimizeBtn.Parent = titleBar
 local minimizeRound = Instance.new("UICorner")
 minimizeRound.CornerRadius = UDim.new(0, 6 * SCALE_OVERALL)
 minimizeRound.Parent = minimizeBtn
+
+local minimizeStroke = Instance.new("UIStroke")
+minimizeStroke.Color = KEY_OUTLINE_COLOR
+minimizeStroke.Thickness = 1
+minimizeStroke.Parent = minimizeBtn
 
 minimizeBtn.MouseEnter:Connect(function()
 minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.8)
