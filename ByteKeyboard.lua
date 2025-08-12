@@ -1,6 +1,6 @@
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
-local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
@@ -12,7 +12,7 @@ gui.Parent = playerGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local SCALE_KEYS = 0.683
-local SCALE_OVERALL = 1/1.37
+local SCALE_OVERALL = (1/1.37) * 1.1 -- 10% bigger
 
 local BASE_KEYBOARD_WIDTH = 540
 local BASE_TITLE_HEIGHT = 40
@@ -23,8 +23,8 @@ local BASE_KEY_SPACING = 6
 local KEYBOARD_WIDTH = BASE_KEYBOARD_WIDTH * SCALE_OVERALL * 1.2
 local TITLE_HEIGHT = BASE_TITLE_HEIGHT * SCALE_OVERALL
 local BODY_HEIGHT = BASE_BODY_HEIGHT * SCALE_OVERALL
-local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS
-local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS
+local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS * 1.1
+local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS * 1.1
 
 local basePurple = Color3.fromRGB(122, 70, 234)
 
@@ -42,21 +42,40 @@ local KEY_OUTLINE_COLOR = Color3.fromRGB(80, 46, 153)
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, KEYBOARD_WIDTH, 0, TITLE_HEIGHT + BODY_HEIGHT - 5)
-mainFrame.Position = UDim2.new(0.5, -KEYBOARD_WIDTH/2, 0.4, -(TITLE_HEIGHT + BODY_HEIGHT)/2)
+mainFrame.Position = UDim2.new(0.5, -KEYBOARD_WIDTH/2, 0.5, -(TITLE_HEIGHT + BODY_HEIGHT)/2)
 mainFrame.BackgroundColor3 = BACKGROUND_COLOR
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = gui
-mainFrame.Active = true
-mainFrame.Draggable = true
+
+local dragging = false
+local dragStart, startPos
+mainFrame.InputBegan:Connect(function(input)
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
+dragging = true
+dragStart = input.Position
+startPos = mainFrame.Position
+input.Changed:Connect(function()
+if input.UserInputState == Enum.UserInputState.End then
+dragging = false
+end
+end)
+end
+end)
+UserInputService.InputChanged:Connect(function(input)
+if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+local delta = input.Position - dragStart
+mainFrame.Position = UDim2.new(
+startPos.X.Scale,
+startPos.X.Offset + delta.X,
+startPos.Y.Scale,
+startPos.Y.Offset + delta.Y
+)
+end
+end)
 
 local mainRound = Instance.new("UICorner")
 mainRound.CornerRadius = UDim.new(0, 20 * SCALE_OVERALL)
 mainRound.Parent = mainFrame
-
-local mainStroke = Instance.new("UIStroke")
-mainStroke.Color = KEY_OUTLINE_COLOR
-mainStroke.Thickness = 2
-mainStroke.Parent = mainFrame
 
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1, 0, 0, TITLE_HEIGHT)
@@ -95,11 +114,6 @@ local minimizeRound = Instance.new("UICorner")
 minimizeRound.CornerRadius = UDim.new(0, 6 * SCALE_OVERALL)
 minimizeRound.Parent = minimizeBtn
 
-local minimizeStroke = Instance.new("UIStroke")
-minimizeStroke.Color = KEY_OUTLINE_COLOR
-minimizeStroke.Thickness = 1
-minimizeStroke.Parent = minimizeBtn
-
 minimizeBtn.MouseEnter:Connect(function()
 minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.8)
 end)
@@ -126,6 +140,9 @@ closeBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 end)
 closeBtn.MouseLeave:Connect(function()
 closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+end)
+closeBtn.MouseButton1Click:Connect(function()
+gui:Destroy()
 end)
 
 local body = Instance.new("Frame")
