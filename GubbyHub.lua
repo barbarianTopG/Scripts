@@ -261,7 +261,6 @@ if game.PlaceId == 17574618959 then
  genTab:CreateButton({
   Name = "+︱Genesis Krystal Dance",
   Callback = function()
-   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Krystal%20Dance"))()
   end
  })
@@ -269,7 +268,6 @@ if game.PlaceId == 17574618959 then
  genTab:CreateButton({
   Name = "Genesis Neptunian V",
   Callback = function()
-   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Neptunian%20V"))()
   end
  })
@@ -277,7 +275,6 @@ if game.PlaceId == 17574618959 then
  genTab:CreateButton({
   Name = "Genesis Sin Dragon",
   Callback = function()
-   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Sin%20Dragon"))()
   end
  })
@@ -285,7 +282,6 @@ if game.PlaceId == 17574618959 then
  genTab:CreateButton({
   Name = "Genesis Goner",
   Callback = function()
-   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Goner"))()
   end
  })
@@ -293,7 +289,6 @@ if game.PlaceId == 17574618959 then
  genTab:CreateButton({
   Name = "Genesis Ban Hammer",
   Callback = function()
-   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Ban%20Hammer"))()
   end
  })
@@ -301,7 +296,6 @@ if game.PlaceId == 17574618959 then
  genTab:CreateButton({
   Name = "Genesis Lightning Cannon",
   Callback = function()
-   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
    loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Lightning%20Cannon"))()
   end
  })
