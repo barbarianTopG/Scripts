@@ -12,7 +12,7 @@ gui.Parent = playerGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local SCALE_KEYS = 0.683
-local SCALE_OVERALL = (1/1.37) * 1.1 -- 10% bigger
+local SCALE_OVERALL = (1/1.37) * 1.1
 
 local BASE_KEYBOARD_WIDTH = 540
 local BASE_TITLE_HEIGHT = 40
