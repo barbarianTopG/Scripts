@@ -4,6 +4,7 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService = game:GetService("TweenService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
+
 local gui = Instance.new("ScreenGui")
 gui.Name = "ByteKeyboard"
 gui.ResetOnSpawn = false
@@ -17,6 +18,7 @@ local BASE_TITLE_HEIGHT = 40
 local BASE_BODY_HEIGHT = 235
 local BASE_KEY_HEIGHT = 40
 local BASE_KEY_SPACING = 6
+
 local KEYBOARD_WIDTH = BASE_KEYBOARD_WIDTH * SCALE_OVERALL * 1.2
 local TITLE_HEIGHT = BASE_TITLE_HEIGHT * SCALE_OVERALL
 local BODY_HEIGHT = BASE_BODY_HEIGHT * SCALE_OVERALL
@@ -98,7 +100,6 @@ minimizeRound.Parent = minimizeBtn
 minimizeBtn.MouseEnter:Connect(function()
     minimizeBtn.BackgroundColor3 = darkenColor(basePurple, 0.8)
 end)
-
 minimizeBtn.MouseLeave:Connect(function()
     minimizeBtn.BackgroundColor3 = KEY_BG_COLOR
 end)
@@ -134,42 +135,39 @@ body.Parent = mainFrame
 
 --- // ==== Key Map ==== \\ ---
 local keyMap = {
-    {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace"},
-    {"Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\"},
-    {"Caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter"},
-    {"Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "/", "Shift"},
-    {"Ctrl", "Win", "Alt", "Space", "Alt", "Fn", "Ctrl"},
+    {"1","2","3","4","5","6","7","8","9","0","-","=","Backspace"},
+    {"Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"},
+    {"Caps","A","S","D","F","G","H","J","K","L",";","'","Enter"},
+    {"Shift","Z","X","C","V","B","N","M",",",".","/","Shift"},
+    {"Ctrl","Win","Alt","Space","Alt","F9","Ctrl"},
 }
 
 local keyNameToEnum = {
-    ["1"]             = "One",      ["2"]             = "Two",      ["3"]             = "Three",  ["4"]             = "Four",
-    ["5"]             = "Five",     ["6"]             = "Six",      ["7"]             = "Seven",  ["8"]             = "Eight",
-    ["9"]             = "Nine",     ["0"]             = "Zero",     ["-"]             = "Minus",  ["="]             = "Equals",
-    ["Backspace"]     = "Backspace", ["Tab"]         = "Tab",     ["Q"]             = "Q",       ["W"]             = "W",
-    ["E"]             = "E",        ["R"]             = "R",       ["T"]             = "T",       ["Y"]             = "Y", 
-    ["U"]             = "U",        ["I"]             = "I",       ["O"]             = "O",       ["P"]             = "P",
-    ["["]             = "LeftBracket", ["]"]          = "RightBracket", ["\\"]     = "BackSlash", ["Caps"] = "CapsLock",
-    ["A"]             = "A",        ["S"]             = "S",       ["D"]             = "D",       ["F"]             = "F", 
-    ["G"]             = "G",        ["H"]             = "H",       ["J"]             = "J",       ["K"]             = "K",
-    ["L"]             = "L",        [";"]             = "Semicolon", ["'"]        = "Quote",  ["Enter"]         = "Return",
-    ["Shift"]         = "LeftShift", ["Ctrl"]         = "LeftControl", ["Alt"]    = "LeftAlt", ["Win"]          = "LeftSuper",
-    ["Space"]         = "Space",     ["Fn"]           = "Unknown",
+    ["1"]="One",["2"]="Two",["3"]="Three",["4"]="Four",["5"]="Five",
+    ["6"]="Six",["7"]="Seven",["8"]="Eight",["9"]="Nine",["0"]="Zero",
+    ["-"]="Minus",["="]="Equals",["Backspace"]="Backspace",
+    ["Tab"]="Tab",["Q"]="Q",["W"]="W",["E"]="E",["R"]="R",["T"]="T",
+    ["Y"]="Y",["U"]="U",["I"]="I",["O"]="O",["P"]="P",
+    ["["]="LeftBracket",["]"]="RightBracket",["\\"]="BackSlash",
+    ["Caps"]="CapsLock",["A"]="A",["S"]="S",["D"]="D",["F"]="F",
+    ["G"]="G",["H"]="H",["J"]="J",["K"]="K",["L"]="L",
+    [";"]="Semicolon",["'"]="Quote",["Enter"]="Return",
+    ["Shift"]="LeftShift",["Ctrl"]="LeftControl",["Alt"]="LeftAlt",
+    ["Win"]="LeftSuper",["Space"]="Space",
+    ["Z"]="Z",["X"]="X",["C"]="C",["V"]="V",["B"]="B",
+    ["N"]="N",["M"]="M",[","]="Comma",["."]="Period",["/"]="Slash",
+    ["F9"]="F9"
 }
 
 --- // ==== Key Creation ==== \\ ---
 local function getKeyWidth(key)
     local baseWidth = 40 * SCALE_KEYS
     local wideKeys = {
-        Backspace = baseWidth * 2.5,
-        Tab       = baseWidth * 1.6,
-        Caps      = baseWidth * 1.8,
-        Enter     = baseWidth * 2.5,
-        Shift     = baseWidth * 2.5,
-        Space     = baseWidth * 6.5,
-        Ctrl      = baseWidth * 1.5,
-        Alt       = baseWidth * 1.5,
-        Win       = baseWidth * 1.5,
-        Fn        = baseWidth * 1.5,
+        Backspace = baseWidth * 2.5, Tab = baseWidth * 1.6,
+        Caps = baseWidth * 1.8, Enter = baseWidth * 2.5,
+        Shift = baseWidth * 2.5, Space = baseWidth * 6.5,
+        Ctrl = baseWidth * 1.5, Alt = baseWidth * 1.5,
+        Win = baseWidth * 1.5, F9 = baseWidth * 1.5
     }
     return wideKeys[key] or baseWidth
 end
@@ -206,7 +204,7 @@ for rowIndex, row in ipairs(keyMap) do
         btn.Parent = body
         btn.MouseButton1Click:Connect(function()
             local enumName = keyNameToEnum[keyText]
-            if enumName and enumName ~= "Unknown" then
+            if enumName then
                 local keyCode = Enum.KeyCode[enumName]
                 if keyCode then
                     VirtualInputManager:SendKeyEvent(true, keyCode, false, game)
@@ -214,7 +212,6 @@ for rowIndex, row in ipairs(keyMap) do
                 end
             end
         end)
-
         x = x + width + KEY_SPACING
     end
 end
@@ -280,11 +277,9 @@ body.Visible = true
 minimizeBtn.MouseButton1Click:Connect(function()
     tweenToLeftAndHide()
 end)
-
 minimizerBtn.MouseButton1Click:Connect(function()
     tweenToCenter()
 end)
-
 closeBtn.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
