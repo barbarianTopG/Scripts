@@ -1,3 +1,4 @@
+--- // ==== Byte Keyboard ==== \\ ---
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService = game:GetService("TweenService")
@@ -16,14 +17,13 @@ local BASE_TITLE_HEIGHT = 40
 local BASE_BODY_HEIGHT = 235
 local BASE_KEY_HEIGHT = 40
 local BASE_KEY_SPACING = 6
-
 local KEYBOARD_WIDTH = BASE_KEYBOARD_WIDTH * SCALE_OVERALL * 1.2
 local TITLE_HEIGHT = BASE_TITLE_HEIGHT * SCALE_OVERALL
 local BODY_HEIGHT = BASE_BODY_HEIGHT * SCALE_OVERALL
 local KEY_HEIGHT = BASE_KEY_HEIGHT * SCALE_KEYS
 local KEY_SPACING = BASE_KEY_SPACING * SCALE_KEYS
 
-local basePurple = Color3.fromRGB(122, 70, 234)
+local basePurple = Color3.fromRGB(33, 0, 84)
 local function darkenColor(color, factor)
     return Color3.new(
         math.clamp(color.R * factor, 0, 1),
@@ -32,23 +32,31 @@ local function darkenColor(color, factor)
     )
 end
 
-local BACKGROUND_COLOR = darkenColor(basePurple, 0.6)
-local KEY_BG_COLOR = basePurple
-local KEY_OUTLINE_COLOR = Color3.fromRGB(80, 46, 153)
+local BACKGROUND_COLOR = basePurple
+local KEY_BG_COLOR = darkenColor(basePurple, 1.2)
+local KEY_OUTLINE_COLOR = basePurple
 
+--- // ==== Main Frame ==== \\ ---
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, KEYBOARD_WIDTH, 0, TITLE_HEIGHT + BODY_HEIGHT - 5)
 mainFrame.Position = UDim2.new(0.5, -KEYBOARD_WIDTH / 2, 0.4, -(TITLE_HEIGHT + BODY_HEIGHT) / 2)
 mainFrame.BackgroundColor3 = BACKGROUND_COLOR
 mainFrame.BorderSizePixel = 0
-mainFrame.Parent = gui
 mainFrame.Active = true
 mainFrame.Draggable = true
+mainFrame.Parent = gui
 
 local mainRound = Instance.new("UICorner")
 mainRound.CornerRadius = UDim.new(0, 20 * SCALE_OVERALL)
 mainRound.Parent = mainFrame
 
+local mainOutline = Instance.new("UIStroke")
+mainOutline.Color = KEY_BG_COLOR
+mainOutline.Thickness = 2
+mainOutline.ZIndex = 1001
+mainOutline.Parent = mainFrame
+
+--- // ==== Title Bar ==== \\ ---
 local titleBar = Instance.new("Frame")
 titleBar.Size = UDim2.new(1, 0, 0, TITLE_HEIGHT)
 titleBar.BackgroundTransparency = 1
@@ -72,6 +80,7 @@ titleOutline.Thickness = 1
 titleOutline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 titleOutline.Parent = titleText
 
+--- // ==== Minimize Button ==== \\ ---
 local minimizeBtn = Instance.new("TextButton")
 minimizeBtn.Size = UDim2.new(0, 30 * SCALE_OVERALL, 1, 0)
 minimizeBtn.Position = UDim2.new(1, -90 * SCALE_OVERALL, 0, 0)
@@ -94,6 +103,7 @@ minimizeBtn.MouseLeave:Connect(function()
     minimizeBtn.BackgroundColor3 = KEY_BG_COLOR
 end)
 
+--- // ==== Close Button ==== \\ ---
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30 * SCALE_OVERALL, 1, 0)
 closeBtn.Position = UDim2.new(1, -50 * SCALE_OVERALL, 0, 0)
@@ -111,17 +121,18 @@ closeRound.Parent = closeBtn
 closeBtn.MouseEnter:Connect(function()
     closeBtn.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
 end)
-
 closeBtn.MouseLeave:Connect(function()
     closeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
 end)
 
+--- // ==== Body ==== \\ ---
 local body = Instance.new("Frame")
 body.Size = UDim2.new(1, 0, 0, BODY_HEIGHT)
 body.Position = UDim2.new(0, 0, 0, TITLE_HEIGHT)
 body.BackgroundTransparency = 1
 body.Parent = mainFrame
 
+--- // ==== Key Map ==== \\ ---
 local keyMap = {
     {"1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "Backspace"},
     {"Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\"},
@@ -131,33 +142,34 @@ local keyMap = {
 }
 
 local keyNameToEnum = {
-    ["1"] = "One", ["2"] = "Two", ["3"] = "Three", ["4"] = "Four",
-    ["5"] = "Five", ["6"] = "Six", ["7"] = "Seven", ["8"] = "Eight",
-    ["9"] = "Nine", ["0"] = "Zero", ["-"] = "Minus", ["="] = "Equals",
-    ["Backspace"] = "Backspace", ["Tab"] = "Tab", ["Q"] = "Q", ["W"] = "W",
-    ["E"] = "E", ["R"] = "R", ["T"] = "T", ["Y"] = "Y", ["U"] = "U",
-    ["I"] = "I", ["O"] = "O", ["P"] = "P", ["["] = "LeftBracket",
-    ["]"] = "RightBracket", ["\\"] = "BackSlash", ["Caps"] = "CapsLock",
-    ["A"] = "A", ["S"] = "S", ["D"] = "D", ["F"] = "F", ["G"] = "G",
-    ["H"] = "H", ["J"] = "J", ["K"] = "K", ["L"] = "L", [";"] = "Semicolon",
-    ["'"] = "Quote", ["Enter"] = "Return", ["Shift"] = "LeftShift",
-    ["Ctrl"] = "LeftControl", ["Alt"] = "LeftAlt", ["Win"] = "LeftSuper",
-    ["Space"] = "Space", ["Fn"] = "Unknown",
+    ["1"]             = "One",      ["2"]             = "Two",      ["3"]             = "Three",  ["4"]             = "Four",
+    ["5"]             = "Five",     ["6"]             = "Six",      ["7"]             = "Seven",  ["8"]             = "Eight",
+    ["9"]             = "Nine",     ["0"]             = "Zero",     ["-"]             = "Minus",  ["="]             = "Equals",
+    ["Backspace"]     = "Backspace", ["Tab"]         = "Tab",     ["Q"]             = "Q",       ["W"]             = "W",
+    ["E"]             = "E",        ["R"]             = "R",       ["T"]             = "T",       ["Y"]             = "Y", 
+    ["U"]             = "U",        ["I"]             = "I",       ["O"]             = "O",       ["P"]             = "P",
+    ["["]             = "LeftBracket", ["]"]          = "RightBracket", ["\\"]     = "BackSlash", ["Caps"] = "CapsLock",
+    ["A"]             = "A",        ["S"]             = "S",       ["D"]             = "D",       ["F"]             = "F", 
+    ["G"]             = "G",        ["H"]             = "H",       ["J"]             = "J",       ["K"]             = "K",
+    ["L"]             = "L",        [";"]             = "Semicolon", ["'"]        = "Quote",  ["Enter"]         = "Return",
+    ["Shift"]         = "LeftShift", ["Ctrl"]         = "LeftControl", ["Alt"]    = "LeftAlt", ["Win"]          = "LeftSuper",
+    ["Space"]         = "Space",     ["Fn"]           = "Unknown",
 }
 
+--- // ==== Key Creation ==== \\ ---
 local function getKeyWidth(key)
     local baseWidth = 40 * SCALE_KEYS
     local wideKeys = {
         Backspace = baseWidth * 2.5,
-        Tab = baseWidth * 1.6,
-        Caps = baseWidth * 1.8,
-        Enter = baseWidth * 2.5,
-        Shift = baseWidth * 2.5,
-        Space = baseWidth * 6.5,
-        Ctrl = baseWidth * 1.5,
-        Alt = baseWidth * 1.5,
-        Win = baseWidth * 1.5,
-        Fn = baseWidth * 1.5,
+        Tab       = baseWidth * 1.6,
+        Caps      = baseWidth * 1.8,
+        Enter     = baseWidth * 2.5,
+        Shift     = baseWidth * 2.5,
+        Space     = baseWidth * 6.5,
+        Ctrl      = baseWidth * 1.5,
+        Alt       = baseWidth * 1.5,
+        Win       = baseWidth * 1.5,
+        Fn        = baseWidth * 1.5,
     }
     return wideKeys[key] or baseWidth
 end
@@ -174,14 +186,9 @@ for rowIndex, row in ipairs(keyMap) do
         btn.Font = Enum.Font.GothamBold
         btn.TextScaled = true
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-
-        if keyText == "-" then
-            btn.BackgroundColor3 = KEY_BG_COLOR
-        else
-            btn.BackgroundColor3 = KEY_BG_COLOR
-        end
-
+        btn.BackgroundColor3 = KEY_BG_COLOR
         btn.BorderSizePixel = 0
+
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, 6 * SCALE_KEYS)
         corner.Parent = btn
@@ -197,7 +204,6 @@ for rowIndex, row in ipairs(keyMap) do
         textOutline.Parent = btn
 
         btn.Parent = body
-
         btn.MouseButton1Click:Connect(function()
             local enumName = keyNameToEnum[keyText]
             if enumName and enumName ~= "Unknown" then
@@ -213,14 +219,14 @@ for rowIndex, row in ipairs(keyMap) do
     end
 end
 
-local minimizeScaleFactor = 1.8
-local minimizeBaseSize = 24
-local minimizeBtnSize = minimizeBaseSize * minimizeScaleFactor
-
+--- // ==== Minimized Button ==== \\ ---
 local minimizerBtn = Instance.new("TextButton")
+local minimizeBaseSize = 24
+local minimizeScaleFactor = 1.8
+local minimizeBtnSize = minimizeBaseSize * minimizeScaleFactor
 minimizerBtn.Size = UDim2.new(0, minimizeBtnSize, 0, minimizeBtnSize)
 minimizerBtn.Position = UDim2.new(0.006, 10, 0, 7)
-minimizerBtn.BackgroundColor3 = darkenColor(basePurple, 0.6)
+minimizerBtn.BackgroundColor3 = BACKGROUND_COLOR
 minimizerBtn.Text = "B"
 minimizerBtn.TextColor3 = Color3.new(1, 1, 1)
 minimizerBtn.Font = Enum.Font.GothamBold
@@ -230,19 +236,20 @@ minimizerBtn.AutoButtonColor = false
 minimizerBtn.Active = false
 minimizerBtn.Draggable = false
 minimizerBtn.BorderSizePixel = 0
-minimizerBtn.ZIndex = 1000
+minimizerBtn.ZIndex = 1001
 
 local minimizerRound = Instance.new("UICorner")
 minimizerRound.CornerRadius = UDim.new(0, minimizeBtnSize / 4)
 minimizerRound.Parent = minimizerBtn
 
 local minimizerStroke = Instance.new("UIStroke")
-minimizerStroke.Color = KEY_OUTLINE_COLOR
-minimizerStroke.Thickness = 1
+minimizerStroke.Color = KEY_BG_COLOR
+minimizerStroke.Thickness = 2
+minimizerStroke.ZIndex = 1001
 minimizerStroke.Parent = minimizerBtn
 
+--- // ==== Tweens ==== \\ ---
 local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-
 local function tweenToCenter()
     gui.Enabled = true
     mainFrame.Visible = true
