@@ -1,4 +1,4 @@
---- // ==== Blacklisted players ==== \\ ---
+--- // == Blacklisted players == \\ ---
 
 return {
     "Username1",
