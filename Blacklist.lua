@@ -10,5 +10,6 @@ return {
     "Palmen_g",
     "Milpi_los",
     "kakish_nega228",
-    "Kesha_Tank"
+    "Kesha_Tank",
+    "2tallker64"
 }
