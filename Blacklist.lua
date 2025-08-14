@@ -1,6 +1,7 @@
 --- // == Blacklisted players == \\ ---
 
---[[ // Reasons I blacklist people:
+--[[
+// Reasons I blacklist people \\
 They try to fling me, OR they are Russian.
 ]]
 
