@@ -2,6 +2,5 @@
 
 return {
     "Username1",
-    "Username2",
-    "IdkMyNameBro_012"
+    "Username2"
 }
