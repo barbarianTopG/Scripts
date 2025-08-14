@@ -9,6 +9,5 @@ return {
     "jimballll",
     "Palmen_g",
     "Milpi_los",
-    "kakish_nega228",
-    "IdkMyNameBro_012"
+    "kakish_nega228"
 }
