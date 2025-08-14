@@ -1,6 +1,6 @@
 --- // == Blacklisted players == \\ ---
 
 return {
-    "Username1",
-    "Username2"
+    "jimballll",
+    "Username1"
 }
