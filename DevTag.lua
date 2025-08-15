@@ -1,6 +1,4 @@
---[[ Credits to Theo AKA https://github.com/Solary-3 for the tag since I wasn't the guy who made this.
-
-Dev Tag thingy ]]
+-- // ==== Dev Tag thingy ==== \\
 
 local Players = game:GetService("Players")
 local TAG_NAME = "ScriptOwnerTag"
