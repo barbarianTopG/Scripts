@@ -4,7 +4,7 @@ Dev Tag thingy ]]
 
 local Players = game:GetService("Players")
 local TAG_NAME = "ScriptOwnerTag"
-local TARGET_USERNAMES = { "IdkMyNameBro_012", "XDsomeoneX3", "Treezz_w" } -- Add more here
+local TARGET_USERNAMES = { "IdkMyNameBro_012", "XDsomeoneX3", "Treezz_w", "BobloxPlayer59" } -- Add more here
 local CHECK_INTERVAL = 2
 
 local TargetLookup = {}
