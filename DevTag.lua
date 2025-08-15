@@ -34,7 +34,7 @@ local function createTag(player)
 		label.Parent = billboard1
 
 		if player.Name == "Theo_TheoBenzo" then
-			label.Text = "Theo\nCool Guy :)"
+			label.Text = "Theo\nThe GOAT"
 		else
 			label.Text = "ChillbyteHD\nOwner"
 		end
