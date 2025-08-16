@@ -1,6 +1,6 @@
 local lp = game:GetService("Players").LocalPlayer
 local textChatEnabled = true
-local currentPhrase = "I Like yo cut G"
+local currentPhrase = "GET OUT!!!"
 
 local function gplr(String)
     local Found = {}
@@ -166,7 +166,6 @@ ToggleChat.Text = "Send Text: ON"
 ToggleChat.TextColor3 = Color3.new(1, 1, 1)
 ToggleChat.TextScaled = true
 ToggleChat.TextWrapped = true
-
 ToggleChat.MouseButton1Click:Connect(function()
     textChatEnabled = not textChatEnabled
     ToggleChat.Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
@@ -202,21 +201,28 @@ local function updatePlayerList()
 end
 
 local function highlightMatches()
-    for _, child in pairs(ScrollingFrame:GetChildren()) do
-        if child:IsA("TextButton") then
-            if Username.Text ~= "" and string.find(child.Text:lower(), Username.Text:lower()) then
-                child.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-            else
-                child.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+        if player.Character and player.Character.PrimaryPart then
+            if player.Character:FindFirstChild("Highlight") then
+                player.Character.Highlight:Destroy()
+            end
+            if Username.Text ~= "" and string.find(player.Name:lower(), Username.Text:lower()) then
+                local highlight = Instance.new("Highlight")
+                highlight.Name = "Highlight"
+                highlight.Adornee = player.Character
+                highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                highlight.FillTransparency = 0.5
+                highlight.OutlineColor = Color3.fromRGB(150, 0, 255)
+                highlight.OutlineTransparency = 0
+                highlight.Parent = player.Character
             end
         end
     end
 end
 
 Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
-
-game:GetService("Players").PlayerAdded:Connect(updatePlayerList)
-game:GetService("Players").PlayerRemoving:Connect(updatePlayerList)
+game:GetService("Players").PlayerAdded:Connect(function() updatePlayerList(); highlightMatches() end)
+game:GetService("Players").PlayerRemoving:Connect(function() updatePlayerList(); highlightMatches() end)
 updatePlayerList()
 
 ShowListBtn.MouseButton1Click:Connect(function()
