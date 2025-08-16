@@ -165,7 +165,6 @@ ToggleChat.Text = "Send Text: ON"
 ToggleChat.TextColor3 = Color3.new(1, 1, 1)
 ToggleChat.TextScaled = true
 ToggleChat.TextWrapped = true
-
 ToggleChat.MouseButton1Click:Connect(function()
     textChatEnabled = not textChatEnabled
     ToggleChat.Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
@@ -201,21 +200,27 @@ local function updatePlayerList()
 end
 
 local function highlightMatches()
-    for _, child in pairs(ScrollingFrame:GetChildren()) do
-        if child:IsA("TextButton") then
-            if Username.Text ~= "" and string.find(child.Text:lower(), Username.Text:lower()) then
-                child.BackgroundColor3 = Color3.fromRGB(33, 0, 84)
-            else
-                child.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
+        if player.Character and player.Character.PrimaryPart then
+            if player.Character:FindFirstChild("Highlight") then
+                player.Character.Highlight:Destroy()
+            end
+            if Username.Text ~= "" and string.find(player.Name:lower(), Username.Text:lower()) then
+                local highlight = Instance.new("SelectionBox")
+                highlight.Adornee = player.Character
+                highlight.Parent = player.Character
+                highlight.Color3 = Color3.fromRGB(33, 0, 84)
+                highlight.LineThickness = 0.05
+                highlight.Name = "Highlight"
             end
         end
     end
 end
 
 Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
-
 game:GetService("Players").PlayerAdded:Connect(updatePlayerList)
 game:GetService("Players").PlayerRemoving:Connect(updatePlayerList)
+game:GetService("Players").PlayerAdded:Connect(function() task.wait(0.1) highlightMatches() end)
 updatePlayerList()
 
 ShowListBtn.MouseButton1Click:Connect(function()
@@ -227,7 +232,7 @@ Kill.MouseButton1Click:Connect(function()
     if Player then
         local message = 'Duping item to "'..Player.DisplayName..'"...'
         if textChatEnabled then
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("GET OUT!!!")
         end
         notify(message)
     else
