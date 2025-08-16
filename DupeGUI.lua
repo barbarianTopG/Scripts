@@ -1,5 +1,6 @@
 local lp = game:GetService("Players").LocalPlayer
 local textChatEnabled = true
+local currentPhrase = "Duping item..."
 
 local function gplr(String)
     local Found = {}
@@ -206,21 +207,22 @@ local function highlightMatches()
                 player.Character.Highlight:Destroy()
             end
             if Username.Text ~= "" and string.find(player.Name:lower(), Username.Text:lower()) then
-                local highlight = Instance.new("SelectionBox")
-                highlight.Adornee = player.Character
-                highlight.Parent = player.Character
-                highlight.Color3 = Color3.fromRGB(33, 0, 84)
-                highlight.LineThickness = 0.05
+                local highlight = Instance.new("Highlight")
                 highlight.Name = "Highlight"
+                highlight.Adornee = player.Character
+                highlight.FillColor = Color3.fromRGB(255, 0, 0)
+                highlight.FillTransparency = 0.5
+                highlight.OutlineColor = Color3.fromRGB(150, 0, 255)
+                highlight.OutlineTransparency = 0
+                highlight.Parent = player.Character
             end
         end
     end
 end
 
 Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
-game:GetService("Players").PlayerAdded:Connect(updatePlayerList)
-game:GetService("Players").PlayerRemoving:Connect(updatePlayerList)
-game:GetService("Players").PlayerAdded:Connect(function() task.wait(0.1) highlightMatches() end)
+game:GetService("Players").PlayerAdded:Connect(function() updatePlayerList(); highlightMatches() end)
+game:GetService("Players").PlayerRemoving:Connect(function() updatePlayerList(); highlightMatches() end)
 updatePlayerList()
 
 ShowListBtn.MouseButton1Click:Connect(function()
@@ -230,12 +232,66 @@ end)
 Kill.MouseButton1Click:Connect(function()
     local Player = gplr(Username.Text)[1]
     if Player then
-        local message = 'Duping item to "'..Player.DisplayName..'"...'
+        local LocalPlayer = game.Players.LocalPlayer
         if textChatEnabled then
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("GET OUT!!!")
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(currentPhrase)
+            task.wait(0.1)
         end
-        notify(message)
+        if LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
+            local Character = LocalPlayer.Character
+            local previous = LocalPlayer.Character.PrimaryPart.CFrame
+            Character.Archivable = true
+            local Clone = Character:Clone()
+            LocalPlayer.Character = Clone
+            wait(0.5)
+            LocalPlayer.Character = Character
+            wait(0.2)
+            if LocalPlayer.Character and Player.Character and Player.Character.PrimaryPart then
+                if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):Destroy()
+                end
+                local Humanoid = Instance.new("Humanoid")
+                Humanoid.Parent = LocalPlayer.Character
+                local Tool = nil
+                if LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+                    Tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+                elseif LocalPlayer.Backpack and LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
+                    Tool = LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
+                end
+                if Tool ~= nil then
+                    Tool.Parent = LocalPlayer.Backpack
+                    Player.Character.HumanoidRootPart.Anchored = true
+                    local Arm = game.Players.LocalPlayer.Character['Right Arm'].CFrame * CFrame.new(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, -1, 0)
+                    Tool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
+                    Tool.Parent = LocalPlayer.Character
+                    workspace.CurrentCamera.CameraSubject = Tool.Handle
+                    repeat wait() until not Tool or (Tool.Parent == workspace or Tool.Parent == Player.Character)
+                    Player.Character.HumanoidRootPart.Anchored = false
+                    wait(0.1)
+                    Humanoid.Health = 0
+                    LocalPlayer.Character = nil
+                    spawn(function()
+                        LocalPlayer.CharacterAdded:Wait()
+                        Player.Character.HumanoidRootPart.Anchored = false
+                        if Player.Character.Humanoid.Health <= 15 then
+                            notify("Successfully duped item!")
+                            repeat wait() until LocalPlayer.Character and LocalPlayer.Character.PrimaryPart
+                            wait(0.4)
+                            LocalPlayer.Character:SetPrimaryPartCFrame(previous)
+                        else
+                            notify("Error: Error, possible reasons: Reanimation/Just failed.")
+                        end
+                    end)
+                else
+                    notify("Error: Error, possible reasons: Reanimation/Just failed.")
+                end
+            else
+                notify("Error: Error, possible reasons: Reanimation/Just failed.")
+            end
+        else
+            notify("Error: Error, possible reasons: Reanimation/Just failed.")
+        end
     else
-        notify("Player not found.")
+        notify("Player is not in the server.")
     end
 end)
