@@ -268,7 +268,7 @@ Kill.MouseButton1Click:Connect(function()
                     repeat wait() until not Tool or (Tool.Parent == workspace or Tool.Parent == Player.Character)
                     Player.Character.HumanoidRootPart.Anchored = false
                     wait(0.1)
-                    Humanoid.Health = 0
+                    Humanoid.Health = 50
                     LocalPlayer.Character = nil
                     spawn(function()
                         LocalPlayer.CharacterAdded:Wait()
