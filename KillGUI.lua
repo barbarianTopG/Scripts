@@ -1,6 +1,6 @@
 local lp = game:GetService("Players").LocalPlayer
 local textChatEnabled = true
-local currentPhrase = "I Like yo cut G"
+local currentPhrase = "GET OUT!!!"
 
 local function gplr(String)
     local Found = {}
@@ -106,9 +106,9 @@ btnCorner.Parent = ShowListBtn
 
 local PlayerListBG = Instance.new("Frame")
 PlayerListBG.Parent = ui
-PlayerListBG.BackgroundColor3 = Color3.fromRGB(50, 0, 150)
-PlayerListBG.Position = UDim2.new(1, 10, 0.05, 0)
-PlayerListBG.Size = UDim2.new(0, 180, 0, 150)
+PlayerListBG.BackgroundColor3 = Color3.fromRGB(33, 0, 84) -- match Kill GUI background
+PlayerListBG.Position = UDim2.new(1.05, 10, 0.05, 0) -- offset right
+PlayerListBG.Size = UDim2.new(0, 270, 0, 150) -- widened 1.5x
 PlayerListBG.BorderSizePixel = 0
 PlayerListBG.Visible = false
 PlayerListBG.ClipsDescendants = true
@@ -180,11 +180,12 @@ local function updatePlayerList()
         if player ~= lp then
             local btn = Instance.new("TextButton")
             btn.Size = UDim2.new(1, 0, 0, 25)
-            btn.BackgroundColor3 = Color3.fromRGB(100, 0, 200)
+            btn.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- match Kill button
             btn.TextColor3 = Color3.fromRGB(255, 255, 255)
             btn.Font = Enum.Font.SourceSans
             btn.TextSize = 14
             btn.Text = player.DisplayName.." ("..player.Name..")"
+            btn.TextWrapped = true
             local btnCorner = Instance.new("UICorner")
             btnCorner.CornerRadius = UDim.new(0, 6)
             btnCorner.Parent = btn
