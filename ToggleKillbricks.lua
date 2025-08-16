@@ -1,7 +1,7 @@
 local player = game:GetService("Players").LocalPlayer
 local toggleEnabled = false
 
-stuffTab:CreateToggle({
+myTab:CreateToggle({
     Name = "Disable killbricks",
     CurrentValue = false,
     Flag = "DisableKillbricks",
