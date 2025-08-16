@@ -4,7 +4,6 @@ local toggleEnabled = false
 myTab:CreateToggle({
     Name = "Disable killbricks",
     CurrentValue = false,
-    Flag = "DisableKillbricks",
     Callback = function(Value)
         toggleEnabled = Value
     end
