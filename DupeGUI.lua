@@ -32,7 +32,7 @@ end
 
 local function notify(text)
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "+ Dupe GUI V1 +";
+        Title = "• Dupe GUI •";
         Text = text;
         Duration = 3;
     })
@@ -48,8 +48,9 @@ ui.Parent = ScreenGui
 ui.Active = true
 ui.BackgroundColor3 = Color3.fromRGB(33, 0, 84)
 ui.BackgroundTransparency = 0
-ui.BorderSizePixel = 0
-ui.Position = UDim2.new(0.254972845, 0, 0.419703096, 0)
+ui.BorderSizePixel = 2
+ui.BorderColor3 = Color3.fromRGB(150, 0, 255)
+ui.Position = UDim2.new(0.254, 0, 0.419, 0)
 ui.Size = UDim2.new(0, 278, 0, 220)
 ui.Draggable = true
 
@@ -71,7 +72,7 @@ title.TextWrapped = true
 
 local Frame = Instance.new("Frame")
 Frame.Parent = title
-Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 255) -- Purple
+Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
 Frame.Position = UDim2.new(0.07, 0, 0.86, 0)
 Frame.Size = UDim2.new(0.85, 0, 0, 6)
 
@@ -91,7 +92,7 @@ Username.TextWrapped = true
 local ShowListBtn = Instance.new("TextButton")
 ShowListBtn.Name = "ShowListBtn"
 ShowListBtn.Parent = ui
-ShowListBtn.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
+ShowListBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
 ShowListBtn.Position = UDim2.new(0.72, 0, 0.3, 0)
 ShowListBtn.Size = UDim2.new(0, 50, 0, 50)
 ShowListBtn.Text = "List"
@@ -105,10 +106,11 @@ btnCorner.Parent = ShowListBtn
 
 local PlayerListBG = Instance.new("Frame")
 PlayerListBG.Parent = ui
-PlayerListBG.BackgroundColor3 = Color3.fromRGB(50, 0, 150) -- Darker Purple
-PlayerListBG.Position = UDim2.new(1, 10, 0.05, 0)
-PlayerListBG.Size = UDim2.new(0, 180, 0, 150) -- made wider
-PlayerListBG.BorderSizePixel = 0
+PlayerListBG.BackgroundColor3 = Color3.fromRGB(33, 0, 84)
+PlayerListBG.Position = UDim2.new(1.05, 0, 0, 0)
+PlayerListBG.Size = UDim2.new(0, 270, 0, 200)
+PlayerListBG.BorderSizePixel = 2
+PlayerListBG.BorderColor3 = Color3.fromRGB(150, 0, 255)
 PlayerListBG.Visible = false
 PlayerListBG.ClipsDescendants = true
 
@@ -155,7 +157,7 @@ Kill.TextWrapped = true
 local ToggleChat = Instance.new("TextButton")
 ToggleChat.Name = "ToggleChat"
 ToggleChat.Parent = ui
-ToggleChat.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
+ToggleChat.BackgroundColor3 = Color3.fromRGB(100, 0, 200)
 ToggleChat.Position = UDim2.new(0.25, 0, 0.82, 0)
 ToggleChat.Size = UDim2.new(0.5, 0, 0, 30)
 ToggleChat.Font = Enum.Font.Gotham
@@ -163,6 +165,7 @@ ToggleChat.Text = "Send Text: ON"
 ToggleChat.TextColor3 = Color3.new(1, 1, 1)
 ToggleChat.TextScaled = true
 ToggleChat.TextWrapped = true
+
 ToggleChat.MouseButton1Click:Connect(function()
     textChatEnabled = not textChatEnabled
     ToggleChat.Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
@@ -178,7 +181,7 @@ local function updatePlayerList()
         if player ~= lp then
             local btn = Instance.new("TextButton")
             btn.Size = UDim2.new(1, 0, 0, 25)
-            btn.BackgroundColor3 = Color3.fromRGB(100, 0, 200) -- Purple
+            btn.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
             btn.TextColor3 = Color3.fromRGB(255, 255, 255)
             btn.Font = Enum.Font.SourceSans
             btn.TextSize = 14
@@ -197,6 +200,20 @@ local function updatePlayerList()
     ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
 end
 
+local function highlightMatches()
+    for _, child in pairs(ScrollingFrame:GetChildren()) do
+        if child:IsA("TextButton") then
+            if Username.Text ~= "" and string.find(child.Text:lower(), Username.Text:lower()) then
+                child.BackgroundColor3 = Color3.fromRGB(33, 0, 84)
+            else
+                child.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+            end
+        end
+    end
+end
+
+Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
+
 game:GetService("Players").PlayerAdded:Connect(updatePlayerList)
 game:GetService("Players").PlayerRemoving:Connect(updatePlayerList)
 updatePlayerList()
@@ -208,65 +225,11 @@ end)
 Kill.MouseButton1Click:Connect(function()
     local Player = gplr(Username.Text)[1]
     if Player then
-        local LocalPlayer = game.Players.LocalPlayer
+        local message = 'Duping item to "'..Player.DisplayName..'"...'
         if textChatEnabled then
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("Duping item to "..Player.DisplayName.."...")
-            task.wait(0.1)
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
         end
-        if LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
-            local Character = LocalPlayer.Character
-            local previous = LocalPlayer.Character.PrimaryPart.CFrame
-            Character.Archivable = true
-            local Clone = Character:Clone()
-            LocalPlayer.Character = Clone
-            wait(0.5)
-            LocalPlayer.Character = Character
-            wait(0.2)
-            if LocalPlayer.Character and Player.Character and Player.Character.PrimaryPart then
-                if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):Destroy()
-                end
-                local Humanoid = Instance.new("Humanoid")
-                Humanoid.Parent = LocalPlayer.Character
-                local Tool = nil
-                if LocalPlayer.Character:FindFirstChildOfClass("Tool") then
-                    Tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
-                elseif LocalPlayer.Backpack and LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
-                    Tool = LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
-                end
-                if Tool ~= nil then
-                    Tool.Parent = LocalPlayer.Backpack
-                    Player.Character.HumanoidRootPart.Anchored = true
-                    local Arm = game.Players.LocalPlayer.Character['Right Arm'].CFrame * CFrame.new(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, -1, 0)
-                    Tool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
-                    Tool.Parent = LocalPlayer.Character
-                    workspace.CurrentCamera.CameraSubject = Tool.Handle
-                    repeat wait() until not Tool or (Tool.Parent == workspace or Tool.Parent == Player.Character)
-                    Player.Character.HumanoidRootPart.Anchored = false
-                    wait(0.1)
-                    Humanoid.Health = 15
-                    LocalPlayer.Character = nil
-                    spawn(function()
-                        LocalPlayer.CharacterAdded:Wait()
-                        Player.Character.HumanoidRootPart.Anchored = false
-                        if Player.Character.Humanoid.Health <= 15 then
-                            notify("The requested user has been killed!")
-                            repeat wait() until LocalPlayer.Character and LocalPlayer.Character.PrimaryPart
-                            wait(0.4)
-                            LocalPlayer.Character:SetPrimaryPartCFrame(previous)
-                        else
-                            notify("Success: Duped item to "..Player.DisplayName.."!")
-                        end
-                    end)
-                else
-                    notify("Success: Duped item to "..Player.DisplayName.."!")
-                end
-            else
-                notify("Success: Duped item to "..Player.DisplayName.."!")
-            end
-        else
-            notify("Success: Duped item to "..Player.DisplayName.."!")
-        end
+        notify(message)
     else
         notify("Player not found.")
     end
