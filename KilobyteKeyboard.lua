@@ -24,8 +24,6 @@ mainFrame.Parent = gui
 mainFrame.Active = true
 mainFrame.Draggable = true
 
--- removed mainFrame UICorner here (no rounded corners)
-
 local outline = Instance.new("UIStroke")
 outline.Color = Color3.fromRGB(120, 60, 255)
 outline.Thickness = 2
