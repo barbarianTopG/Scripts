@@ -20,7 +20,6 @@ local BASE_TITLE_HEIGHT    = 42
 local BASE_BODY_HEIGHT     = 245
 local BASE_KEY_HEIGHT      = 42
 local BASE_KEY_SPACING     = 6
-
 local KEYBOARD_WIDTH       = BASE_KEYBOARD_WIDTH * SCALE_OVERALL * 1.2
 local TITLE_HEIGHT         = BASE_TITLE_HEIGHT * SCALE_OVERALL
 local BODY_HEIGHT          = BASE_BODY_HEIGHT * SCALE_OVERALL
@@ -36,15 +35,12 @@ local keyHover             = Color3.fromRGB(70, 70, 100)
 local dangerColor          = Color3.fromRGB(220, 60, 60)
 local dangerHover          = Color3.fromRGB(255, 90, 90)
 local selectGreen          = Color3.fromRGB(40, 200, 100)
+local shortcutPurple       = Color3.fromRGB(90, 50, 255)
 
 --- // ==== Utilities ==== \ ---
 local function makeHover(btn, normal, hover)
-    btn.MouseEnter:Connect(function()
-        btn.BackgroundColor3 = hover
-    end)
-    btn.MouseLeave:Connect(function()
-        btn.BackgroundColor3 = normal
-    end)
+    btn.MouseEnter:Connect(function() btn.BackgroundColor3 = hover end)
+    btn.MouseLeave:Connect(function() btn.BackgroundColor3 = normal end)
 end
 
 local function makePressGlow(btn)
@@ -67,14 +63,14 @@ mainFrame.Parent          = gui
 
 local mainRound            = Instance.new("UICorner")
 mainRound.CornerRadius     = UDim.new(0, 18 * SCALE_OVERALL)
-mainRound.Parent            = mainFrame
+mainRound.Parent           = mainFrame
 
 local mainStroke           = Instance.new("UIStroke")
 mainStroke.Color           = accentColor
 mainStroke.Thickness       = 2
 mainStroke.Parent          = mainFrame
 
---- // ==== Title Bar ==== \ ---
+--- // ==== Title ==== \ ---
 local titleBar             = Instance.new("Frame")
 titleBar.Size              = UDim2.new(1,0,0,TITLE_HEIGHT)
 titleBar.BackgroundTransparency = 1
@@ -91,7 +87,6 @@ titleText.TextSize         = 24 * SCALE_OVERALL
 titleText.TextXAlignment   = Enum.TextXAlignment.Left
 titleText.Parent           = titleBar
 
---- // ==== Minimize Button (-) ==== \ ---
 local minimizeBtn           = Instance.new("TextButton")
 minimizeBtn.Size            = UDim2.new(0,32*SCALE_OVERALL,1,0)
 minimizeBtn.Position        = UDim2.new(1,-90*SCALE_OVERALL,0,0)
@@ -110,7 +105,6 @@ minimizeRound.Parent         = minimizeBtn
 makeHover(minimizeBtn, accentColor, accentHover)
 makePressGlow(minimizeBtn)
 
---- // ==== Close Button (X) ==== \ ---
 local closeBtn             = Instance.new("TextButton")
 closeBtn.Size              = UDim2.new(0,32*SCALE_OVERALL,1,0)
 closeBtn.Position          = UDim2.new(1,-50*SCALE_OVERALL,0,0)
@@ -162,8 +156,22 @@ local keyNameToEnum = {
     ["F9"] = "F9"
 }
 
---- // ==== Functons ==== \ ---
+--- // ==== Functions ==== \ ---
 local selecting = false
+local plusStroke
+
+local function setSelecting(state)
+    selecting = state
+    if plusStroke then
+        if selecting then
+            plusStroke.Color = selectGreen
+            titleText.Text = "Byte Keyboard (Selecting key)"
+        else
+            plusStroke.Color = shortcutPurple
+            titleText.Text = "Byte Keyboard"
+        end
+    end
+end
 
 local function createShortcut(keyText)
     local btn = Instance.new("TextButton")
@@ -216,9 +224,10 @@ local function createShortcut(keyText)
     closeCircle.MouseButton1Click:Connect(function()
         btn:Destroy()
     end)
+
+    setSelecting(false) -- reset after adding shortcut
 end
 
---- // ==== Create Keys ==== \ ---
 local function getKeyWidth(key)
     local baseWidth = 42 * SCALE_KEYS
     local wide = {
@@ -237,7 +246,6 @@ local function getKeyWidth(key)
 end
 
 local startY = KEY_SPACING
-
 for rowIndex,row in ipairs(keyMap) do
     local x = KEY_SPACING
     for _, keyText in ipairs(row) do
@@ -273,7 +281,6 @@ for rowIndex,row in ipairs(keyMap) do
             end
             if selecting then
                 createShortcut(keyText)
-                selecting = false
             end
         end)
 
@@ -281,7 +288,6 @@ for rowIndex,row in ipairs(keyMap) do
     end
 end
 
---- // ==== Shortcut btn ==== \ ---
 local plusBtn = Instance.new("TextButton")
 plusBtn.Size = UDim2.new(0,32,0,32)
 plusBtn.Position = UDim2.new(1,-40,1,-40)
@@ -296,28 +302,20 @@ local plusRound = Instance.new("UICorner")
 plusRound.CornerRadius = UDim.new(0,8)
 plusRound.Parent = plusBtn
 
-local plusStroke = Instance.new("UIStroke")
-plusStroke.Color = accentColor
+plusStroke = Instance.new("UIStroke")
+plusStroke.Color = shortcutPurple
 plusStroke.Thickness = 2
 plusStroke.Parent = plusBtn
 
 plusBtn.MouseButton1Click:Connect(function()
-    selecting = not selecting
-    if selecting then
-        plusStroke.Color = selectGreen
-        titleText.Text = "Byte Keyboard (Selecting key)"
-    else
-        plusStroke.Color = accentColor
-        titleText.Text = "Byte Keyboard"
-    end
+    setSelecting(not selecting)
 end)
 
---- // ==== Show Button ==== \ ---
 local minimizerBtn = Instance.new("TextButton")
 local minimizeSize = 36
 minimizerBtn.Size = UDim2.new(0,minimizeSize,0,minimizeSize)
 minimizerBtn.Position = UDim2.new(0.022,0,0,12)
-minimizerBtn.BackgroundColor3 = accentColor
+minimizerBtn.BackgroundColor3 = keyColor
 minimizerBtn.Text = "⌨"
 minimizerBtn.TextColor3 = Color3.new(1,1,1)
 minimizerBtn.Font = Enum.Font.GothamBold
@@ -326,18 +324,21 @@ minimizerBtn.Parent = gui
 minimizerBtn.Visible = false
 minimizerBtn.BorderSizePixel = 0
 minimizerBtn.ZIndex = 2000
-minimizerBtn:SetAttribute("NormalColor", accentColor)
 
 local miniRound = Instance.new("UICorner")
 miniRound.CornerRadius = UDim.new(0,8)
 miniRound.Parent = minimizerBtn
 
-makeHover(minimizerBtn, accentColor, accentHover)
+local miniStroke = Instance.new("UIStroke")
+miniStroke.Color = accentColor
+miniStroke.Thickness = 2
+miniStroke.Parent = minimizerBtn
+
+makeHover(minimizerBtn, keyColor, keyHover)
 makePressGlow(minimizerBtn)
 
---- // ==== Tweens ==== \ ---
+--- // ==== Anims ==== \ ---
 local tweenInfo = TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-
 local function tweenToCenter()
     mainFrame.Visible = true
     minimizeBtn.Visible = true
@@ -360,9 +361,7 @@ end
 
 minimizeBtn.MouseButton1Click:Connect(tweenToLeftAndHide)
 minimizerBtn.MouseButton1Click:Connect(tweenToCenter)
-closeBtn.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
+closeBtn.MouseButton1Click:Connect(function() gui:Destroy() end)
 
 plr.CharacterAdded:Connect(function()
     local newGui = plr:WaitForChild("PlayerGui")
