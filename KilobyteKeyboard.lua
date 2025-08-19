@@ -1,5 +1,6 @@
 --- // ==== Kilobyte Keyboard ==== \\ ---
 
+-- // ==== Services ==== \ --
 local Players             = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService        = game:GetService("TweenService")
@@ -7,6 +8,7 @@ local TweenService        = game:GetService("TweenService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
+-- // ==== GUI ==== \ --
 local gui = Instance.new("ScreenGui")
 gui.Name = "KilobyteKeyboard"
 gui.ResetOnSpawn = false
@@ -22,9 +24,7 @@ mainFrame.Parent = gui
 mainFrame.Active = true
 mainFrame.Draggable = true
 
-local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(0.25, 0) -- squircle
-UICorner.Parent = mainFrame
+-- removed mainFrame UICorner here (no rounded corners)
 
 local outline = Instance.new("UIStroke")
 outline.Color = Color3.fromRGB(120, 60, 255)
@@ -59,6 +59,7 @@ closeBtn.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
+-- // ==== Keys ==== \ --
 local keysLayout = {
  {"Q","E","R","T","Y"},
  {"U","P","L","K","J"},
@@ -67,8 +68,8 @@ local keysLayout = {
 }
 
 local startY = 30
-local keySize = 40 
-local spacing = 3  
+local keySize = 40
+local spacing = 3
 
 local totalRowWidth = (#keysLayout[1] * keySize) + ((#keysLayout[1]-1) * spacing)
 
@@ -99,7 +100,6 @@ for rowIndex, row in ipairs(keysLayout) do
   keyBtn.MouseButton1Click:Connect(function()
    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode[keyName], false, game)
    VirtualInputManager:SendKeyEvent(false, Enum.KeyCode[keyName], false, game)
-
    keyBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 80)
    TweenService:Create(keyBtn, TweenInfo.new(0.25), {BackgroundColor3 = Color3.fromRGB(25, 25, 40)}):Play()
   end)
