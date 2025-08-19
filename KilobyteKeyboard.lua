@@ -1,6 +1,5 @@
 --- // ==== Kilobyte Keyboard ==== \\ ---
 
--- // ==== Services ==== \ --
 local Players             = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService        = game:GetService("TweenService")
@@ -8,7 +7,6 @@ local TweenService        = game:GetService("TweenService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
--- // ==== GUI ==== \ --
 local gui = Instance.new("ScreenGui")
 gui.Name = "KilobyteKeyboard"
 gui.ResetOnSpawn = false
@@ -16,7 +14,7 @@ gui.Parent = playerGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 280, 0, 200)
+mainFrame.Size = UDim2.new(0, 260, 0, 200)
 mainFrame.Position = UDim2.new(0.5, -140, 0.7, -90)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
@@ -41,7 +39,7 @@ title.Parent = mainFrame
 
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 20, 0, 20)
-closeBtn.Position = UDim2.new(0.82, -20, 0, 0)
+closeBtn.Position = UDim2.new(1, -20, 0, 0)
 closeBtn.BackgroundColor3 = Color3.fromRGB(220, 60, 60)
 closeBtn.Text = "X"
 closeBtn.TextColor3 = Color3.new(1,1,1)
@@ -57,7 +55,6 @@ closeBtn.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
--- // ==== Keys ==== \ --
 local keysLayout = {
  {"Q","E","R","T","Y"},
  {"U","P","L","K","J"},
