@@ -1,6 +1,4 @@
---[[ Credits to MyWorld!
-Changes made: Added auto-loading keyboard & auto-loading PermaDeath ]]
-
+--[[ Credits to the respective owner of this script as I just Modded this ]]
 game.StarterGui:SetCore("SendNotification", {
     Title = "Nameless animation v4.",
     Text = "Loading...",
@@ -8,9 +6,9 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 3
 })
 task.wait(3.1)
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -net")
 task.wait(1)
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd")
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -pd")
 task.wait(1)
 
 if "wanna use myworld reanimate" then
