@@ -6,8 +6,6 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 3
 })
 task.wait(3.1)
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -net")
-task.wait(1)
 game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -pd")
 task.wait(1)
 
