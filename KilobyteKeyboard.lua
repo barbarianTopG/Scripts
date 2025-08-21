@@ -1,5 +1,4 @@
---- // ==== Kilobyte Keyboard ==== \\ ---
-
+-- /// ==== Kilobyte Keyboard ==== \\\ --
 local Players             = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService        = game:GetService("TweenService")
@@ -15,16 +14,21 @@ gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local mainFrame = Instance.new("Frame")
 mainFrame.Size = UDim2.new(0, 260, 0, 200)
-mainFrame.Position = UDim2.new(0.5, -140, 0.7, -90)
+mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = gui
 mainFrame.Active = true
 mainFrame.Draggable = true
 
+-- Start fully transparent
+mainFrame.BackgroundTransparency = 1
+
 local outline = Instance.new("UIStroke")
 outline.Color = Color3.fromRGB(120, 60, 255)
 outline.Thickness = 2
+outline.Transparency = 1
 outline.Parent = mainFrame
 
 local title = Instance.new("TextLabel")
@@ -36,6 +40,7 @@ title.TextColor3 = Color3.fromRGB(150, 80, 255)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBold
 title.Parent = mainFrame
+title.TextTransparency = 1
 
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 20, 0, 20)
@@ -46,13 +51,31 @@ closeBtn.TextColor3 = Color3.new(1,1,1)
 closeBtn.TextScaled = true
 closeBtn.Font = Enum.Font.GothamBold
 closeBtn.Parent = mainFrame
+closeBtn.TextTransparency = 1
+closeBtn.BackgroundTransparency = 1
 
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0.3,0)
 corner.Parent = closeBtn
 
+-- Spawn effect
+TweenService:Create(mainFrame, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+TweenService:Create(outline, TweenInfo.new(0.5), {Transparency = 0}):Play()
+TweenService:Create(title, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+TweenService:Create(closeBtn, TweenInfo.new(0.5), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+
 closeBtn.MouseButton1Click:Connect(function()
-    gui:Destroy()
+    -- Destroy effect
+    local t1 = TweenService:Create(mainFrame, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+    local t2 = TweenService:Create(outline, TweenInfo.new(0.5), {Transparency = 1})
+    local t3 = TweenService:Create(title, TweenInfo.new(0.5), {TextTransparency = 1})
+    local t4 = TweenService:Create(closeBtn, TweenInfo.new(0.5), {TextTransparency = 1, BackgroundTransparency = 1})
+    
+    t1:Play() t2:Play() t3:Play() t4:Play()
+    
+    task.delay(0.5, function()
+        gui:Destroy()
+    end)
 end)
 
 local keysLayout = {
@@ -66,12 +89,9 @@ local startY = 30
 local keySize = 40
 local spacing = 3
 
-local totalRowWidth = (#keysLayout[1] * keySize) + ((#keysLayout[1]-1) * spacing)
-
 for rowIndex, row in ipairs(keysLayout) do
  local rowWidth = (#row * keySize) + ((#row-1) * spacing)
  local startX = (mainFrame.AbsoluteSize.X - rowWidth) / 2
-
  for colIndex, keyName in ipairs(row) do
   local keyBtn = Instance.new("TextButton")
   keyBtn.Size = UDim2.new(0, keySize, 0, keySize)
@@ -82,6 +102,8 @@ for rowIndex, row in ipairs(keysLayout) do
   keyBtn.TextScaled = true
   keyBtn.Font = Enum.Font.GothamBold
   keyBtn.Parent = mainFrame
+  keyBtn.TextTransparency = 1
+  keyBtn.BackgroundTransparency = 1
 
   local corner2 = Instance.new("UICorner")
   corner2.CornerRadius = UDim.new(0.25, 0)
@@ -90,7 +112,11 @@ for rowIndex, row in ipairs(keysLayout) do
   local stroke = Instance.new("UIStroke")
   stroke.Color = Color3.fromRGB(120, 60, 255)
   stroke.Thickness = 1.5
+  stroke.Transparency = 1
   stroke.Parent = keyBtn
+
+  TweenService:Create(keyBtn, TweenInfo.new(0.5), {TextTransparency = 0, BackgroundTransparency = 0}):Play()
+  TweenService:Create(stroke, TweenInfo.new(0.5), {Transparency = 0}):Play()
 
   keyBtn.MouseButton1Click:Connect(function()
    VirtualInputManager:SendKeyEvent(true, Enum.KeyCode[keyName], false, game)
