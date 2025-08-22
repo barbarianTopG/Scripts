@@ -2,7 +2,7 @@
 game.StarterGui:SetCore("SendNotification", {
     Title = "Nameless animation v4.",
     Text = "Loading...",
-    Icon = "rbxassetid://108355382306271",
+    Icon = "rbxassetid://75748121994225",
     Duration = 3
 })
 task.wait(3.1)
@@ -1257,14 +1257,7 @@ end)
 game.StarterGui:SetCore("SendNotification", {
     Title = "Nameless animation v4.",
     Text = "Loaded reanimation!",
-    Icon = "rbxassetid://108355382306271",
-    Duration = 2
-})
-task.wait(1.9)
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Nameless animation v4.",
-    Text = "Loading Keyboard...",
-    Icon = "rbxassetid://108355382306271",
+    Icon = "rbxassetid://75748121994225",
     Duration = 2
 })
 task.wait(1.9)
@@ -1272,6 +1265,6 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScript
 game.StarterGui:SetCore("SendNotification", {
     Title = "Nameless animation v4.",
     Text = "Enjoy!",
-    Icon = "rbxassetid://108355382306271",
+    Icon = "rbxassetid://75748121994225",
     Duration = 2
 })
