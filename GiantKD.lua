@@ -309,9 +309,13 @@ end))
 
 game:GetService("StarterGui"):SetCore("ResetButtonCallback", reset)
 
- task.wait(5)
+task.wait(5)
  loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 end)
+
+task.wait(1)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/SelectKeyboard.lua"))()
 
 noBtn.MouseButton1Click:Connect(function()
  closePopup()
