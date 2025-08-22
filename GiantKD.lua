@@ -1,7 +1,3 @@
--- Just Grass Giant by Quirky Anime Boy#5506
-
--- ChillbyteHD's discord server: https://discord.gg/XXtB3Vth53
-
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -70,28 +66,6 @@ noBtn.Text="NO ONE CAREZ!"
 noBtn.Parent=popup
 Instance.new("UICorner",noBtn).CornerRadius=UDim.new(0,20)
 
-local glitch=Instance.new("Frame",gui)
-glitch.Size=UDim2.new(0,200,0,80)
-glitch.Position=UDim2.new(0.5,-100,0.75,0)
-glitch.BackgroundColor3=Color3.fromRGB(255,0,0)
-glitch.BackgroundTransparency=0.5
-Instance.new("UICorner",glitch).CornerRadius=UDim.new(0,20)
-
-local glitchText=Instance.new("TextLabel",glitch)
-glitchText.Size=UDim2.new(1,0,1,0)
-glitchText.BackgroundTransparency=1
-glitchText.Text="GLITCH?"
-glitchText.TextColor3=Color3.new(1,1,1)
-glitchText.Font=Enum.Font.GothamBold
-glitchText.TextScaled=true
-
-task.spawn(function()
- while glitch.Parent do
-  glitch.Position=UDim2.new(0.5,-100+math.random(-5,5),0.75,math.random(-5,5))
-  task.wait(0.05)
- end
-end)
-
 TweenService:Create(popup,TweenInfo.new(0.6,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=UDim2.new(0,20,0.5,-100)}):Play()
 
 local function closePopup()
@@ -106,198 +80,234 @@ executeBtn.MouseButton1Click:Connect(function()
 
  notify("Hey!","Giant Krystal Dance is back BABYYYY!!",3)
 
- TextChatService.TextChannels.RBXGeneral:SendAsync("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
+task.wait(3)
 
- task.wait(3)
- local reps="4602533885,"
- local repped=reps:rep(13)
- local base="-gh 6202063049,"
- repped=repped:sub(1,-2)
- local done=base..repped
- if setclipboard then setclipboard(done) else print(done) end
+local reps = "4602533885,"
 
- repeat wait() until plr.Character:FindFirstChild("Smile")
- wait(0.8)
+local repped = reps:rep(13)
 
- local char=plr.Character
- local cons={}
- local ti=table.insert
- local rs=RunService
- local stepped=rs.Stepped
- local heartbeat=rs.Heartbeat
- local oldpos=char.HumanoidRootPart.CFrame
- char.HumanoidRootPart.CFrame=oldpos+Vector3.new(0,10000,0)
- wait(0.3)
+local base = "-gh 6202063049,"
 
- local reanimstorage=Instance.new("Folder",char)
- reanimstorage.Name="ReanimStorage"
+repped = repped:sub(1,-2)
 
- local reanim=game:GetObjects("rbxassetid://9678834251")[1]
- reanim.Humanoid.CameraOffset=Vector3.new(0,9.5,0)
- reanim.Name="Reanim"
+local done = base .. repped
 
- local anim=char.Animate
- anim.Parent=reanim
+--game.Players:Chat(done) -- get hats needed
+if setclipboard then setclipboard(done) else print(done) end
+repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("Smile")
+wait(.8)
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local cons = {}
+local ti = table.insert
+local rs = game:GetService("RunService")
+local stepped = rs.Stepped
+local heartbeat = rs.Heartbeat
 
- for i,v in pairs(reanim:GetDescendants()) do
-  if v:IsA("BasePart") or v:IsA("Decal") then
-   v.Transparency=1
-  end
-  if v:IsA("ParticleEmitter") then
-   v.Enabled=false
-  end
- end
+local oldpos = char.HumanoidRootPart.CFrame
+char.HumanoidRootPart.CFrame = oldpos + Vector3.new(0,10000,0)
+wait(.3)
+local function notify(title,text,duration)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 5;
+    })
+end
 
- reanim.Parent=reanimstorage
- reanim.HumanoidRootPart.CFrame=char.HumanoidRootPart.CFrame*CFrame.new(0,5,0)
 
- local netless_Y=Vector3.new(0,30,0)
- local v3_101=Vector3.new(1,0,1)
- local inf=math.huge
- local v3_0=Vector3.new(0,0,0)
+local reanimstorage = Instance.new("Folder",char)
+reanimstorage.Name="ReanimStorage"
 
- local function getNetlessVelocity(realPartVelocity)
-  if (realPartVelocity.Y>1) or (realPartVelocity.Y<-1) then
-   return realPartVelocity*(25.1/realPartVelocity.Y)
-  end
-  realPartVelocity=realPartVelocity*v3_101
-  local mag=realPartVelocity.Magnitude
-  if mag>1 then realPartVelocity=realPartVelocity*100/mag end
-  return realPartVelocity+netless_Y
- end
+local reanim = game:GetObjects("rbxassetid://9678834251")[1]
+reanim.Humanoid.CameraOffset = Vector3.new(0,9.5,0)
+reanim.Name="Reanim"
 
- local function align(Part0,Part1,p,r)
-  Part0.CustomPhysicalProperties=PhysicalProperties.new(0.0001,0.0001,0.0001,0.0001,0.0001)
-  Part0.CFrame=Part1.CFrame
-  local att0=Instance.new("Attachment",Part0)
-  att0.Orientation=r or v3_0
-  att0.Position=v3_0
-  att0.Name="att0_"..Part0.Name
-  local att1=Instance.new("Attachment",Part1)
-  att1.Orientation=v3_0
-  att1.Position=p or v3_0
-  att1.Name="att1_"..Part1.Name
 
-  local ape=Instance.new("AlignPosition",att0)
-  ape.ApplyAtCenterOfMass=false
-  ape.MaxForce=inf
-  ape.MaxVelocity=inf
-  ape.ReactionForceEnabled=false
-  ape.Responsiveness=200
-  ape.Attachment1=att1
-  ape.Attachment0=att0
-  ape.Name="AlignPositionRtrue"
-  ape.RigidityEnabled=true
+local anim = char.Animate
+anim.Parent = reanim
 
-  local apd=Instance.new("AlignPosition",att0)
-  apd.ApplyAtCenterOfMass=false
-  apd.MaxForce=inf
-  apd.MaxVelocity=inf
-  apd.ReactionForceEnabled=false
-  apd.Responsiveness=200
-  apd.Attachment1=att1
-  apd.Attachment0=att0
-  apd.Name="AlignPositionRfalse"
-  apd.RigidityEnabled=false
+for i,v in pairs(reanim:GetDescendants()) do
+    if v:IsA("BasePart") or v:IsA("Decal") then
+        v.Transparency = 1 
+    end 
+    if v:IsA("ParticleEmitter") then
+        v.Enabled = false
+    end
+end
 
-  local ao=Instance.new("AlignOrientation",att0)
-  ao.MaxAngularVelocity=inf
-  ao.MaxTorque=inf
-  ao.PrimaryAxisOnly=false
-  ao.ReactionTorqueEnabled=false
-  ao.Responsiveness=200
-  ao.Attachment1=att1
-  ao.Attachment0=att0
-  ao.RigidityEnabled=false
+reanim.Parent = reanimstorage
+reanim.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0,5,0)
 
-  if type(getNetlessVelocity)=="function" then
-   local realVelocity=Vector3.new(0,30,0)
-   local steppedcon=stepped:Connect(function() Part0.Velocity=realVelocity end)
-   local heartbeatcon=heartbeat:Connect(function()
-    realVelocity=Part0.Velocity
-    Part0.Velocity=getNetlessVelocity(realVelocity)
-   end)
-   Part0.Destroying:Connect(function()
-    Part0=nil
-    steppedcon:Disconnect()
-    heartbeatcon:Disconnect()
-   end)
-   ti(cons,steppedcon)
-   ti(cons,heartbeatcon)
-  end
+-- netless/align by MyWorld, ty cutie <3
+local netless_Y = Vector3.new(0, 30, 0)
+local v3_101 = Vector3.new(1, 0, 1)
+local inf = math.huge
+local v3_0 = Vector3.new(0,0,0)
+local function getNetlessVelocity(realPartVelocity)
+    if (realPartVelocity.Y > 1) or (realPartVelocity.Y < -1) then
+        return realPartVelocity * (25.1 / realPartVelocity.Y)
+    end
+    realPartVelocity = realPartVelocity * v3_101
+    local mag = realPartVelocity.Magnitude
+    if mag > 1 then
+        realPartVelocity = realPartVelocity * 100 / mag
+    end
+    return realPartVelocity + netless_Y
+end
 
-  att0.Orientation=r or v3_0
-  att0.Position=v3_0
-  att1.Orientation=v3_0
-  att1.Position=p or v3_0
-  Part0.CFrame=Part1.CFrame
- end
+local function align(Part0, Part1, p, r)
+	Part0.CustomPhysicalProperties = PhysicalProperties.new(0.0001, 0.0001, 0.0001, 0.0001, 0.0001)
+    Part0.CFrame = Part1.CFrame
+	local att0 = Instance.new("Attachment", Part0)
+	att0.Orientation = r or v3_0
+	att0.Position = v3_0
+	att0.Name = "att0_" .. Part0.Name
+	local att1 = Instance.new("Attachment", Part1)
+	att1.Orientation = v3_0 
+	att1.Position = p or v3_0
+	att1.Name = "att1_" .. Part1.Name
 
- for _,part in next,char:GetDescendants() do
-  if part:IsA("BasePart") then
-   ti(cons,stepped:Connect(function() part.CanCollide=false end))
-  end
- end
+	local ape = Instance.new("AlignPosition", att0)
+	ape.ApplyAtCenterOfMass = false
+	ape.MaxForce = inf
+	ape.MaxVelocity = inf
+	ape.ReactionForceEnabled = false
+	ape.Responsiveness = 200
+	ape.Attachment1 = att1
+	ape.Attachment0 = att0
+	ape.Name = "AlignPositionRtrue"
+	ape.RigidityEnabled = true
 
- local bighats={}
- local smile=char:FindFirstChild("Smile")
+	local apd = Instance.new("AlignPosition", att0)
+	apd.ApplyAtCenterOfMass = false
+	apd.MaxForce = inf
+	apd.MaxVelocity = inf
+	apd.ReactionForceEnabled = false
+	apd.Responsiveness = 200
+	apd.Attachment1 = att1
+	apd.Attachment0 = att0
+	apd.Name = "AlignPositionRfalse"
+	apd.RigidityEnabled = false
 
- for i,v in pairs(char:GetChildren()) do
-  if v:IsA("BasePart") and (v.Name:find("Arm") or v.Name:find("Leg")) then v:Destroy() end
-  if v:IsA("Accessory") and v.Handle.Size==Vector3.new(6,6,6) then
-   table.insert(bighats,v)
-   v.Handle.SpecialMesh:Destroy()
-  elseif v:IsA("Accessory") and v.Handle.Size~=Vector3.new(6,6,6) and v.Name~="Smile" then
-   v.Handle:BreakJoints()
-   v:Destroy()
-  end
- end
+	local ao = Instance.new("AlignOrientation", att0)
+	ao.MaxAngularVelocity = inf
+	ao.MaxTorque = inf
+	ao.PrimaryAxisOnly = false
+	ao.ReactionTorqueEnabled = false
+	ao.Responsiveness = 200
+	ao.Attachment1 = att1
+	ao.Attachment0 = att0
+	ao.RigidityEnabled = false
+    
+	if type(getNetlessVelocity) == "function" then
+	    local realVelocity = Vector3.new(0,30,0)
+        local steppedcon = stepped:Connect(function()
+            Part0.Velocity = realVelocity
+        end)
+        local heartbeatcon = heartbeat:Connect(function()
+            realVelocity = Part0.Velocity
+            Part0.Velocity = getNetlessVelocity(realVelocity)
+        end)
+        Part0.Destroying:Connect(function()
+            Part0 = nil
+            steppedcon:Disconnect()
+            heartbeatcon:Disconnect()
+        end)
+        ti(cons,steppedcon)
+        ti(cons,heartbeatcon)
+	end
+	
+    att0.Orientation = r or v3_0
+	att0.Position = v3_0
+	att1.Orientation = v3_0 
+	att1.Position = p or v3_0
+	Part0.CFrame = Part1.CFrame
+end
 
- align(char["HumanoidRootPart"],reanim["Head"],Vector3.new(0,0.5,0))
+for _,part in next, char:GetDescendants() do
+    if part:IsA("BasePart") then
+        ti(cons,stepped:Connect(function()
+            part.CanCollide = false
+        end))
+    end
+end
 
- for i,v in pairs(bighats) do
-  v.Name="bighat "..tostring(i)
-  v.Handle:BreakJoints()
- end
+local bighats = {}
+local smile = char:FindFirstChild("Smile")
+for i,v in pairs(char:GetChildren()) do
+    if v:IsA("BasePart") and (v.Name:find("Arm") or v.Name:find("Leg")) then
+        v:Destroy()
+    end
+    if v:IsA("Accessory") and v.Handle.Size == Vector3.new(6,6,6) then
+        table.insert(bighats,v)
+        v.Handle.SpecialMesh:Destroy()
+    elseif v:IsA("Accessory") and v.Handle.Size ~= Vector3.new(6,6,6) and v.Name ~= "Smile" then
+        v.Handle:BreakJoints()
+        v:Destroy()
+    end
+end
 
- align(bighats[1].Handle,reanim["Head"])
- align(smile.Handle,reanim["Head"],Vector3.new(0,0,-3.01),Vector3.new(0,90,0))
- align(bighats[2].Handle,reanim["Torso"],Vector3.new(-3,3,0))
- align(bighats[3].Handle,reanim["Torso"],Vector3.new(3,3,0))
- align(bighats[4].Handle,reanim["Torso"],Vector3.new(-3,-3,0))
- align(bighats[5].Handle,reanim["Torso"],Vector3.new(3,-3,0))
- align(bighats[6].Handle,reanim["Right Arm"],Vector3.new(0,3,0))
- align(bighats[7].Handle,reanim["Right Arm"],Vector3.new(0,-3,0))
- align(bighats[8].Handle,reanim["Left Arm"],Vector3.new(0,3,0))
- align(bighats[9].Handle,reanim["Left Arm"],Vector3.new(0,-3,0))
- align(bighats[10].Handle,reanim["Right Leg"],Vector3.new(0,3,0))
- align(bighats[11].Handle,reanim["Right Leg"],Vector3.new(0,-3,0))
- align(bighats[12].Handle,reanim["Left Leg"],Vector3.new(0,3,0))
- align(bighats[13].Handle,reanim["Left Leg"],Vector3.new(0,-3,0))
+align(char["HumanoidRootPart"],reanim["Head"],Vector3.new(0,0.5,0))
 
- workspace.CurrentCamera.CameraSubject=reanim.Humanoid
- plr.Character=reanim
- anim.Disabled=true
- anim.Disabled=false
- wait(0.3)
- plr.Character.HumanoidRootPart.CFrame=oldpos+Vector3.new(0,6,0)
- for i,v in pairs(bighats) do v.Handle.CFrame=plr.Character.HumanoidRootPart.CFrame end
- smile.Handle.CFrame=plr.Character.HumanoidRootPart.CFrame
+for i,v in pairs(bighats) do
+    v.Name = "bighat " .. tostring(i)
+    v.Handle:BreakJoints()
+end
+smile.Handle:BreakJoints()
 
- TextChatService.TextChannels.RBXGeneral:SendAsync("-net")
+align(bighats[1].Handle,reanim["Head"])
+align(smile.Handle,reanim["Head"],Vector3.new(0,0,-3.01),Vector3.new(0,90,0))
 
- local reset=Instance.new("BindableEvent")
- ti(cons,reset.Event:Connect(function()
-  reanim:Destroy()
-  plr.Character=nil
-  plr.Character=char
-  plr.Character.Humanoid.Health=0
-  for i,v in pairs(cons) do v:Disconnect() end
-  StarterGui:SetCore("ResetButtonCallback",true)
-  reset:Remove()
-  notify("Resetting","Please wait "..tostring(Players.RespawnTime).." seconds",Players.RespawnTime)
- end))
- StarterGui:SetCore("ResetButtonCallback",reset)
+align(bighats[2].Handle,reanim["Torso"],Vector3.new(-3,3,0))
+align(bighats[3].Handle,reanim["Torso"],Vector3.new(3,3,0))
+align(bighats[4].Handle,reanim["Torso"],Vector3.new(-3,-3,0))
+align(bighats[5].Handle,reanim["Torso"],Vector3.new(3,-3,0))
+
+align(bighats[6].Handle,reanim["Right Arm"],Vector3.new(0,3,0))
+align(bighats[7].Handle,reanim["Right Arm"],Vector3.new(0,-3,0))
+
+align(bighats[8].Handle,reanim["Left Arm"],Vector3.new(0,3,0))
+align(bighats[9].Handle,reanim["Left Arm"],Vector3.new(0,-3,0))
+
+align(bighats[10].Handle,reanim["Right Leg"],Vector3.new(0,3,0))
+align(bighats[11].Handle,reanim["Right Leg"],Vector3.new(0,-3,0))
+
+align(bighats[12].Handle,reanim["Left Leg"],Vector3.new(0,3,0))
+align(bighats[13].Handle,reanim["Left Leg"],Vector3.new(0,-3,0))
+
+workspace.CurrentCamera.CameraSubject = reanim.Humanoid
+plr.Character = reanim
+
+anim.Disabled = true
+anim.Disabled = false
+wait(.3)
+plr.Character.HumanoidRootPart.CFrame = oldpos + Vector3.new(0,6,0)
+
+for i,v in pairs(bighats) do
+    v.Handle.CFrame = plr.Character.HumanoidRootPart.CFrame
+end
+smile.Handle.CFrame = plr.Character.HumanoidRootPart.CFrame 
+
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
+
+
+local reset = Instance.new("BindableEvent")
+ti(cons,reset.Event:Connect(function()
+    reanim:Destroy()
+    plr.Character = nil
+    plr.Character = char
+    plr.Character.Humanoid.Health = 0
+    for i,v in pairs(cons) do
+        v:Disconnect()
+    end
+    game:GetService("StarterGui"):SetCore("ResetButtonCallback", true)
+    reset:Remove()
+    notify("Resetting","Please wait " .. tostring(game.Players.RespawnTime) .. " seconds",game.Players.RespawnTime)
+end))
+
+game:GetService("StarterGui"):SetCore("ResetButtonCallback", reset)
 
  task.wait(5)
  loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
@@ -307,34 +317,4 @@ noBtn.MouseButton1Click:Connect(function()
  closePopup()
  task.wait(0.5)
  plr:Kick("GET OUT!!!")
-end)
-
-glitch.InputBegan:Connect(function(input)
- if input.UserInputType==Enum.UserInputType.MouseButton1 then
-  local black=Instance.new("Frame",gui)
-  black.Size=UDim2.new(1,0,1,0)
-  black.BackgroundColor3=Color3.fromRGB(0,0,0)
-
-  local txt=Instance.new("TextLabel",black)
-  txt.Size=UDim2.new(1,0,1,0)
-  txt.BackgroundTransparency=1
-  txt.Text="FORTNITE BALLZ ALL IN YO FACE!"
-  txt.Font=Enum.Font.GothamBlack
-  txt.TextSize=50
-  txt.TextColor3=Color3.fromRGB(255,0,0)
-
-  local sound=Instance.new("Sound",black)
-  sound.SoundId="rbxassetid://6754147732"
-  sound:Play()
-
-  task.spawn(function()
-   while black.Parent do
-    txt.Position=UDim2.new(0,math.random(-10,10),0,math.random(-10,10))
-    task.wait(0.05)
-   end
-  end)
-
-  task.wait(2)
-  plr:Kick("L BOZO XD")
- end
 end)
