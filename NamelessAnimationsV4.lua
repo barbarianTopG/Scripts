@@ -1,10 +1,13 @@
 --[[ Credits to the respective owner of this script as I just Modded this ]]
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Nameless animation v4.",
-    Text = "Loading...",
-    Icon = "rbxassetid://75748121994225",
-    Duration = 3
-})
+function notify(title, text, duration)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 5
+    })
+end
+
+notify("Nameless Animations V4", "Loading...")
 task.wait(3.1)
 game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -pd")
 task.wait(1)
@@ -1254,17 +1257,6 @@ con = renderstepped:Connect(function(deltaTime)
     end
 end)
 
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Nameless animation v4.",
-    Text = "Loaded reanimation!",
-    Icon = "rbxassetid://75748121994225",
-    Duration = 2
-})
 task.wait(1.9)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/SelectKeyboard.lua"))()
-game.StarterGui:SetCore("SendNotification", {
-    Title = "Nameless animation v4.",
-    Text = "Enjoy!",
-    Icon = "rbxassetid://75748121994225",
-    Duration = 2
-})
+notify("Nameless Animations V4", "Enjoy!")
