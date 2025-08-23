@@ -3,13 +3,13 @@ function notify(title, text, duration)
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = title,
         Text = text,
-        Duration = duration or 5
+        Duration = duration or 4
     })
 end
 
 notify("Nameless Animations V4", "Loading...")
-task.wait(3.1)
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("/e -pd")
+task.wait(3.5)
+game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-pd ")
 task.wait(1)
 
 if "wanna use myworld reanimate" then
