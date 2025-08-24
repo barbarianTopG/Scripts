@@ -41,7 +41,7 @@ local byText = Instance.new("TextLabel", gui)
 byText.Size = UDim2.new(0.5,0,0.05,0)
 byText.Position = UDim2.new(0.25,0,0,10)
 byText.BackgroundTransparency = 1
-btText.TextColor3 = Color3.new(1,1,1)
+byText.TextColor3 = Color3.new(1,1,1)
 byText.TextTransparency = 0.5
 byText.TextScaled = true
 byText.Text = "Made by ChillbyteHD"
@@ -61,6 +61,7 @@ barFill.BackgroundColor3 = Color3.fromRGB(0,120,255)
 
 local barCorner = Instance.new("UICorner", barBack)
 barCorner.CornerRadius = UDim.new(0.5,0)
+
 local fillCorner = Instance.new("UICorner", barFill)
 fillCorner.CornerRadius = UDim.new(0.5,0)
 
@@ -142,6 +143,7 @@ RunService.RenderStepped:Connect(function(dt)
     else
         stamina = math.min(maxStamina, stamina + 10 * dt)
     end
+
     barFill.Size = UDim2.new(stamina/maxStamina,0,1,0)
 
     if hum.MoveDirection.Magnitude > 0 then
