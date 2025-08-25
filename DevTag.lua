@@ -1,24 +1,24 @@
 -- /// Tags
 
 local Players = game:GetService("Players")
-local TAG_NAME = "ScriptOwnerTag"
+local TAG_NAME = "NameTag"
 local CHECK_INTERVAL = 2
 
 local TAG_GROUPS = {
     {
-        Names = { "IdkMyNameBro_012", "Treezz_w", "XDsomeoneX3", },
+        Names = { "IdkMyNameBro_012", "Treezz_w", "XDsomeoneX3" },
         Text = "ChillbyteHD\nOwner",
-        Color = Color3.new(64, 2, 199)
+        Color = Color3.fromRGB(64, 2, 199)
     },
     {
         Names = { "Theo_TheoBenzo" },
         Text = "Theo\nThe GOAT",
-        Color = Color3.new(1, 1, 0)
+        Color = Color3.fromRGB(255, 255, 0)
     },
     {
         Names = { "buratitat7" },
         Text = "Goofy lil\ngoober",
-        Color = Color3.new(1, 1, 0)
+        Color = Color3.fromRGB(255, 255, 0)
     },
 }
 
