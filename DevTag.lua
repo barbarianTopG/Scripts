@@ -8,7 +8,7 @@ local TAG_GROUPS = {
     {
         Names = { "IdkMyNameBro_012", "Treezz_w", "XDsomeoneX3" },
         Text = "ChillbyteHD\nOwner",
-        Color = Color3.fromRGB(64, 2, 199)
+        Color = Color3.fromRGB(86, 8, 255)
     },
     {
         Names = { "Theo_TheoBenzo" },
@@ -30,20 +30,21 @@ for _, group in ipairs(TAG_GROUPS) do
 end
 
 local function createTag(player)
-    if player.Character and player.Character:FindFirstChild("Head") then
-        if player.Character.Head:FindFirstChild(TAG_NAME) then return end
-
+    local success, err = pcall(function()
+        local char = player.Character
+        if not char then return end
+        local head = char:FindFirstChild("Head") or char:WaitForChild("Head", 5)
+        if not head then return end
+        if head:FindFirstChild(TAG_NAME) then return end
         local tagInfo = NameToTag[player.Name]
         if not tagInfo then return end
-
         local billboard = Instance.new("BillboardGui")
         billboard.Name = TAG_NAME
         billboard.Size = UDim2.new(0, 100, 0, 40)
         billboard.StudsOffset = Vector3.new(0, 2.5, 0)
-        billboard.Adornee = player.Character.Head
+        billboard.Adornee = head
         billboard.AlwaysOnTop = true
-        billboard.Parent = player.Character.Head
-
+        billboard.Parent = head
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(1, 0, 1, 0)
         label.BackgroundTransparency = 1
@@ -53,6 +54,9 @@ local function createTag(player)
         label.Text = tagInfo.Text
         label.TextColor3 = tagInfo.Color
         label.Parent = billboard
+    end)
+    if not success then
+        warn("Failed to create NameTag for player "..player.Name..": "..err)
     end
 end
 
