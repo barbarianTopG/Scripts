@@ -1,4 +1,4 @@
--- // ==== Dev Tag thingy ==== \\
+-- /// Developer tag
 
 local Players = game:GetService("Players")
 local TAG_NAME = "ScriptOwnerTag"
