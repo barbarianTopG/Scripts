@@ -18,7 +18,7 @@ local TAG_GROUPS = {
     {
         Names = { "buratitat7" },
         Text = "Goofy lil\ngoober",
-        Color = Color3.new(1, 0, 0)
+        Color = Color3.new(1, 1, 0)
     },
 }
 
