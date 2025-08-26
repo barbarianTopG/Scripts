@@ -119,8 +119,22 @@ local function notif(title, text)
  task.delay(6, function() nFrame:Destroy() end)
 end
 
+local function flashTextLabel(label, duration)
+    local originalColor = label.TextColor3
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    task.delay(duration, function()
+        label.TextColor3 = originalColor
+    end)
+end
+
+DiscordLink.MouseButton1Click:Connect(function()
+    setclipboard("https://discord.gg/XXtB3Vth53")
+    flashTextLabel(DiscordLink, 0.2)
+end)
+
 HowToGet.MouseButton1Click:Connect(function()
- notif("Local Hub", "To get key you have to:\n1.Join our discord.\n2.Go to the \"Keys\" channel.\n3.Copy the key.\n4.Enter the key and enjoy!")
+    notif("Local Hub", "To get key you have to:\n1.Join our discord.\n2.Go to the \"Keys\" channel.\n3.Copy the key.\n4.Enter the key and enjoy!")
+    flashTextLabel(HowToGet, 0.2)
 end)
 
 local hiddenKey = {76,111,99,97,108,45,72,117,98,95,75,101,121,45,49,57,52,55,50,49,57,51,56,49,49,56,51,55,49,57,57,49}
