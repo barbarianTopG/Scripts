@@ -124,7 +124,7 @@ HowToGet.MouseButton1Click:Connect(function()
  notif("Local Hub", "To get key you have to:\n1.Join our discord.\n2.Go to the \"Keys\" channel.\n3.Copy the key.\n4.Enter the key and enjoy!")
 end)
 
-local hiddenKey = {120,111,99,97,108,45,72,117,98,95,75,101,121,45,49,57,52,55,50,49,57,51,56,49,49,56,51,55,49,57,57,49}
+local hiddenKey = {76,111,99,97,108,45,72,117,98,95,75,101,121,45,49,57,52,55,50,49,57,51,56,49,49,56,51,55,49,57,57,49}
 local function decodeKey(t)
  local s = ""
  for i=1,#t do
