@@ -87,4 +87,7 @@ end
 
 EnterButton.MouseButton1Click:Connect(checkKey)
 
-TweenService:Create(Frame,TweenInfo.new(1,Enum.EasingStyle.Quint,Enum.EasingDirection.Out),{Position=UDim2.new(0.5,0,0.5,0)}):Play()
+local tweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+local tweenGoal = { Position = UDim2.new(0.5, 0, 0.5, 0) }
+local tween = TweenService:Create(Frame, tweenInfo, tweenGoal)
+tween:Play()
