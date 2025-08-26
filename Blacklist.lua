@@ -1,8 +1,35 @@
---- // ==== Blacklist ==== \\ ---
+-- /// Da Blacklist
 
-return {
- "jimballll", "Palmen_g", "Milpi_los", "kakish_nega228",
- "Kesha_Tank", "2tallker64", "w3p1k1saa", "sasha2017187",
- "skinr228", "windy38830", "Radiant_Rose380", "miha_gg12c",
- "magistr_shluh", "america_xddd8", "koffe_123455lox", "Scorpion68760", "hshdvdvhc5", "Ismail_05610", "m3nik_13", "kukuhibo5"
-}
+local Players = game:GetService("Players")
+
+local TARGET_USERNAMES = {
+    "User1",
+    "User2" 
+} -- Add more here
+
+local TAG_NAME = "Blacklisted"
+local TargetLookup = {}
+
+for _, name in pairs(TARGET_USERNAMES) do
+    TargetLookup[name] = true
+end
+
+local function Blacklist(player)
+    if player.Character then
+        if player.Character:FindFirstChild("Head") and player.Character.Head:FindFirstChild(TAG_NAME) then
+            return
+        end
+        game:GetService("StarterGui"):SetCore("SendNotification", {
+            Title = "From ChillbyteHD";
+            Text = "You are blacklisted by the owner, sorry! :(";
+            Duration = 3;
+        })
+    end
+end
+
+for _, player in pairs(Players:GetPlayers()) do
+    if TargetLookup[player.Name] then
+        Blacklist(player)
+        return
+    end
+end
