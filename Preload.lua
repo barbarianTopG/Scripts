@@ -4,11 +4,12 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLo
 -- /// DevTag
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/main/DevTag.lua"))()
 
--- /// Key system
+-- /// KeySystem
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
+local StarterGui = game:GetService("StarterGui")
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = PlayerGui
@@ -17,12 +18,11 @@ ScreenGui.ResetOnSpawn = false
 local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(0, 350, 0, 300)
 Frame.Position = UDim2.new(0.5, -175, -1, 0)
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
 Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 Frame.BorderSizePixel = 0
-Frame.AnchorPoint = Vector2.new(0.5, 0.5)
-Frame.Parent = ScreenGui
 Frame.ClipsDescendants = true
-Frame.BackgroundTransparency = 0.1
+Frame.Parent = ScreenGui
 
 local UICorner = Instance.new("UICorner")
 UICorner.CornerRadius = UDim.new(0, 15)
@@ -69,10 +69,14 @@ DiscordLink.Size = UDim2.new(0.8, 0, 0, 30)
 DiscordLink.Position = UDim2.new(0.1, 0, 0.65, 0)
 DiscordLink.Text = "Join our Discord: discord.gg/XXtB3Vth53"
 DiscordLink.TextColor3 = Color3.fromRGB(200, 200, 200)
-DiscordLink.BackgroundTransparency = 1
+DiscordLink.BackgroundTransparency = 0.3
+DiscordLink.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 DiscordLink.Font = Enum.Font.Gotham
 DiscordLink.TextSize = 14
 DiscordLink.Parent = Frame
+local dcCorner = Instance.new("UICorner")
+dcCorner.CornerRadius = UDim.new(0, 6)
+dcCorner.Parent = DiscordLink
 
 local HowToGet = Instance.new("TextButton")
 HowToGet.Size = UDim2.new(0.8, 0, 0, 30)
@@ -85,38 +89,11 @@ HowToGet.TextSize = 14
 HowToGet.Parent = Frame
 
 local function notif(title, text)
- local nFrame = Instance.new("Frame")
- nFrame.Size = UDim2.new(0, 300, 0, 200)
- nFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
- nFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
- nFrame.Parent = ScreenGui
- local nc = Instance.new("UICorner")
- nc.CornerRadius = UDim.new(0, 12)
- nc.Parent = nFrame
-
- local nTitle = Instance.new("TextLabel")
- nTitle.Size = UDim2.new(1, 0, 0, 40)
- nTitle.BackgroundTransparency = 1
- nTitle.Text = title
- nTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
- nTitle.Font = Enum.Font.GothamBold
- nTitle.TextSize = 18
- nTitle.Parent = nFrame
-
- local nText = Instance.new("TextLabel")
- nText.Size = UDim2.new(1, -20, 1, -50)
- nText.Position = UDim2.new(0, 10, 0, 40)
- nText.BackgroundTransparency = 1
- nText.Text = text
- nText.TextWrapped = true
- nText.TextColor3 = Color3.fromRGB(220, 220, 220)
- nText.Font = Enum.Font.Gotham
- nText.TextSize = 14
- nText.TextXAlignment = Enum.TextXAlignment.Left
- nText.TextYAlignment = Enum.TextYAlignment.Top
- nText.Parent = nFrame
-
- task.delay(6, function() nFrame:Destroy() end)
+    StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = 5
+    })
 end
 
 local function flashTextLabel(label, duration)
@@ -130,30 +107,37 @@ end
 DiscordLink.MouseButton1Click:Connect(function()
     setclipboard("https://discord.gg/XXtB3Vth53")
     flashTextLabel(DiscordLink, 0.2)
+    notif("Local Hub", "Discord invite copied to clipboard!")
 end)
 
 HowToGet.MouseButton1Click:Connect(function()
-    notif("Local Hub", "To get key you have to:\n1.Join our discord.\n2.Go to the \"Keys\" channel.\n3.Copy the key.\n4.Enter the key and enjoy!")
+    notif("Local Hub", "To get key:\n1. Join our discord\n2. Copy the key\n3. Enter it here!")
     flashTextLabel(HowToGet, 0.2)
 end)
 
+-- Hidden Key
 local hiddenKey = {76,111,99,97,108,45,72,117,98,95,75,101,121,45,49,57,52,55,50,49,57,51,56,49,49,56,51,55,49,57,57,49}
 local function decodeKey(t)
- local s = ""
- for i=1,#t do
-  s = s..string.char(t[i])
- end
- return s
+    local s = ""
+    for i=1,#t do s = s..string.char(t[i]) end
+    return s
 end
 local realKey = decodeKey(hiddenKey)
 
+local keyEntered = false
 EnterButton.MouseButton1Click:Connect(function()
- if TextBox.Text == realKey then
-  Frame:Destroy()
- else
-  notif("Local Hub", "Invalid Key!")
- end
+    if TextBox.Text == realKey then
+        Frame:Destroy()
+        keyEntered = true
+        notif("Local Hub", "Key correct!")
+    else
+        notif("Local Hub", "Invalid Key!")
+    end
 end)
 
 local tween = TweenService:Create(Frame, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -175, 0.5, 0)})
 tween:Play()
+
+while not keyEntered do task.wait() end
+
+notif("Success!", "Valid Key, loading main script...")
