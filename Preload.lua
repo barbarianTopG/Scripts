@@ -4,7 +4,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLo
 -- /// DevTag
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/main/DevTag.lua"))()
 
--- /// KeySystem
+-- /// Key System
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local Player = Players.LocalPlayer
@@ -89,19 +89,13 @@ HowToGet.TextSize = 14
 HowToGet.Parent = Frame
 
 local function notif(title, text)
-    StarterGui:SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = 5
-    })
+    StarterGui:SetCore("SendNotification", {Title = title, Text = text, Duration = 5})
 end
 
 local function flashTextLabel(label, duration)
     local originalColor = label.TextColor3
     label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    task.delay(duration, function()
-        label.TextColor3 = originalColor
-    end)
+    task.delay(duration, function() label.TextColor3 = originalColor end)
 end
 
 DiscordLink.MouseButton1Click:Connect(function()
@@ -115,7 +109,6 @@ HowToGet.MouseButton1Click:Connect(function()
     flashTextLabel(HowToGet, 0.2)
 end)
 
--- Hidden Key
 local hiddenKey = {76,111,99,97,108,45,72,117,98,95,75,101,121,45,49,57,52,55,50,49,57,51,56,49,49,56,51,55,49,57,57,49}
 local function decodeKey(t)
     local s = ""
@@ -135,9 +128,7 @@ EnterButton.MouseButton1Click:Connect(function()
     end
 end)
 
-local tween = TweenService:Create(Frame, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -175, 0.5, 0)})
-tween:Play()
+TweenService:Create(Frame, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
 
 while not keyEntered do task.wait() end
-
-notif("Success!", "Valid Key, loading main script...")
+notif("Success!", "Now loading main script...")
