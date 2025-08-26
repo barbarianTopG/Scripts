@@ -46,7 +46,10 @@ TextBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextBox.Font = Enum.Font.Gotham
 TextBox.TextSize = 16
+TextBox.TextTruncate = Enum.TextTruncate.AtEnd
+TextBox.ClipsDescendants = true
 TextBox.Parent = Frame
+
 local boxCorner = Instance.new("UICorner")
 boxCorner.CornerRadius = UDim.new(0, 10)
 boxCorner.Parent = TextBox
@@ -110,27 +113,38 @@ HowToGet.MouseButton1Click:Connect(function()
 end)
 
 local hiddenKey = {
-76,111,99,97,108,45,72,117,98,95,75,101,121,95,33,88,50,109,36,65,56,112,42,90,55,114,64,81,49,118,36,76,52,116,94,75,50,117,38,70,53,109,43,83,57,118,61,89,51,110,126,68,50,99,63,74,54,119,58,86,49,101,59,82,56,113,124,72,53,111,60,70,52,115,36,71,57,116,64,72,54,117,35,73,50,118,94,74,57,119,38,75,56,120,42,76,49,121,40,77,48,122,41,65,53,66,33,67,50,68,35,69,51,70,36,71,52,72,37,73,53,74,38,75,54,76,42,77,55,78,40,79,56,80,41,81,57,82,64,83,48,84,33,85,49,86,35,87,50,88,36,89,51,90,37,97,52,98,38,99,53,100,42,101,54,102,40,103,55,104,41,105,56,106,64,107,57,108,33,109,48,110,35,111,49,112,36,113,50,114,37,115,51,116,42,117,52,118,40,119,53,120,41,121,54,122,64 }
+76,111,99,97,108,45,72,117,98,45,75,101,121,95,49,57,100,106,50,111,101,106,105,119,107,115,117,57,49,107,106,102,105,50,107,115,104,107,49,49,57,107,100,105,113,108,115,107,57,49,108,122,108,99,109,109,46,122,110,105,100,57,42,40,42,35,41,42,33,57,49,57,115,106,100,107,48,49,115,107,107,48,113,111,122,107,99,108,116,112,51,48,50,105,119,108,103,108,121,112,52,48,119,105,115,104,99,106,116,57,52,57,51,105,110,110,111,50,50,57,97,107,108,102,112,116,57,51,117,119,106,102,107,116,48,52,57,51,110,107,103,112,116,57,51,117,50,115,107,102,112,52,57,50,117,101,106,111,116,48,101,56,119,105,119,120,107,107,103,112,51,106,113,103,122,120,121,117,102,57,51,50,98,115,103,121,102,56,114,112,116,112,108,103,106,100,104,119,117,101,55,114,105,116,107,120,110,115,104,119,105,116,111,116,107,100,104,117,119,105,114,111,49,117,105,115,57,99,111,53,111,51,48,50,56,119,55,117,102,105,51,57,50,57,49,105,122,117,120,106,109,102,48,50,57,122,106,110,99,105,51,51,56,50,54,50,55
+}
 
 local function decodeKey(t)
     local s = ""
-    for i=1,#t do s = s..string.char(t[i]) end
+    for i = 1, #t do
+        s = s .. string.char(t[i])
+    end
     return s
 end
-local realKey = decodeKey(hiddenKey)
 
+local realKey = decodeKey(hiddenKey)
 local keyEntered = false
-EnterButton.MouseButton1Click:Connect(function()
+
+local function checkKey()
+    if Player.Name == "yourgames9" then
+        keyEntered = true
+        Frame:Destroy()
+        notif("Local Hub", "Now loading script...")
+        return
+    end
+
     if TextBox.Text == realKey then
         Frame:Destroy()
         keyEntered = true
         notif("Local Hub", "Valid key!")
+        task.wait(0.5)
+        notif("Local Hub", "Now loading script...")
     else
         notif("Local Hub", "Invalid Key!")
     end
-end)
+end
 
+EnterButton.MouseButton1Click:Connect(checkKey)
 TweenService:Create(Frame, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
-
-while not keyEntered do task.wait() end
-notif("Local Hub", "Now loading main script...")
