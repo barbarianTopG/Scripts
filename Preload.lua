@@ -124,7 +124,7 @@ EnterButton.MouseButton1Click:Connect(function()
     if TextBox.Text == realKey then
         Frame:Destroy()
         keyEntered = true
-        notif("Local Hub", "Key correct!")
+        notif("Local Hub", "Valid key!")
     else
         notif("Local Hub", "Invalid Key!")
     end
@@ -133,4 +133,4 @@ end)
 TweenService:Create(Frame, TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
 
 while not keyEntered do task.wait() end
-notif("Success!", "Now loading main script...")
+notif("Local Hub", "Now loading main script...")
