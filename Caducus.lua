@@ -190,7 +190,7 @@ end
 
 task.wait(8)
 
-loadstring(game:HttpGet("https://pastebin.com/raw/XJeBNe0s"))()
+loadstring(game:HttpGet("https://pastebin.com/raw/XJeBNe0s"))() 
 local LocalPlayer = game.Players.LocalPlayer
 
 local function getGlove()
@@ -209,15 +209,16 @@ local function getGlove()
 end
 
 local function KillTarget(targetPlr)
+	local glove, event = getGlove()
+	if not (glove and event) then return end
 	if targetPlr and targetPlr.Character then
 		local hum = targetPlr.Character:FindFirstChildOfClass("Humanoid")
-		if hum then
+		if hum and hum.Health > 0 then
 			spawn(function()
-				for i=1,10 do
-					hum.Health = hum.Health - (hum.MaxHealth/10)
-					task.wait(0.1)
+				while hum.Parent and hum.Health > 0 do
+					event:FireServer("slash", targetPlr.Character, Vector3.new(0,-math.huge,0))
+					task.wait(0.3)
 				end
-				hum.Health = hum.MaxHealth
 			end)
 		end
 	end
@@ -230,8 +231,11 @@ function MagnitudeDamage(Part, Magnitude, MinimumDamage, MaximumDamage, KnockBac
 		if hum and plr and plr ~= LocalPlayer then
 			local head = c:FindFirstChild("Torso") or c:FindFirstChild("HumanoidRootPart")
 			if head and (head.Position - Part.Position).magnitude <= Magnitude then
+				
 				KillTarget(plr)
 			end
 		end
 	end
 end
+
+warn("Loaded Caducus, enjoy!")
