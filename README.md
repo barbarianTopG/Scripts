@@ -1,1 +1,1 @@
-# Local Hub - Storage
+# Local Hub / Storage
