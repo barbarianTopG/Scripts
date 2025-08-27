@@ -1,18 +1,15 @@
---- // ==== Services ==== \ ---
 local Players             = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService        = game:GetService("TweenService")
 local plr                 = Players.LocalPlayer
 local playerGui           = plr:WaitForChild("PlayerGui")
 
---- // ==== ScreenGui ==== \ ---
 local gui                 = Instance.new("ScreenGui")
 gui.Name                  = "ByteKeyboard"
 gui.ResetOnSpawn           = false
 gui.Parent                 = playerGui
 gui.ZIndexBehavior         = Enum.ZIndexBehavior.Sibling
 
---- // ==== Scaling ==== \ ---
 local SCALE_KEYS           = 0.7
 local SCALE_OVERALL        = 1 / 1.25
 local BASE_KEYBOARD_WIDTH  = 560
@@ -26,7 +23,6 @@ local BODY_HEIGHT          = BASE_BODY_HEIGHT * SCALE_OVERALL
 local KEY_HEIGHT           = BASE_KEY_HEIGHT * SCALE_KEYS
 local KEY_SPACING          = BASE_KEY_SPACING * SCALE_KEYS
 
---- // ==== Colors ==== \ ---
 local baseColor            = Color3.fromRGB(30, 30, 45)
 local accentColor          = Color3.fromRGB(90, 50, 255)
 local accentHover          = Color3.fromRGB(110, 70, 255)
@@ -37,7 +33,6 @@ local dangerHover          = Color3.fromRGB(255, 90, 90)
 local selectGreen          = Color3.fromRGB(40, 200, 100)
 local shortcutPurple       = Color3.fromRGB(90, 50, 255)
 
---- // ==== Utilities ==== \ ---
 local function makeHover(btn, normal, hover)
     btn.MouseEnter:Connect(function() btn.BackgroundColor3 = hover end)
     btn.MouseLeave:Connect(function() btn.BackgroundColor3 = normal end)
@@ -51,7 +46,6 @@ local function makePressGlow(btn)
     end)
 end
 
---- // ==== Main Frame ==== \ ---
 local mainFrame           = Instance.new("Frame")
 mainFrame.Size            = UDim2.new(0, KEYBOARD_WIDTH, 0, TITLE_HEIGHT + BODY_HEIGHT - 5)
 mainFrame.Position        = UDim2.new(0.5, -KEYBOARD_WIDTH/2, 0.42, -(TITLE_HEIGHT+BODY_HEIGHT)/2)
@@ -123,14 +117,13 @@ closeRound.Parent           = closeBtn
 makeHover(closeBtn, dangerColor, dangerHover)
 makePressGlow(closeBtn)
 
---- // ==== Body ==== \ ---
 local body                 = Instance.new("Frame")
 body.Size                  = UDim2.new(1,0,0,BODY_HEIGHT)
 body.Position              = UDim2.new(0,0,0,TITLE_HEIGHT)
 body.BackgroundTransparency = 1
 body.Parent                = mainFrame
 
---- // ==== Key Map ==== \ ---
+-- /// Keys
 local keyMap = {
     {"1","2","3","4","5","6","7","8","9","0","-","=","Backspace"},
     {"Tab","Q","W","E","R","T","Y","U","I","O","P","[","]","\\"},
@@ -156,7 +149,7 @@ local keyNameToEnum = {
     ["F9"] = "F9"
 }
 
---- // ==== Functions ==== \ ---
+-- // Functions
 local selecting = false
 local plusStroke
 
@@ -225,7 +218,7 @@ local function createShortcut(keyText)
         btn:Destroy()
     end)
 
-    setSelecting(false) -- reset after adding shortcut
+    setSelecting(false)
 end
 
 local function getKeyWidth(key)
