@@ -1,4 +1,4 @@
--- /// ==== Kilobyte Keyboard ==== \\\
+-- /// Kilobyte Keyboard \\\
 
 local Players             = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
