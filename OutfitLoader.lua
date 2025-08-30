@@ -79,15 +79,19 @@ end
 tweenIn:Play()
 
 Button1.MouseButton1Click:Connect(function()
+  for EpicLoaderLoop = 0, 1, 1 do
     Send("-gh 417457461, 5316539421, 108224319902592, 82404150383568  100856932339214 "..tostring(Ez))
-    task.wait(2.5)
+    task.wait(2.55)
     Send("-sh "..tostring(Ez))
     closeGui()
+    end
 end)
 
 Button2.MouseButton1Click:Connect(function()
+  for EpicLoaderLoop = 0, 1, 1 do
     Send("-gh 15535076528, 18833520599, 14069764985, 87776845004507, 95039184904088, 18347819042 "..tostring(Ez))
-    task.wait(2.5)
+    task.wait(2.55)
     Send("-sh "..tostring(Ez))
     closeGui()
+    end
 end)
