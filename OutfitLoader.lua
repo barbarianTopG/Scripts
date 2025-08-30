@@ -66,10 +66,12 @@ end
 
 Button1.MouseButton1Click:Connect(function()
 	Send("/e -gh 417457461, 5316539421, 108224319902592, 82404150383568 100856932339214 ")
+	Send("/e -sh")
 	closeGui()
 end)
 
 Button2.MouseButton1Click:Connect(function()
 	Send("/e -gh 15535076528, 18833520599, 14069764985, 87776845004507, 95039184904088, 18347819042 ")
+	Send("/e -sh")
 	closeGui()
 end)
