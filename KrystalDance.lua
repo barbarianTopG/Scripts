@@ -1,4 +1,4 @@
---[[ Places that have PermaDeath support only, also creds to MrY7zz for kdv3 and mzha for working Reanimation ]]
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Blacklist.lua")
 
 local Place = game.PlaceId
 
