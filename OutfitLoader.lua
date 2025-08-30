@@ -2,6 +2,10 @@ local TweenService = game:GetService("TweenService")
 local Player = game.Players.LocalPlayer
 local PlayerGui = Player:WaitForChild("PlayerGui")
 
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
 local Ez = " ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -75,14 +79,13 @@ end
 tweenIn:Play()
 
 Button1.MouseButton1Click:Connect(function()
-    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-gh 417457461, 5316539421, 108224319902592, 82404150383568  100856932339214 ")..tostring(Ez))
-    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-sh")..tostring(Ez))
+    Send("-gh 417457461, 5316539421, 108224319902592, 82404150383568  100856932339214 "..tostring(Ez))
+    Send("-sh "..tostring(Ez))
     closeGui()
 end)
 
 Button2.MouseButton1Click:Connect(function()
-    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-gh 15535076528, 18833520599, 14069764985, 87776845004507, 95039184904088, 18347819042 ")..tostring(Ez))
-  
-  game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-sh")..tostring(Ez))
+    Send("-gh 15535076528, 18833520599, 14069764985, 87776845004507, 95039184904088, 18347819042 "..tostring(Ez))
+    Send("-sh "..tostring(Ez))
     closeGui()
 end)
