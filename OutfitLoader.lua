@@ -89,7 +89,7 @@ end)
 
 Button2.MouseButton1Click:Connect(function()
   for EpicLoaderLoop = 0, 1, 1 do
-    Send("-gh 15535076528, 18833520599, 14069764985, 87776845004507, 95039184904088, 18347819042 "..tostring(Ez))
+    Send("-gh 15535076528, 18833520599, 14069764985, 95039184904088, 18347819042 "..tostring(Ez))
     task.wait(2.55)
     Send("-sh "..tostring(Ez))
     closeGui()
