@@ -6,6 +6,8 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Blacklist.lua")
+
 function notify(title,text,duration)
  StarterGui:SetCore("SendNotification",{Title=title,Text=text,Duration=duration or 5})
 end
