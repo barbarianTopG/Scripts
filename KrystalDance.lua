@@ -6,9 +6,16 @@ function notify(title, text, duration)
     })
 end
 
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
 notify("Local Hub", "Itz epik time")
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Reanimate.lua"))()
+task.delay(6.25, function()
+    Send("/e -net")
+end)
 task.wait(8)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 task.wait(2)
