@@ -4,8 +4,6 @@ local TweenService        = game:GetService("TweenService")
 local plr                 = Players.LocalPlayer
 local playerGui           = plr:WaitForChild("PlayerGui")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Blacklist.lua")
-
 local gui                 = Instance.new("ScreenGui")
 gui.Name                  = "ByteKeyboard"
 gui.ResetOnSpawn           = false
