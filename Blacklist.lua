@@ -3,7 +3,7 @@
 local Players = game:GetService("Players")
 
 local TARGET_USERNAMES = {
-    "User1",
+    "modsmaniac_com41",
     "User2" 
 } -- Add more here
 
