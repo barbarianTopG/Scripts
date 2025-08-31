@@ -6,7 +6,7 @@ function notify(title, text, duration)
     })
 end
 
-notify("Local Hub", "If people cannot see this use a reanimation, e.g: Just a Baseplate working reanimation")
+notify("Local Hub", "Itz epik time")
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 task.wait(2)
