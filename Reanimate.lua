@@ -19,7 +19,8 @@ local function Send(message)
 end
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/src/packages/FunctionPack.lua"))()
-
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/src/lib/Reanimate.lua"))()
-task.wait(6.25)
-Send("/e -net")
+
+task.delay(6.25, function()
+	Send("/e -net")
+end)
