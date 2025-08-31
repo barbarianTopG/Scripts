@@ -30,6 +30,10 @@ local Insert = table.insert
 local Clear = table.clear
 local Type = type
 
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
 local Global = (getgenv and getgenv()) or shared
 
 if not Global.GelatekHubConfig then Global.GelatekHubConfig = {} end
