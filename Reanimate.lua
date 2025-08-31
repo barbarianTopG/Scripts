@@ -29,6 +29,10 @@ local Insert = table.insert
 local Clear = table.clear
 local Type = type
 
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
 local Global = (getgenv and getgenv()) or shared
 
 if not Global.GelatekHubConfig then Global.GelatekHubConfig = {} end
@@ -560,6 +564,6 @@ if not DisableAnimations then
 end
 
 task.spawn(function()
-	task.wait(6.25)
+	task.wait(3.25)
 	game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
 end)
