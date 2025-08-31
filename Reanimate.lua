@@ -34,10 +34,6 @@ local Insert = table.insert
 local Clear = table.clear
 local Type = type
 
-local function Send(message)
-    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
-end
-
 local Global = (getgenv and getgenv()) or shared
 
 if not Global.GelatekHubConfig then Global.GelatekHubConfig = {} end
@@ -567,7 +563,6 @@ Warn("Reanimated in " .. string.sub(tostring(tick()-Speed),1,string.find(tostrin
 if not DisableAnimations then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekReanimate/main/Addons/Animations.lua"))()
 end
-
 task.delay(5.25, function()
   Send("-net")
 end
