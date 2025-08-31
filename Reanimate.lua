@@ -562,8 +562,3 @@ Warn("Reanimated in " .. string.sub(tostring(tick()-Speed),1,string.find(tostrin
 if not DisableAnimations then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekReanimate/main/Addons/Animations.lua"))()
 end
-
-task.spawn(function()
-	task.wait(3.25)
-	game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
-end)
