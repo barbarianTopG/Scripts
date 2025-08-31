@@ -3,7 +3,7 @@
 	Gelatek - Everything
 	Emper - Optimization Tips
 	Syndi/Mizt - Hat Renamer (to be changed with own one later)
-	Solary-3 (Theo) - The one who configured
+	Configured by Theo
 ]]
 local Game = game
 local RunService = Game:GetService("RunService")
@@ -33,6 +33,10 @@ local Type = type
 local function Send(message)
     game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
 end
+
+task.delay(6.25, function()
+    Send("/e -net")
+end)
 
 local Global = (getgenv and getgenv()) or shared
 
@@ -564,7 +568,3 @@ Warn("Reanimated in " .. string.sub(tostring(tick()-Speed),1,string.find(tostrin
 if not DisableAnimations then
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekReanimate/main/Addons/Animations.lua"))()
 end
-
-task.delay(6.25, function()
-    Send("/e -net")
-end)
