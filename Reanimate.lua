@@ -22,5 +22,5 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHu
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekHub/main/src/lib/Reanimate.lua"))()
 
 task.delay(6.25, function()
-	Send("-net
+	Send("-net")
 end)
