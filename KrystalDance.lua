@@ -1,5 +1,3 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Blacklist.lua")
-
 local Place = game.PlaceId
 
 if Place == 88308889239232 or Place == 17574618959 then
