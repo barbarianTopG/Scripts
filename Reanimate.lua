@@ -32,6 +32,14 @@ local Type = type
 
 local Global = (getgenv and getgenv()) or shared
 
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
+task.delay(6.25, Function()
+  Send("-net")
+end)
+
 if not Global.GelatekHubConfig then Global.GelatekHubConfig = {} end
 local PermanentDeath = Global.GelatekHubConfig["Permanent Death"]  or true
 local CollideFling = Global.GelatekHubConfig["Torso Fling"]  or true
