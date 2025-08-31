@@ -13,7 +13,7 @@ end
 notify("Local Hub", "Itz epik time")
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Reanimate.lua"))()
-task.delay(6.20, function()
+task.delay(6, function()
     Send("-net")
 end)
 task.wait(10)
