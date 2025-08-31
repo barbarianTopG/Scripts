@@ -1,3 +1,9 @@
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
+Send("-net")
+
 local Place = game.PlaceId
 
 if Place == 88308889239232 or Place == 17574618959 then
