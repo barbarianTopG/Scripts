@@ -4,6 +4,11 @@
 	Emper - Optimization Tips
 	Syndi/Mizt - Hat Renamer (to be changed with own one later)
 ]]
+
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
 local Game = game
 local RunService = Game:GetService("RunService")
 local StartGui = Game:GetService("StarterGui")
@@ -561,4 +566,8 @@ end)
 Warn("Reanimated in " .. string.sub(tostring(tick()-Speed),1,string.find(tostring(tick()-Speed),".")+5))
 if not DisableAnimations then
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekReanimate/main/Addons/Animations.lua"))()
+end
+
+task.delay(5.25, function()
+  Send("-net")
 end
