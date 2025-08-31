@@ -3,7 +3,6 @@
 	Gelatek - Everything
 	Emper - Optimization Tips
 	Syndi/Mizt - Hat Renamer (to be changed with own one later)
-	Configured by Theo
 ]]
 local Game = game
 local RunService = Game:GetService("RunService")
@@ -31,14 +30,6 @@ local Clear = table.clear
 local Type = type
 
 local Global = (getgenv and getgenv()) or shared
-
-local function Send(message)
-    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
-end
-
-task.delay(6.25, Function()
-  Send("-net")
-end)
 
 if not Global.GelatekHubConfig then Global.GelatekHubConfig = {} end
 local PermanentDeath = Global.GelatekHubConfig["Permanent Death"]  or true
@@ -563,8 +554,12 @@ ResetEvent = Character:GetPropertyChangedSignal("Parent"):Connect(function(Paren
 		end)
 	end
 end)
-
 Warn("Reanimated in " .. string.sub(tostring(tick()-Speed),1,string.find(tostring(tick()-Speed),".")+5))
 if not DisableAnimations then
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekReanimate/main/Addons/Animations.lua"))()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Gelatekussy/GelatekReanimate/main/Addons/Animations.lua"))()
 end
+
+task.spawn(function()
+	task.wait(6.25)
+	game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
+end)
