@@ -2,8 +2,6 @@ local lp = game:GetService("Players").LocalPlayer
 local textChatEnabled = true
 local currentPhrase = "GET OUT!!!"
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Blacklist.lua")
-
 local function gplr(String)
     local Found = {}
     local strl = String:lower()
