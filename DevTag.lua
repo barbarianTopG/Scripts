@@ -20,6 +20,11 @@ local TAG_GROUPS = {
         Text = "Goofy lil\ngoober",
         Color = Color3.fromRGB(255, 255, 0)
     },
+    {
+        Names = { "yourgames9" },
+        Text = "Zombie",
+        Color = Color3.fromRGB(40, 168, 8)
+    },
 }
 
 local NameToTag = {}
