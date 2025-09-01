@@ -1,5 +1,3 @@
--- /// Tags
-
 local Players = game:GetService("Players")
 local TAG_NAME = "NameTag"
 local CHECK_INTERVAL = 2
@@ -38,11 +36,18 @@ local function createTag(player)
     local success, err = pcall(function()
         local char = player.Character
         if not char then return end
-        local head = char:FindFirstChild("Head") or char:WaitForChild("Head", 5)
+        
+        local head = char:FindFirstChild("Head")
+        if head and head:FindFirstChild(TAG_NAME) then
+            head:FindFirstChild(TAG_NAME):Destroy()
+        end
+        
+        head = head or char:WaitForChild("Head")
         if not head then return end
-        if head:FindFirstChild(TAG_NAME) then return end
+        
         local tagInfo = NameToTag[player.Name]
         if not tagInfo then return end
+        
         local billboard = Instance.new("BillboardGui")
         billboard.Name = TAG_NAME
         billboard.Size = UDim2.new(0, 100, 0, 40)
@@ -50,6 +55,7 @@ local function createTag(player)
         billboard.Adornee = head
         billboard.AlwaysOnTop = true
         billboard.Parent = head
+        
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(1, 0, 1, 0)
         label.BackgroundTransparency = 1
@@ -60,21 +66,24 @@ local function createTag(player)
         label.TextColor3 = tagInfo.Color
         label.Parent = billboard
     end)
+    
     if not success then
         warn("Failed to create NameTag for player "..player.Name..": "..err)
     end
 end
 
-task.spawn(function()
-    while true do
-        for _, player in pairs(Players:GetPlayers()) do
-            if NameToTag[player.Name] then
-                createTag(player)
-            end
+for _, player in pairs(Players:GetPlayers()) do
+    if NameToTag[player.Name] then
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createTag(player)
+        end)
+        
+        if player.Character then
+            createTag(player)
         end
-        task.wait(CHECK_INTERVAL)
     end
-end)
+end
 
 Players.PlayerAdded:Connect(function(player)
     if NameToTag[player.Name] then
@@ -82,5 +91,15 @@ Players.PlayerAdded:Connect(function(player)
             task.wait(1)
             createTag(player)
         end)
+    end
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    if player.Character and player.Character:FindFirstChild("Head") then
+        local head = player.Character.Head
+        local tag = head:FindFirstChild(TAG_NAME)
+        if tag then
+            tag:Destroy()
+        end
     end
 end)
