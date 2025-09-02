@@ -22,7 +22,7 @@ local function Blacklist(player)
         end
         game:GetService("StarterGui"):SetCore("SendNotification", {
             Title = "From ChillbyteHD";
-            Text = "You are blacklisted by the owner, sorry! :(";
+            Text = "You are blacklisted, stay mad L.";
             Duration = 3;
         })
     end
