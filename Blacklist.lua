@@ -5,7 +5,7 @@ local Players = game:GetService("Players")
 local TARGET_USERNAMES = {
     "modsmaniac_com41",
     "teamkiller3340",
-    ["faroukhaddidevelope2"]
+    "faroukhaddidevelope2"
 } -- Add more here
 
 local TAG_NAME = "Blacklisted"
