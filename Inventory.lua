@@ -11,26 +11,38 @@ screenGui.Name = "CustomHotbar"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = playerGui
 
+local notch = Instance.new("Frame")
+notch.Name = "Notch"
+notch.AnchorPoint = Vector2.new(0.5, 0)
+notch.Position = UDim2.new(0.5, 0, 0, 0)
+notch.Size = UDim2.new(0, 210, 0, 30)
+notch.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+notch.BorderSizePixel = 0
+notch.Parent = screenGui
+
+local notchCorner = Instance.new("UICorner", notch)
+notchCorner.CornerRadius = UDim.new(0, 12)
+
 local hotbarBG = Instance.new("Frame")
 hotbarBG.Name = "HotbarBG"
 hotbarBG.AnchorPoint = Vector2.new(0.5, 1)
-hotbarBG.Position = UDim2.new(0.5, 0, 1, -10)
-hotbarBG.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+hotbarBG.Position = UDim2.new(0.5, 0, 1, -20) 
+hotbarBG.BackgroundColor3 = Color3.fromRGB(45, 25, 65)
 hotbarBG.BorderSizePixel = 0
 hotbarBG.Parent = screenGui
 
 local hotbarCorner = Instance.new("UICorner", hotbarBG)
-hotbarCorner.CornerRadius = UDim.new(0, 8)
+hotbarCorner.CornerRadius = UDim.new(0, 20) 
 
 local hotbarPadding = Instance.new("UIPadding", hotbarBG)
-hotbarPadding.PaddingLeft = UDim.new(0, 8)
-hotbarPadding.PaddingRight = UDim.new(0, 8)
-hotbarPadding.PaddingTop = UDim.new(0, 8)
-hotbarPadding.PaddingBottom = UDim.new(0, 8)
+hotbarPadding.PaddingLeft = UDim.new(0, 12)
+hotbarPadding.PaddingRight = UDim.new(0, 12)
+hotbarPadding.PaddingTop = UDim.new(0, 12)
+hotbarPadding.PaddingBottom = UDim.new(0, 12)
 
 local hotbarList = Instance.new("UIListLayout", hotbarBG)
 hotbarList.FillDirection = Enum.FillDirection.Horizontal
-hotbarList.Padding = UDim.new(0, 8)
+hotbarList.Padding = UDim.new(0, 12)
 hotbarList.HorizontalAlignment = Enum.HorizontalAlignment.Center
 hotbarList.SortOrder = Enum.SortOrder.LayoutOrder
 
@@ -38,46 +50,47 @@ local function resizeHotbarBg()
 	local contentSize = hotbarList.AbsoluteContentSize
 	local width = contentSize.X + hotbarPadding.PaddingLeft.Offset + hotbarPadding.PaddingRight.Offset
 	local height = contentSize.Y + hotbarPadding.PaddingTop.Offset + hotbarPadding.PaddingBottom.Offset
-	if width < 100 then width = 100 end
-	if height < 48 then height = 48 end
+	if width < 120 then width = 120 end
+	if height < 60 then height = 60 end
 	hotbarBG.Size = UDim2.new(0, width, 0, height)
 end
 hotbarList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(resizeHotbarBg)
 
 local SLOTS_COUNT = 4
-local SLOT_SIZE = 56
+local SLOT_SIZE = 60
 local slots = {}
 
 for i = 1, SLOTS_COUNT do
 	local slot = Instance.new("TextButton")
 	slot.Name = "Slot"..i
 	slot.Size = UDim2.new(0, SLOT_SIZE, 0, SLOT_SIZE)
-	slot.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	slot.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
 	slot.BorderSizePixel = 0
 	slot.AutoButtonColor = true
 	slot.Text = ""
 	slot.Parent = hotbarBG
 
 	local slotCorner = Instance.new("UICorner", slot)
-	slotCorner.CornerRadius = UDim.new(0, 6)
-
+	slotCorner.CornerRadius = UDim.new(0, 14)
+	
 	local slotStroke = Instance.new("UIStroke", slot)
-	slotStroke.Color = Color3.fromRGB(90, 90, 90)
-	slotStroke.Thickness = 2
+	slotStroke.Color = Color3.fromRGB(140, 70, 200)
+	slotStroke.Thickness = 2.5 
 
 	local icon = Instance.new("ImageLabel", slot)
 	icon.Name = "Icon"
-	icon.Size = UDim2.new(0, 36, 0, 36)
-	icon.Position = UDim2.new(0.5, -18, 0, 6)
+	icon.Size = UDim2.new(0, 40, 0, 40) 
+	icon.Position = UDim2.new(0.5, -20, 0, 6)
 	icon.BackgroundTransparency = 1
 	icon.Image = ""
-
+	icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+	
 	local nameLabel = Instance.new("TextLabel", slot)
 	nameLabel.Name = "Name"
 	nameLabel.Size = UDim2.new(1, -6, 0, 14)
 	nameLabel.Position = UDim2.new(0, 3, 1, -18)
 	nameLabel.BackgroundTransparency = 1
-	nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+	nameLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
 	nameLabel.Font = Enum.Font.Gotham
 	nameLabel.TextSize = 12
 	nameLabel.Text = ""
@@ -89,65 +102,101 @@ end
 local invButton = Instance.new("TextButton")
 invButton.Name = "InventoryButton"
 invButton.AnchorPoint = Vector2.new(0.5, 1)
-invButton.Position = UDim2.new(0.5, 0, 1, -90)
-invButton.Size = UDim2.new(0, 120, 0, 36)
-invButton.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+invButton.Position = UDim2.new(0.5, 0, 1, -100)
+invButton.Size = UDim2.new(0, 140, 0, 40) 
+invButton.BackgroundColor3 = Color3.fromRGB(90, 50, 130)
 invButton.BorderSizePixel = 0
 invButton.Text = "Inventory"
 invButton.Font = Enum.Font.GothamBold
-invButton.TextSize = 14
+invButton.TextSize = 16 
 invButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 invButton.Parent = screenGui
 
 local invStroke = Instance.new("UIStroke", invButton)
-invStroke.Color = Color3.fromRGB(200, 200, 200)
-invStroke.Thickness = 2
+invStroke.Color = Color3.fromRGB(160, 90, 220)
+invStroke.Thickness = 2.5
 
 local invCorner = Instance.new("UICorner", invButton)
-invCorner.CornerRadius = UDim.new(0, 8)
+invCorner.CornerRadius = UDim.new(0, 12) 
 
 local inventoryFrame = Instance.new("Frame")
 inventoryFrame.Name = "InventoryFrame"
 inventoryFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-inventoryFrame.Position = UDim2.new(0.5, 0, 0.25, 0)
-inventoryFrame.Size = UDim2.new(0, 360, 0, 220)
-inventoryFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+inventoryFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+inventoryFrame.Size = UDim2.new(0, 380, 0, 460)
+inventoryFrame.BackgroundColor3 = Color3.fromRGB(45, 25, 65)
 inventoryFrame.BorderSizePixel = 0
 inventoryFrame.Visible = false
 inventoryFrame.Parent = screenGui
 
 local invCorner2 = Instance.new("UICorner", inventoryFrame)
-invCorner2.CornerRadius = UDim.new(0, 10)
+invCorner2.CornerRadius = UDim.new(0, 20) 
 
 local invPadding = Instance.new("UIPadding", inventoryFrame)
-invPadding.PaddingLeft = UDim.new(0, 8)
-invPadding.PaddingTop = UDim.new(0, 8)
-invPadding.PaddingRight = UDim.new(0, 8)
-invPadding.PaddingBottom = UDim.new(0, 8)
+invPadding.PaddingLeft = UDim.new(0, 16)
+invPadding.PaddingTop = UDim.new(0, 16)
+invPadding.PaddingRight = UDim.new(0, 16)
+invPadding.PaddingBottom = UDim.new(0, 16)
+
+local titleBar = Instance.new("Frame", inventoryFrame)
+titleBar.Name = "TitleBar"
+titleBar.Size = UDim2.new(1, 0, 0, 40)
+titleBar.Position = UDim2.new(0, 0, 0, 0)
+titleBar.BackgroundTransparency = 1
+
+local titleText = Instance.new("TextLabel", titleBar)
+titleText.Size = UDim2.new(1, 0, 1, 0)
+titleText.BackgroundTransparency = 1
+titleText.Text = "Inventory"
+titleText.Font = Enum.Font.GothamBold
+titleText.TextSize = 20
+titleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+local closeButton = Instance.new("TextButton", titleBar)
+closeButton.Size = UDim2.new(0, 60, 1, 0)
+closeButton.Position = UDim2.new(1, -60, 0, 0)
+closeButton.BackgroundTransparency = 1
+closeButton.Text = "Close"
+closeButton.Font = Enum.Font.Gotham
+closeButton.TextSize = 16
+closeButton.TextColor3 = Color3.fromRGB(180, 120, 240) 
+
+closeButton.MouseButton1Click:Connect(function()
+	inventoryFrame.Visible = false
+end)
 
 local searchBox = Instance.new("TextBox", inventoryFrame)
 searchBox.Name = "Search"
-searchBox.Size = UDim2.new(1, -16, 0, 34)
-searchBox.Position = UDim2.new(0, 8, 0, 8)
-searchBox.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+searchBox.Size = UDim2.new(1, 0, 0, 40)
+searchBox.Position = UDim2.new(0, 0, 0, 50)
+searchBox.BackgroundColor3 = Color3.fromRGB(60, 35, 85)
 searchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 searchBox.PlaceholderText = "Search..."
+searchBox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
 searchBox.Text = ""
 searchBox.ClearTextOnFocus = false
 searchBox.Font = Enum.Font.Gotham
-searchBox.TextSize = 14
+searchBox.TextSize = 16
+
+local searchCorner = Instance.new("UICorner", searchBox)
+searchCorner.CornerRadius = UDim.new(0, 12)
+
+local searchPadding = Instance.new("UIPadding", searchBox)
+searchPadding.PaddingLeft = UDim.new(0, 12)
+searchPadding.PaddingRight = UDim.new(0, 12)
 
 local grid = Instance.new("ScrollingFrame", inventoryFrame)
 grid.Name = "Grid"
-grid.Size = UDim2.new(1, 0, 1, -56)
-grid.Position = UDim2.new(0, 0, 0, 50)
+grid.Size = UDim2.new(1, 0, 1, -140)
+grid.Position = UDim2.new(0, 0, 0, 100)
 grid.CanvasSize = UDim2.new(0, 0, 0, 0)
 grid.BackgroundTransparency = 1
 grid.ScrollBarThickness = 6
+grid.ScrollBarImageColor3 = Color3.fromRGB(120, 70, 170) 
 
 local gridLayout = Instance.new("UIGridLayout", grid)
-gridLayout.CellSize = UDim2.new(0, 80, 0, 60)
-gridLayout.CellPadding = UDim2.new(0, 6, 0, 6)
+gridLayout.CellSize = UDim2.new(0, 80, 0, 80)
+gridLayout.CellPadding = UDim2.new(0, 10, 0, 10) 
 gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 local function getAllPlayerTools()
@@ -203,8 +252,8 @@ local function setSlotVisual(slot, tool)
 	end
 end
 
-local DEFAULT_BG = Color3.fromRGB(40,40,40)
-local HIGHLIGHT_BG = Color3.fromRGB(0,170,255)
+local DEFAULT_BG = Color3.fromRGB(80, 40, 120) 
+local HIGHLIGHT_BG = Color3.fromRGB(140, 70, 200) 
 
 local function updateHighlights()
 	for _, slot in ipairs(slots) do
@@ -216,7 +265,7 @@ local function updateHighlights()
 		else
 			slot.BackgroundColor3 = DEFAULT_BG
 			local stroke = slot:FindFirstChildOfClass("UIStroke")
-			if stroke then stroke.Color = Color3.fromRGB(90,90,90) end
+			if stroke then stroke.Color = Color3.fromRGB(140, 70, 200) end 
 		end
 	end
 end
@@ -308,14 +357,21 @@ local function refreshInventory()
 		local name = tool.Name
 		if query == "" or string.find(name:lower(), query, 1, true) then
 			local btn = Instance.new("TextButton")
-			btn.Size = UDim2.new(0, 80, 0, 60)
-			btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+			btn.Size = UDim2.new(0, 80, 0, 80)
+			btn.BackgroundColor3 = Color3.fromRGB(80, 40, 120) 
 			btn.BorderSizePixel = 0
 			btn.Font = Enum.Font.Gotham
 			btn.TextSize = 14
 			btn.TextColor3 = Color3.fromRGB(255, 255, 255)
 			btn.Text = name
 			btn.Parent = grid
+			
+			local btnCorner = Instance.new("UICorner", btn)
+			btnCorner.CornerRadius = UDim.new(0, 12)
+			
+			local btnStroke = Instance.new("UIStroke", btn)
+			btnStroke.Color = Color3.fromRGB(140, 70, 200)
+			btnStroke.Thickness = 2
 
 			btn.MouseButton1Click:Connect(function()
 				local assignedSlot = nil
