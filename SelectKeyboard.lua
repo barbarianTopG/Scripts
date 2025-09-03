@@ -1,8 +1,8 @@
---- // ==== Services ==== \ ---
+-- /// Services
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 
---- // ==== Setup ==== \ ---
+-- /// Setup
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
@@ -12,16 +12,16 @@ gui.ResetOnSpawn = false
 gui.Parent = playerGui
 gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
---- // ==== Frame ==== \ ---
+-- /// Frame
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 200)
-frame.Position = UDim2.new(0, -320, 0.5, -100)
+frame.Size = UDim2.new(0, 300, 0, 300)
+frame.Position = UDim2.new(0, -320, 0.5, -150)
 frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 frame.BorderSizePixel = 0
 frame.Parent = gui
 
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0.25, 0) -- squircle-like
+corner.CornerRadius = UDim.new(0.25, 0) 
 corner.Parent = frame
 
 local outline = Instance.new("UIStroke")
@@ -29,7 +29,6 @@ outline.Thickness = 2
 outline.Color = Color3.fromRGB(255, 255, 255)
 outline.Parent = frame
 
---- // ==== Title ==== \ ---
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.BackgroundTransparency = 1
@@ -39,7 +38,7 @@ title.TextSize = 20
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Parent = frame
 
---- // ==== Close Button ==== \ ---
+-- /// CloseBtn
 local closeBtn = Instance.new("TextButton")
 closeBtn.Size = UDim2.new(0, 30, 0, 30)
 closeBtn.Position = UDim2.new(0.9, -40, 0, 5)
@@ -62,7 +61,7 @@ closeBtn.MouseButton1Click:Connect(function()
  gui:Destroy()
 end)
 
---- // ==== Buttons ==== \ ---
+-- /// Btns
 local function createButton(name, yPos, func)
  local button = Instance.new("TextButton")
  button.Size = UDim2.new(0.8, 0, 0, 40)
@@ -90,19 +89,42 @@ local function slideOutAndRun(callback)
  gui:Destroy()
 end
 
-createButton("Byte keyboard", 60, function()
+-- /// Byte Keyboard
+createButton("Byte Keyboard", 60, function()
  slideOutAndRun(function()
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/ByteKeyboard.lua"))()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/ByteKeyboard.lua"))()
  end)
 end)
 
-createButton("Kilobyte keyboard", 110, function()
+-- /// Kilobyte Keyboard
+createButton("Kilobyte Keyboard", 110, function()
  slideOutAndRun(function()
-  loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/KilobyteKeyboard.lua"))()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/KilobyteKeyboard.lua"))()
  end)
 end)
 
---- // ==== Spawn anim ==== \ ---
+-- /// Delta Keyboard
+createButton("Delta Keyboard", 160, function()
+ slideOutAndRun(function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/DeltaKeyboard.lua"))()
+ end)
+end)
+
+-- /// Virtual Keyboard
+createButton("Virtual Keyboard", 210, function()
+ slideOutAndRun(function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/refs/heads/main/VirtualKeyboard.lua"))()
+ end)
+end)
+
+-- /// Mob Keyboard
+createButton("Mob Keyboard", 260, function()
+ slideOutAndRun(function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+ end)
+end)
+
+-- /// Spawn Anim
 TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
- Position = UDim2.new(0.5, -150, 0.5, -100)
+ Position = UDim2.new(0.5, -150, 0.5, -150)
 }):Play()
