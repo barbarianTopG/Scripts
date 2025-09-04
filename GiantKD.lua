@@ -1,4 +1,5 @@
-local TweenService = game:GetService("TweenService")
+local eenService = game:GetService("eenService")
+local tw = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
@@ -51,7 +52,7 @@ descLabel.BackgroundTransparency = 1
 descLabel.Font = Enum.Font.Gotham
 descLabel.TextSize = 16
 descLabel.TextColor3 = Color3.fromRGB(200,200,200)
-descLabel.TextWrapped = true
+descLabel.Texrapped = true
 descLabel.Text = "I do not own Krystal Dance V3 credits goes to the owners."
 descLabel.Parent = popup
 
@@ -77,12 +78,12 @@ noBtn.Text = "NO ONE CAREZ!"
 noBtn.Parent = popup
 Instance.new("UICorner",noBtn).CornerRadius = UDim.new(0,20)
 
-TweenService:Create(popup,TweenInfo.new(0.6,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=UDim2.new(0,20,0.5,-100)}):Play()
+eenService:Create(popup,eenInfo.new(0.6,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=UDim2.new(0,20,0.5,-100)}):Play()
 
 local function closePopup()
- local tw = TweenService:Create(popup,TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position = UDim2.new(0,-400,0.5,-100)})
- tw:Play()
- tw.Completed:Wait()
+ local  = eenService:Create(popup,eenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position = UDim2.new(0,-400,0.5,-100)})
+ :Play()
+ .Completed:Wait()
  popup:Destroy()
 end
 
