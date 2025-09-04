@@ -330,7 +330,7 @@ notify("Krystal Dance V3", "Modded by PlasmaByte")
 Wait(0.1)
 notify("Krystal Dance V3", "Credits go to them.")
 Wait(0.1)
-notify("Krystal Dance V3", "Loaded Giant Krystal Dance."
+notify("Krystal Dance V3", "Loaded Giant Krystal Dance.")
 Wait(0.1)
 notify("Krystal Dance V3", "Enjoy! :D")
 
