@@ -47,7 +47,7 @@ byText.BackgroundTransparency = 1
 byText.TextColor3 = Color3.new(1,1,1)
 byText.TextTransparency = 0.5
 byText.TextScaled = true
-byText.Text = "Made by ChillbyteHD"
+byText.Text = "Made by PlasmaByte"
 
 local barBack = Instance.new("Frame", gui)
 barBack.Size = UDim2.new(0.3,0,0,15)
