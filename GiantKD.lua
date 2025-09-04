@@ -77,7 +77,7 @@ Instance.new("UICorner",noBtn).CornerRadius = UDim.new(0,20)
 TweenService:Create(popup,TweenInfo.new(0.6,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=UDim2.new(0,20,0.5,-100)}):Play()
 
 local function closePopup()
- local tw = TweenService:Create(popup,TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position= UDim2.new(0,-400,0.5,-100)})
+ local tw = TweenService:Create(popup,TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position = UDim2.new(0,-400,0.5,-100)})
  tw:Play()
  tw.Completed:Wait()
  popup:Destroy()
