@@ -87,7 +87,7 @@ executeBtn.MouseButton1Click:Connect(function()
  closePopup()
 
 game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
-task.wait(3)
+Wait(3)
 
 local reps = "4602533885,"
 
@@ -101,8 +101,8 @@ local done = base .. repped
 
 -- game.Players:Chat(done) -- get hats needed
 if setclipboard then setclipboard(done) else print(done) end
-repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("Smile")
-wait(.8)
+repeat Wait() until game.Players.LocalPlayer.Character:FindFirstChild("Smile")
+Wait(.8)
 local plr = game.Players.LocalPlayer
 local char = plr.Character
 local cons = {}
@@ -113,15 +113,7 @@ local heartbeat = rs.Heartbeat
 
 local oldpos = char.HumanoidRootPart.CFrame
 char.HumanoidRootPart.CFrame = oldpos + Vector3.new(0,10000,0)
-wait(.3)
-local function notify(title,text,duration)
-    game.StarterGui:SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = duration or 5;
-    })
-end
-
+Wait(.3)
 
 local reanimstorage = Instance.new("Folder",char)
 reanimstorage.Name = "ReanimStorage"
@@ -129,7 +121,6 @@ reanimstorage.Name = "ReanimStorage"
 local reanim = game:GetObjects("rbxassetid://9678834251")[1]
 reanim.Humanoid.CameraOffset = Vector3.new(0,9.5,0)
 reanim.Name = "Reanim"
-
 
 local anim = char.Animate
 anim.Parent = reanim
@@ -288,7 +279,7 @@ plr.Character = reanim
 
 anim.Disabled = true
 anim.Disabled = false
-wait(.3)
+Wait(.3)
 plr.Character.HumanoidRootPart.CFrame = oldpos + Vector3.new(0,6,0)
 
 for i,v in pairs(bighats) do
@@ -314,11 +305,11 @@ end))
 
 game:GetService("StarterGui"):SetCore("ResetButtonCallback", reset)
 		
-task.wait(5)
+Wait(5)
  loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 end)
 
-task.wait(1)
+Wait(1)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/SelectKeyboard.lua"))()
 
@@ -336,6 +327,6 @@ notify("Krystal Dance V3", "Enjoy! :D")
 
 noBtn.MouseButton1Click:Connect(function()
  closePopup()
- task.wait(0.5)
+Wait(0.5)
  plr:Kick("GET OUT!!!")
 end)
