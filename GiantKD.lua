@@ -8,7 +8,7 @@ local playerGui = plr:WaitForChild("PlayerGui")
 
 local Wait = task.wait
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Tag.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Tag"))()
 
 local function Send(message)
     TextChatService.TextChannels.RBXGeneral:SendAsync(message)
