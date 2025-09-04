@@ -323,6 +323,18 @@ task.wait(1)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MyScripts/refs/heads/main/SelectKeyboard.lua"))()
 
+notify("Krystal Dance V3", "Made by NITRO-GT")
+Wait(0.1)
+notify("Krystal Dance V3", "Fixed by MrY7zz")
+Wait(0.1)
+notify("Krystal Dance V3", "Modded by PlasmaByte")
+Wait(0.1)
+notify("Krystal Dance V3", "Credits go to them.")
+Wait(0.1)
+notify("Krystal Dance V3", "Loaded Giant Krystal Dance."
+Wait(0.1)
+notify("Krystal Dance V3", "Enjoy! :D")
+
 noBtn.MouseButton1Click:Connect(function()
  closePopup()
  task.wait(0.5)
