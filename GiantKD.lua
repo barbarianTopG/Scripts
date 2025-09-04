@@ -6,6 +6,8 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
+local Wait = task.wait
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Tag.lua"))()
 
 function notify(title, text, duration)
@@ -17,65 +19,65 @@ function notify(title, text, duration)
 end
 
 local gui = Instance.new("ScreenGui")
-gui.ResetOnSpawn=false
-gui.Parent=playerGui
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
 
 local popup = Instance.new("Frame")
-popup.Size=UDim2.new(0,350,0,200)
-popup.Position=UDim2.new(0,-400,0.5,-100)
-popup.BackgroundColor3=Color3.fromRGB(25,25,25)
-popup.Parent=gui
+popup.Size = UDim2.new(0,350,0,200)
+popup.Position = UDim2.new(0,-400,0.5,-100)
+popup.BackgroundColor3 = Color3.fromRGB(25,25,25)
+popup.Parent = gui
 
 local corner = Instance.new("UICorner",popup)
-corner.CornerRadius=UDim.new(0,40)
+corner.CornerRadius = UDim.new(0,40)
 
-local titleLabel=Instance.new("TextLabel")
-titleLabel.Size=UDim2.new(1,0,0,40)
-titleLabel.Position=UDim2.new(0,0,0,10)
-titleLabel.BackgroundTransparency=1
-titleLabel.Font=Enum.Font.GothamBold
-titleLabel.TextSize=22
-titleLabel.TextColor3=Color3.fromRGB(255,255,255)
-titleLabel.Text="WASSUP VRO!"
-titleLabel.Parent=popup
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1,0,0,40)
+titleLabel.Position = UDim2.new(0,0,0,10)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 22
+titleLabel.TextColor3 = Color3.fromRGB(255,255,255)
+titleLabel.Text = "Giant Krystal Dance (Made by PlasmaByte)"
+titleLabel.Parent = popup
 
-local descLabel=Instance.new("TextLabel")
-descLabel.Size=UDim2.new(1,-20,0,60)
-descLabel.Position=UDim2.new(0,10,0,50)
-descLabel.BackgroundTransparency=1
-descLabel.Font=Enum.Font.Gotham
-descLabel.TextSize=16
-descLabel.TextColor3=Color3.fromRGB(200,200,200)
-descLabel.TextWrapped=true
-descLabel.Text="After a long time, Giant Krystal Dance is working again! As Always creds to the respective owners of the scripts (Kdv3, Just Grass Giant)"
-descLabel.Parent=popup
+local descLabel = Instance.new("TextLabel")
+descLabel.Size = UDim2.new(1,-20,0,60)
+descLabel.Position = UDim2.new(0,10,0,50)
+descLabel.BackgroundTransparency = 1
+descLabel.Font = Enum.Font.Gotham
+descLabel.TextSize = 16
+descLabel.TextColor3 = Color3.fromRGB(200,200,200)
+descLabel.TextWrapped = true
+descLabel.Text = "I do not own Krystal Dance V3 credits goes to the owners."
+descLabel.Parent = popup
 
-local executeBtn=Instance.new("TextButton")
-executeBtn.Size=UDim2.new(0.45,0,0,35)
-executeBtn.Position=UDim2.new(0.05,0,0.7,0)
-executeBtn.BackgroundColor3=Color3.fromRGB(0,170,255)
-executeBtn.Font=Enum.Font.GothamBold
-executeBtn.TextSize=18
-executeBtn.TextColor3=Color3.fromRGB(255,255,255)
-executeBtn.Text="Execute"
-executeBtn.Parent=popup
-Instance.new("UICorner",executeBtn).CornerRadius=UDim.new(0,20)
+local executeBtn = Instance.new("TextButton")
+executeBtn.Size = UDim2.new(0.45,0,0,35)
+executeBtn.Position = UDim2.new(0.05,0,0.7,0)
+executeBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
+executeBtn.Font = Enum.Font.GothamBold
+executeBtn.TextSize = 18
+executeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+executeBtn.Text = "Execute"
+executeBtn.Parent = popup
+Instance.new("UICorner",executeBtn).CornerRadius = UDim.new(0,20)
 
-local noBtn=Instance.new("TextButton")
-noBtn.Size=UDim2.new(0.45,0,0,35)
-noBtn.Position=UDim2.new(0.5,0,0.7,0)
-noBtn.BackgroundColor3=Color3.fromRGB(170,0,0)
-noBtn.Font=Enum.Font.GothamBold
-noBtn.TextSize=16
-noBtn.TextColor3=Color3.fromRGB(255,255,255)
-noBtn.Text="NO ONE CAREZ!"
-noBtn.Parent=popup
-Instance.new("UICorner",noBtn).CornerRadius=UDim.new(0,20)
+local noBtn = Instance.new("TextButton")
+noBtn.Size = UDim2.new(0.45,0,0,35)
+noBtn.Position = UDim2.new(0.5,0,0.7,0)
+noBtn.BackgroundColor3 = Color3.fromRGB(170,0,0)
+noBtn.Font = Enum.Font.GothamBold
+noBtn.TextSize = 16
+noBtn.TextColor3 = Color3.fromRGB(255,255,255)
+noBtn.Text = "NO ONE CAREZ!"
+noBtn.Parent = popup
+Instance.new("UICorner",noBtn).CornerRadius = UDim.new(0,20)
 
 TweenService:Create(popup,TweenInfo.new(0.6,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=UDim2.new(0,20,0.5,-100)}):Play()
 
 local function closePopup()
- local tw=TweenService:Create(popup,TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position=UDim2.new(0,-400,0.5,-100)})
+ local tw = TweenService:Create(popup,TweenInfo.new(0.5,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position= UDim2.new(0,-400,0.5,-100)})
  tw:Play()
  tw.Completed:Wait()
  popup:Destroy()
@@ -83,8 +85,6 @@ end
 
 executeBtn.MouseButton1Click:Connect(function()
  closePopup()
-
- notify("Hey!","Giant Krystal Dance is back BABYYYY!!",3)
 
 game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
 task.wait(3)
@@ -99,7 +99,7 @@ repped = repped:sub(1,-2)
 
 local done = base .. repped
 
---game.Players:Chat(done) -- get hats needed
+-- game.Players:Chat(done) -- get hats needed
 if setclipboard then setclipboard(done) else print(done) end
 repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("Smile")
 wait(.8)
@@ -124,11 +124,11 @@ end
 
 
 local reanimstorage = Instance.new("Folder",char)
-reanimstorage.Name="ReanimStorage"
+reanimstorage.Name = "ReanimStorage"
 
 local reanim = game:GetObjects("rbxassetid://9678834251")[1]
 reanim.Humanoid.CameraOffset = Vector3.new(0,9.5,0)
-reanim.Name="Reanim"
+reanim.Name = "Reanim"
 
 
 local anim = char.Animate
@@ -146,7 +146,7 @@ end
 reanim.Parent = reanimstorage
 reanim.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame * CFrame.new(0,5,0)
 
--- netless/align by MyWorld, ty cutie <3
+-- netless/align by MyWorld.
 local netless_Y = Vector3.new(0, 30, 0)
 local v3_101 = Vector3.new(1, 0, 1)
 local inf = math.huge
