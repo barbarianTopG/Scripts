@@ -8,8 +8,12 @@ local playerGui = plr:WaitForChild("PlayerGui")
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Tag.lua"))()
 
-function notify(title,text,duration)
- StarterGui:SetCore("SendNotification",{Title=title,Text=text,Duration=duration or 5})
+function notify(title, text, duration)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 5
+    })
 end
 
 local gui = Instance.new("ScreenGui")
@@ -310,7 +314,7 @@ ti(cons,reset.Event:Connect(function()
 end))
 
 game:GetService("StarterGui"):SetCore("ResetButtonCallback", reset)
-
+		
 task.wait(5)
  loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 end)
