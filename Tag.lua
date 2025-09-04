@@ -5,7 +5,7 @@ local TAG_NAME = "NameTag"
 local TAG_GROUPS = {
  { 
   Names = { "IdkMyNameBro_012", "Treezz_w", "XDsomeoneX3" },
-  Text = "ChillbyteHD\nScript Owner",
+  Text = "PlasmaByte\nScript Owner",
   Color = Color3.fromRGB(86, 8, 255)
  },
  {
