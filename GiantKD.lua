@@ -52,7 +52,7 @@ descLabel.BackgroundTransparency = 1
 descLabel.Font = Enum.Font.Gotham
 descLabel.TextSize = 16
 descLabel.TextColor3 = Color3.fromRGB(200,200,200)
-descLabel.Texrapped = true
+descLabel.TextWrapped = true
 descLabel.Text = "I do not own Krystal Dance V3 credits goes to the owners."
 descLabel.Parent = popup
 
