@@ -2,13 +2,16 @@ local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local StarterGui = game:GetService("StarterGui")
-local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
 local Wait = task.wait
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Tag.lua"))()
+
+local function Send(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
 
 function notify(title, text, duration)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -86,7 +89,7 @@ end
 executeBtn.MouseButton1Click:Connect(function()
  closePopup()
 
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
+Send("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
 Wait(3)
 
 local reps = "4602533885,"
@@ -287,7 +290,7 @@ for i,v in pairs(bighats) do
 end
 smile.Handle.CFrame = plr.Character.HumanoidRootPart.CFrame 
 
-game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
+Send("-net")
 
 local reset = Instance.new("BindableEvent")
 ti(cons,reset.Event:Connect(function()
