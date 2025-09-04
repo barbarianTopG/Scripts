@@ -6,7 +6,7 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/main/DevTag.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/main/Tag.lua"))()
 
 function notify(title,text,duration)
  StarterGui:SetCore("SendNotification",{Title=title,Text=text,Duration=duration or 5})
