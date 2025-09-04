@@ -298,7 +298,6 @@ smile.Handle.CFrame = plr.Character.HumanoidRootPart.CFrame
 
 game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("-net")
 
-
 local reset = Instance.new("BindableEvent")
 ti(cons,reset.Event:Connect(function()
     reanim:Destroy()
