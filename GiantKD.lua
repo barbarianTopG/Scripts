@@ -146,7 +146,7 @@ end
 local reanimateBtn = createButton("ReanimateBtn", "Reanimate", colorScheme.success, UDim2.new(0.05, 0, 0.6, 0))
 local creditsBtn = createButton("CreditsBtn", "Credits", colorScheme.accent, UDim2.new(0.5, 0, 0.6, 0))
 local stopBtn = createButton("StopBtn", "Stop Script", colorScheme.danger, UDim2.new(0.05, 0, 0.75, 0))
-stopBtn.Parent.Size = UDim2.new(0.9, 0, 0, 40) -- Make stop button wider
+stopBtn.Parent.Size = UDim2.new(0.9, 0, 0, 40) 
 
 local footerLabel = Instance.new("TextLabel")
 footerLabel.Size = UDim2.new(1, 0, 0, 20)
