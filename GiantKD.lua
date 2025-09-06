@@ -22,12 +22,10 @@ function notify(title, text, duration)
     })
 end
 
--- Main UI
 local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
--- Minimizer button
 local minimizer = Instance.new("TextButton")
 minimizer.Size = UDim2.new(0, 100, 0, 30)
 minimizer.Position = UDim2.new(0.5, -50, 0, 10)
@@ -39,7 +37,6 @@ minimizer.Text = "Enable"
 minimizer.Parent = gui
 Instance.new("UICorner", minimizer).CornerRadius = UDim.new(0, 10)
 
--- Popup UI
 local popup = Instance.new("Frame")
 popup.Size = UDim2.new(0, 350, 0, 250)
 popup.Position = UDim2.new(0.5, -175, 0.5, -125)
@@ -50,7 +47,6 @@ popup.Parent = gui
 local corner = Instance.new("UICorner", popup)
 corner.CornerRadius = UDim.new(0, 40)
 
--- Title with Arcade font
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0, 40)
 titleLabel.Position = UDim2.new(0, 0, 0, 20)
@@ -61,7 +57,6 @@ titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 titleLabel.Text = "Giant Krystal Dance"
 titleLabel.Parent = popup
 
--- Description
 local descLabel = Instance.new("TextLabel")
 descLabel.Size = UDim2.new(1, -20, 0, 60)
 descLabel.Position = UDim2.new(0, 10, 0, 60)
@@ -70,10 +65,9 @@ descLabel.Font = Enum.Font.Gotham
 descLabel.TextSize = 16
 descLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
 descLabel.TextWrapped = true
-descLabel.Text = "I do not own Krystal Dance V3 credits goes to the owners."
+descLabel.Text = "I do not own Krystal Dance V3, press credits to see the credits."
 descLabel.Parent = popup
 
--- Reanimate button
 local reanimateBtn = Instance.new("TextButton")
 reanimateBtn.Size = UDim2.new(0.45, 0, 0, 35)
 reanimateBtn.Position = UDim2.new(0.05, 0, 0.7, 0)
@@ -85,7 +79,6 @@ reanimateBtn.Text = "Reanimate"
 reanimateBtn.Parent = popup
 Instance.new("UICorner", reanimateBtn).CornerRadius = UDim.new(0, 20)
 
--- Credits button
 local creditsBtn = Instance.new("TextButton")
 creditsBtn.Size = UDim2.new(0.45, 0, 0, 35)
 creditsBtn.Position = UDim2.new(0.5, 0, 0.7, 0)
@@ -97,7 +90,6 @@ creditsBtn.Text = "Credits"
 creditsBtn.Parent = popup
 Instance.new("UICorner", creditsBtn).CornerRadius = UDim.new(0, 20)
 
--- Footer with Sarpanch font
 local footerLabel = Instance.new("TextLabel")
 footerLabel.Size = UDim2.new(1, 0, 0, 20)
 footerLabel.Position = UDim2.new(0, 0, 0.9, 0)
