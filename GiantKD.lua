@@ -22,6 +22,18 @@ function notify(title, text, duration)
     })
 end
 
+-- Color scheme
+local colorScheme = {
+    primary = Color3.fromRGB(75, 0, 130),    -- Purple
+    secondary = Color3.fromRGB(148, 0, 211), -- Dark Violet
+    accent = Color3.fromRGB(123, 104, 238),  -- Medium Slate Blue
+    danger = Color3.fromRGB(220, 20, 60),    -- Crimson
+    success = Color3.fromRGB(0, 200, 83),    -- Emerald Green
+    background = Color3.fromRGB(30, 30, 40), -- Dark Blue-Gray
+    text = Color3.fromRGB(240, 240, 240),    -- Almost White
+    subtext = Color3.fromRGB(180, 180, 190)  -- Light Gray
+}
+
 local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
@@ -29,23 +41,34 @@ gui.Parent = playerGui
 local minimizer = Instance.new("TextButton")
 minimizer.Size = UDim2.new(0, 100, 0, 30)
 minimizer.Position = UDim2.new(0.5, -50, 0, 10)
-minimizer.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
+minimizer.BackgroundColor3 = colorScheme.primary
 minimizer.Font = Enum.Font.GothamBold
 minimizer.TextSize = 16
-minimizer.TextColor3 = Color3.fromRGB(255, 255, 255)
+minimizer.TextColor3 = colorScheme.text
 minimizer.Text = "Enable"
 minimizer.Parent = gui
+minimizer.ZIndex = 10
 Instance.new("UICorner", minimizer).CornerRadius = UDim.new(0, 10)
+Instance.new("UIStroke", minimizer).Color = colorScheme.accent
 
 local popup = Instance.new("Frame")
-popup.Size = UDim2.new(0, 350, 0, 250)
-popup.Position = UDim2.new(0.5, -175, 0.5, -125)
-popup.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+popup.Size = UDim2.new(0, 350, 0, 300) -- Increased height for the stop button
+popup.Position = UDim2.new(0.5, -175, 0.5, -150)
+popup.BackgroundColor3 = colorScheme.background
 popup.Visible = false
 popup.Parent = gui
 
 local corner = Instance.new("UICorner", popup)
 corner.CornerRadius = UDim.new(0, 40)
+
+-- Add a subtle gradient
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, colorScheme.background),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 25, 35))
+}
+gradient.Rotation = 90
+gradient.Parent = popup
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Size = UDim2.new(1, 0, 0, 40)
@@ -53,7 +76,7 @@ titleLabel.Position = UDim2.new(0, 0, 0, 20)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Font = Enum.Font.Arcade
 titleLabel.TextSize = 24
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextColor3 = colorScheme.text
 titleLabel.Text = "Giant Krystal Dance"
 titleLabel.Parent = popup
 
@@ -63,32 +86,47 @@ descLabel.Position = UDim2.new(0, 10, 0, 60)
 descLabel.BackgroundTransparency = 1
 descLabel.Font = Enum.Font.Gotham
 descLabel.TextSize = 16
-descLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+descLabel.TextColor3 = colorScheme.subtext
 descLabel.TextWrapped = true
 descLabel.Text = "I do not own Krystal Dance V3, press credits to see the credits."
 descLabel.Parent = popup
 
 local reanimateBtn = Instance.new("TextButton")
 reanimateBtn.Size = UDim2.new(0.45, 0, 0, 35)
-reanimateBtn.Position = UDim2.new(0.05, 0, 0.7, 0)
-reanimateBtn.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+reanimateBtn.Position = UDim2.new(0.05, 0, 0.6, 0) -- Adjusted position
+reanimateBtn.BackgroundColor3 = colorScheme.success
 reanimateBtn.Font = Enum.Font.GothamBold
 reanimateBtn.TextSize = 18
-reanimateBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+reanimateBtn.TextColor3 = colorScheme.text
 reanimateBtn.Text = "Reanimate"
 reanimateBtn.Parent = popup
 Instance.new("UICorner", reanimateBtn).CornerRadius = UDim.new(0, 20)
+Instance.new("UIStroke", reanimateBtn).Color = Color3.fromRGB(255, 255, 255)
 
 local creditsBtn = Instance.new("TextButton")
 creditsBtn.Size = UDim2.new(0.45, 0, 0, 35)
-creditsBtn.Position = UDim2.new(0.5, 0, 0.7, 0)
-creditsBtn.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+creditsBtn.Position = UDim2.new(0.5, 0, 0.6, 0) -- Adjusted position
+creditsBtn.BackgroundColor3 = colorScheme.accent
 creditsBtn.Font = Enum.Font.GothamBold
 creditsBtn.TextSize = 16
-creditsBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+creditsBtn.TextColor3 = colorScheme.text
 creditsBtn.Text = "Credits"
 creditsBtn.Parent = popup
 Instance.new("UICorner", creditsBtn).CornerRadius = UDim.new(0, 20)
+Instance.new("UIStroke", creditsBtn).Color = Color3.fromRGB(255, 255, 255)
+
+-- Add Stop button
+local stopBtn = Instance.new("TextButton")
+stopBtn.Size = UDim2.new(0.9, 0, 0, 35)
+stopBtn.Position = UDim2.new(0.05, 0, 0.75, 0)
+stopBtn.BackgroundColor3 = colorScheme.danger
+stopBtn.Font = Enum.Font.GothamBold
+stopBtn.TextSize = 18
+stopBtn.TextColor3 = colorScheme.text
+stopBtn.Text = "Stop Script"
+stopBtn.Parent = popup
+Instance.new("UICorner", stopBtn).CornerRadius = UDim.new(0, 20)
+Instance.new("UIStroke", stopBtn).Color = Color3.fromRGB(255, 255, 255)
 
 local footerLabel = Instance.new("TextLabel")
 footerLabel.Size = UDim2.new(1, 0, 0, 20)
@@ -96,12 +134,13 @@ footerLabel.Position = UDim2.new(0, 0, 0.9, 0)
 footerLabel.BackgroundTransparency = 1
 footerLabel.Font = Enum.Font.Sarpanch
 footerLabel.TextSize = 14
-footerLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+footerLabel.TextColor3 = colorScheme.subtext
 footerLabel.Text = "Made by PlasmaByte"
 footerLabel.Parent = popup
 
 -- UI state
 local uiEnabled = false
+local danceScriptActive = false
 
 -- Toggle UI function
 local function toggleUI()
@@ -111,7 +150,7 @@ local function toggleUI()
         minimizer.Text = "Disable"
         popup.Visible = true
         TweenService:Create(popup, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 350, 0, 250)
+            Size = UDim2.new(0, 350, 0, 300)
         }):Play()
     else
         minimizer.Text = "Enable"
@@ -140,8 +179,26 @@ local function closePopup()
     minimizer.Text = "Enable"
 end
 
+-- Function to stop the dance script
+local function stopDanceScript()
+    if danceScriptActive then
+        Send("-rs")
+        danceScriptActive = false
+        notify("Script Stopped", "Krystal Dance script has been stopped.", 3)
+    else
+        notify("Info", "No active script to stop.", 3)
+    end
+end
+
+-- Stop button click
+stopBtn.MouseButton1Click:Connect(function()
+    closePopup()
+    stopDanceScript()
+end)
+
 -- Reanimate button click
 reanimateBtn.MouseButton1Click:Connect(function()
+    danceScriptActive = true
     closePopup()
     Send("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
     Wait(3)
