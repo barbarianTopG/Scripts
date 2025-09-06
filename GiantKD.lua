@@ -18,7 +18,7 @@ function notify(title, text, duration)
     StarterGui:SetCore("SendNotification", {
         Title = title,
         Text = text,
-        Duration = duration or 5
+        Duration = duration or 3
     })
 end
 
@@ -343,14 +343,17 @@ end)
 -- Credits button click
 creditsBtn.MouseButton1Click:Connect(function()
     closePopup()
-    notify("Krystal Dance V3", "Made by NITRO-GT")
-    Wait(0.95)
-    notify("Krystal Dance V3", "Fixed by MrY7zz")
-    Wait(0.95)
-    notify("Krystal Dance V3", "Modded by PlasmaByte")
-    Wait(0.95)
-    notify("Krystal Dance V3", "Credits goes to them!!")
-    Wait(0.95)
+    print("------------------------------------------")
+print("Krystal Dance V3 - Made by NITRO-GT")
+Wait(0.95)
+print("Krystal Dance V3 - Fixed by MrY7zz")
+Wait(0.95)
+print("Krystal Dance V3 - Modded by PlasmaByte")
+Wait(0.95)
+print("Krystal Dance V3 - Credits goes to them!!")
+print("------------------------------------------")
+Wait(0.2)
+notify("Giant Krystal Dance", "Check Console!")
 end)
 
 Wait(1)
@@ -362,6 +365,6 @@ Wait(0.95)
 notify("Giant Krystal Dance", "wouldn't be able to use this")
 Wait(0.95)
 setclipboard("https://www.roblox.com/games/88308889239232/Green-baseplate")
-notify("Giant Krystal Dance", "Supported game link copied."
+notify("Giant Krystal Dance", "Supported game link copied.")
 Wait(0.95)
 notify("Supported executors:", "Krnl, Delta, rest untested :P")
