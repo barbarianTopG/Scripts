@@ -38,18 +38,32 @@ local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
+-- Create minimizer button with squircle shape
 local minimizer = Instance.new("TextButton")
-minimizer.Size = UDim2.new(0, 100, 0, 30)
-minimizer.Position = UDim2.new(0.5, -50, 0, 10)
+minimizer.Size = UDim2.new(0, 100, 0, 40)
+minimizer.Position = UDim2.new(0, 10, 0, 10) -- Moved to left side
 minimizer.BackgroundColor3 = colorScheme.primary
-minimizer.Font = Enum.Font.GothamBold
+minimizer.Font = Enum.Font.Arcade
 minimizer.TextSize = 16
 minimizer.TextColor3 = colorScheme.text
 minimizer.Text = "Enable"
 minimizer.Parent = gui
 minimizer.ZIndex = 10
-Instance.new("UICorner", minimizer).CornerRadius = UDim.new(0, 10)
-Instance.new("UIStroke", minimizer).Color = colorScheme.accent
+
+-- Create squircle shape for minimizer
+local corner = Instance.new("UICorner", minimizer)
+corner.CornerRadius = UDim.new(0, 20)
+
+-- Create background shape layer for outline effect
+local minimizerBg = Instance.new("Frame")
+minimizerBg.Size = UDim2.new(1, 6, 1, 6)
+minimizerBg.Position = UDim2.new(0, -3, 0, -3)
+minimizerBg.BackgroundColor3 = colorScheme.accent
+minimizerBg.ZIndex = 9
+minimizerBg.Parent = minimizer
+
+local cornerBg = Instance.new("UICorner", minimizerBg)
+cornerBg.CornerRadius = UDim.new(0, 23)
 
 local popup = Instance.new("Frame")
 popup.Size = UDim2.new(0, 350, 0, 300) -- Increased height for the stop button
@@ -91,42 +105,48 @@ descLabel.TextWrapped = true
 descLabel.Text = "I do not own Krystal Dance V3, press credits to see the credits."
 descLabel.Parent = popup
 
-local reanimateBtn = Instance.new("TextButton")
-reanimateBtn.Size = UDim2.new(0.45, 0, 0, 35)
-reanimateBtn.Position = UDim2.new(0.05, 0, 0.6, 0) -- Adjusted position
-reanimateBtn.BackgroundColor3 = colorScheme.success
-reanimateBtn.Font = Enum.Font.GothamBold
-reanimateBtn.TextSize = 18
-reanimateBtn.TextColor3 = colorScheme.text
-reanimateBtn.Text = "Reanimate"
-reanimateBtn.Parent = popup
-Instance.new("UICorner", reanimateBtn).CornerRadius = UDim.new(0, 20)
-Instance.new("UIStroke", reanimateBtn).Color = Color3.fromRGB(255, 255, 255)
+-- Create button template function
+local function createButton(name, text, color, position)
+    local buttonContainer = Instance.new("Frame")
+    buttonContainer.Size = UDim2.new(0.45, 0, 0, 40)
+    buttonContainer.Position = position
+    buttonContainer.BackgroundTransparency = 1
+    buttonContainer.Parent = popup
+    
+    -- Background shape layer
+    local buttonBg = Instance.new("Frame")
+    buttonBg.Size = UDim2.new(1, 6, 1, 6)
+    buttonBg.Position = UDim2.new(0, -3, 0, -3)
+    buttonBg.BackgroundColor3 = color
+    buttonBg.ZIndex = 1
+    buttonBg.Parent = buttonContainer
+    
+    local cornerBg = Instance.new("UICorner", buttonBg)
+    cornerBg.CornerRadius = UDim.new(0, 15)
+    
+    -- Main button
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(1, 0, 1, 0)
+    button.BackgroundColor3 = color
+    button.Font = Enum.Font.Arcade
+    button.TextSize = 16
+    button.TextColor3 = colorScheme.text
+    button.Text = text
+    button.Name = name
+    button.ZIndex = 2
+    button.Parent = buttonContainer
+    
+    local corner = Instance.new("UICorner", button)
+    corner.CornerRadius = UDim.new(0, 12)
+    
+    return button
+end
 
-local creditsBtn = Instance.new("TextButton")
-creditsBtn.Size = UDim2.new(0.45, 0, 0, 35)
-creditsBtn.Position = UDim2.new(0.5, 0, 0.6, 0) -- Adjusted position
-creditsBtn.BackgroundColor3 = colorScheme.accent
-creditsBtn.Font = Enum.Font.GothamBold
-creditsBtn.TextSize = 16
-creditsBtn.TextColor3 = colorScheme.text
-creditsBtn.Text = "Credits"
-creditsBtn.Parent = popup
-Instance.new("UICorner", creditsBtn).CornerRadius = UDim.new(0, 20)
-Instance.new("UIStroke", creditsBtn).Color = Color3.fromRGB(255, 255, 255)
-
--- Add Stop button
-local stopBtn = Instance.new("TextButton")
-stopBtn.Size = UDim2.new(0.9, 0, 0, 35)
-stopBtn.Position = UDim2.new(0.05, 0, 0.75, 0)
-stopBtn.BackgroundColor3 = colorScheme.danger
-stopBtn.Font = Enum.Font.GothamBold
-stopBtn.TextSize = 18
-stopBtn.TextColor3 = colorScheme.text
-stopBtn.Text = "Stop Script"
-stopBtn.Parent = popup
-Instance.new("UICorner", stopBtn).CornerRadius = UDim.new(0, 20)
-Instance.new("UIStroke", stopBtn).Color = Color3.fromRGB(255, 255, 255)
+-- Create buttons using template
+local reanimateBtn = createButton("ReanimateBtn", "Reanimate", colorScheme.success, UDim2.new(0.05, 0, 0.6, 0))
+local creditsBtn = createButton("CreditsBtn", "Credits", colorScheme.accent, UDim2.new(0.5, 0, 0.6, 0))
+local stopBtn = createButton("StopBtn", "Stop Script", colorScheme.danger, UDim2.new(0.05, 0, 0.75, 0))
+stopBtn.Parent.Size = UDim2.new(0.9, 0, 0, 40) -- Make stop button wider
 
 local footerLabel = Instance.new("TextLabel")
 footerLabel.Size = UDim2.new(1, 0, 0, 20)
