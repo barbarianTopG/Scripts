@@ -100,11 +100,11 @@ local descLabel = Instance.new("TextLabel")
 descLabel.Size = UDim2.new(1, -20, 0, 60)
 descLabel.Position = UDim2.new(0, 10, 0, 60)
 descLabel.BackgroundTransparency = 1
-descLabel.Font = Enum.Font.Gotham
+descLabel.Font = Enum.Font.Arcade
 descLabel.TextSize = 16
 descLabel.TextColor3 = colorScheme.subtext
 descLabel.TextWrapped = true
-descLabel.Text = "I do not own Krystal Dance V3, press credits to see the credits."
+descLabel.Text = "I do not own Krystal Dance V3, press 'Click Me!' button for more details"
 descLabel.Parent = popup
 
 -- Create button template function
@@ -146,7 +146,7 @@ end
 
 -- Create buttons using template
 local reanimateBtn = createButton("ReanimateBtn", "Reanimate", colorScheme.success, UDim2.new(0.05, 0, 0.6, 0))
-local creditsBtn = createButton("CreditsBtn", "Click me!", colorScheme.accent, UDim2.new(0.5, 0, 0.6, 0))
+local creditsBtn = createButton("CreditsBtn", "Click Me!", colorScheme.accent, UDim2.new(0.5, 0, 0.6, 0))
 local stopBtn = createButton("StopBtn", "Stop Script", colorScheme.danger, UDim2.new(0.05, 0, 0.75, 0))
 stopBtn.Parent.Size = UDim2.new(0.9, 0, 0, 40) 
 
