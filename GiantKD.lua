@@ -10,6 +10,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools
 
 local Wait = task.wait
 
+local Haha = " ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+
 local function Send(message)
     TextChatService.TextChannels.RBXGeneral:SendAsync(message)
 end
@@ -198,11 +200,11 @@ local function closePopup()
     minimizer.Text = "Enable"
 end
 
--- Stop button click - just sends -rs
+-- Stop button click (Rejoins)
 stopBtn.MouseButton1Click:Connect(function()
     closePopup()
-    Send("-rs")
-    notify("Script Stopped", "Sent stop command.", 3)
+    Send("-rj "..tostring(Haha))
+    notify("Giant Krystal Dance", "Stopping script...", 3)
 end)
 
 -- Reanimate button click
