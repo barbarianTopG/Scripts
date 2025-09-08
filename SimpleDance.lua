@@ -218,8 +218,7 @@ notify("Please select a reanimation method")
 -- Function to load emotes from external source
 local function loadEmotesFromSource()
     local success, result = pcall(function()
-        -- Replace this URL with your emote data loadstring
-        return loadstring(game:HttpGet("YOUR_EMOTE_LOADSTRING_URL_HERE"))()
+        return loadstring(game:HttpGet("loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/SimpleDanceAssets.lua"))()"))()
     end)
     
     if success and type(result) == "table" then
