@@ -218,7 +218,6 @@ notify("Please select a reanimation method")
 -- Function to load emotes from external source
 local function loadEmotesFromSource()
     local success, result = pcall(function()
-        -- Replace this URL with your emote data loadstring
         return loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/ScriptLoader/refs/heads/main/Emotes.lua"))()
     end)
     
@@ -226,8 +225,35 @@ local function loadEmotesFromSource()
         return result
     else
         notify("Failed to load emotes, using defaults")
-
-        return {}
+        -- Default emotes if external loading fails
+        return {
+            Wave = {
+                {
+                    {"Right Shoulder", CFrame.new(1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(90))},
+                    {"Left Shoulder", CFrame.new(-1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(-20))},
+                    {"Neck", CFrame.new(0, 1, 0) * CFrame.Angles(0, 0, 0)}
+                },
+                {
+                    {"Right Shoulder", CFrame.new(1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(70))},
+                    {"Left Shoulder", CFrame.new(-1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(-20))},
+                    {"Neck", CFrame.new(0, 1, 0) * CFrame.Angles(0, 0, 0)}
+                }
+            },
+            Dance = {
+                {
+                    {"Right Shoulder", CFrame.new(1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(45))},
+                    {"Left Shoulder", CFrame.new(-1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(-45))},
+                    {"Right Hip", CFrame.new(0.5, -1, 0) * CFrame.Angles(0, 0, math.rad(-10))},
+                    {"Left Hip", CFrame.new(-0.5, -1, 0) * CFrame.Angles(0, 0, math.rad(10))}
+                },
+                {
+                    {"Right Shoulder", CFrame.new(1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(-45))},
+                    {"Left Shoulder", CFrame.new(-1.5, 0.5, 0) * CFrame.Angles(0, 0, math.rad(45))},
+                    {"Right Hip", CFrame.new(0.5, -1, 0) * CFrame.Angles(0, 0, math.rad(10))},
+                    {"Left Hip", CFrame.new(-0.5, -1, 0) * CFrame.Angles(0, 0, math.rad(-10))}
+                }
+            }
+        }
     end
 end
 
@@ -239,3 +265,386 @@ local currentAnimation = nil
 local function lerpCFrame(c0, c1, alpha)
     return c0:lerp(c1, alpha)
 end
+
+-- Function to play animation
+local function playAnimation(animationName, animations)
+    if isAnimating then return end
+    isAnimating = true
+    
+    local char = game.Players.LocalPlayer.Character
+    if not char then
+        isAnimating = false
+        return
+    end
+    
+    local torso = char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso")
+    if not torso then
+        isAnimating = false
+        return
+    end
+    
+    -- Store original motor CFrame values
+    local originalMotors = {}
+    for _, motorName in ipairs({"Right Shoulder", "Left Shoulder", "Right Hip", "Left Hip", "Neck"}) do
+        local motor = torso:FindFirstChild(motorName)
+        if motor then
+            originalMotors[motorName] = motor.C0
+        end
+    end
+    
+    local animationFrames = animations[animationName]
+    if not animationFrames then
+        notify("Animation not found: " .. animationName)
+        isAnimating = false
+        return
+    end
+    
+    local currentFrame = 1
+    local lerpSpeed = 0.2
+    
+    spawn(function()
+        while isAnimating and char and char.Parent do
+            local targetFrame = animationFrames[currentFrame]
+            local nextFrame = animationFrames[currentFrame % #animationFrames + 1]
+            
+            -- Animate to the target frame
+            for i = 0, 1, lerpSpeed do
+                if not isAnimating or not char or not char.Parent then break end
+                
+                for _, motorData in ipairs(targetFrame) do
+                    local motorName, targetCFrame = motorData[1], motorData[2]
+                    local motor = torso:FindFirstChild(motorName)
+                    
+                    if motor then
+                        local nextMotorData
+                        for _, data in ipairs(nextFrame) do
+                            if data[1] == motorName then
+                                nextMotorData = data
+                                break
+                            end
+                        end
+                        
+                        local nextCFrame = nextMotorData and nextMotorData[2] or targetCFrame
+                        motor.C0 = lerpCFrame(targetCFrame, nextCFrame, i)
+                    end
+                end
+                Wait()
+            end
+            
+            currentFrame = currentFrame % #animationFrames + 1
+        end
+        
+        -- Return to original position
+        for motorName, originalCFrame in pairs(originalMotors) do
+            local motor = torso:FindFirstChild(motorName)
+            if motor then
+                for i = 0, 1, 0.1 do
+                    if not char or not char.Parent then break end
+                    motor.C0 = lerpCFrame(motor.C0, originalCFrame, i)
+                    Wait()
+                end
+                motor.C0 = originalCFrame
+            end
+        end
+        
+        isAnimating = false
+    end)
+end
+
+-- Function to create button with auto-layout
+local function CreateButton(parent, emoteName, emoteColor, index, totalButtons)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 50, 0, 50)
+    button.BackgroundColor3 = emoteColor
+    button.AutoButtonColor = false
+    button.Text = string.sub(emoteName, 1, 1)
+    button.TextColor3 = TEXT_COLOR
+    button.Font = Enum.Font.Arcade
+    button.TextSize = 18
+    button.TextStrokeTransparency = 0.5
+    button.TextStrokeColor3 = GLOW_COLOR
+    
+    local buttonCorner = Instance.new("UICorner")
+    buttonCorner.CornerRadius = UDim.new(0, 8)
+    buttonCorner.Parent = button
+    
+    local buttonStroke = Instance.new("UIStroke")
+    buttonStroke.Color = GLOW_COLOR
+    buttonStroke.Thickness = 2
+    buttonStroke.Parent = button
+    
+    local emoteLabel = Instance.new("TextLabel")
+    emoteLabel.Size = UDim2.new(1, 0, 0, 14)
+    emoteLabel.Position = UDim2.new(0, 0, 0, -16)
+    emoteLabel.BackgroundTransparency = 1
+    emoteLabel.Text = emoteName:upper()
+    emoteLabel.TextColor3 = TEXT_COLOR
+    emoteLabel.Font = Enum.Font.Arcade
+    emoteLabel.TextSize = 10
+    emoteLabel.TextStrokeTransparency = 0.7
+    emoteLabel.TextStrokeColor3 = GLOW_COLOR
+    emoteLabel.Parent = button
+    
+    -- Calculate position based on index
+    local buttonsPerRow = 4
+    local row = math.floor((index - 1) / buttonsPerRow)
+    local col = (index - 1) % buttonsPerRow
+    
+    button.Position = UDim2.new(0, 10 + col * 60, 0, 10 + row * 60)
+    
+    -- Hover effects
+    button.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = emoteColor:Lerp(Color3.new(1,1,1), 0.2)}):Play()
+        game:GetService("TweenService"):Create(buttonStroke, TweenInfo.new(0.2), {Thickness = 3}):Play()
+    end)
+    
+    button.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = emoteColor}):Play()
+        game:GetService("TweenService"):Create(buttonStroke, TweenInfo.new(0.2), {Thickness = 2}):Play()
+    end)
+    
+    button.Parent = parent
+    return button
+end
+
+-- Function to load the emotes GUI
+function loadEmotesGUI()
+    -- Load emotes from external source
+    local loadedEmotes = loadEmotesFromSource()
+    
+    -- Create main GUI with scrolling
+    local SimpleEmotes = Instance.new("ScreenGui")
+    SimpleEmotes.Name = "SimpleEmotes"
+    SimpleEmotes.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    SimpleEmotes.ResetOnSpawn = false
+
+    -- Main frame with scrolling
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 280, 0, 300)
+    MainFrame.Position = UDim2.new(0.5, -140, 0.5, -150)
+    MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    MainFrame.BackgroundColor3 = BACKGROUND_COLOR
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Parent = SimpleEmotes
+
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.Parent = MainFrame
+
+    local UIStroke = Instance.new("UIStroke")
+    UIStroke.Color = GLOW_COLOR
+    UIStroke.Thickness = 3
+    UIStroke.Transparency = 0.7
+    UIStroke.Parent = MainFrame
+
+    -- Title
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.Position = UDim2.new(0, 0, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Text = "SIMPLE EMOTES"
+    Title.TextColor3 = ACCENT_COLOR
+    Title.Font = Enum.Font.Arcade
+    Title.TextSize = 20
+    Title.TextStrokeTransparency = 0.8
+    Title.TextStrokeColor3 = GLOW_COLOR
+    Title.Parent = MainFrame
+
+    -- Divider
+    local Divider = Instance.new("Frame")
+    Divider.Size = UDim2.new(1, -20, 0, 2)
+    Divider.Position = UDim2.new(0, 10, 0, 40)
+    Divider.BackgroundColor3 = ACCENT_COLOR
+    Divider.BorderSizePixel = 0
+    Divider.Parent = MainFrame
+
+    -- Scrolling frame
+    local ScrollFrame = Instance.new("ScrollingFrame")
+    ScrollFrame.Size = UDim2.new(1, -20, 1, -100)
+    ScrollFrame.Position = UDim2.new(0, 10, 0, 50)
+    ScrollFrame.BackgroundTransparency = 1
+    ScrollFrame.BorderSizePixel = 0
+    ScrollFrame.ScrollBarThickness = 6
+    ScrollFrame.ScrollBarImageColor3 = ACCENT_COLOR
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    ScrollFrame.Parent = MainFrame
+
+    -- Buttons container inside scroll frame
+    local ButtonsContainer = Instance.new("Frame")
+    ButtonsContainer.Size = UDim2.new(1, 0, 0, 0)
+    ButtonsContainer.BackgroundTransparency = 1
+    ButtonsContainer.Parent = ScrollFrame
+
+    -- Create emote buttons
+    local emoteButtons = {}
+    local emoteColors = {
+        Color3.fromRGB(150, 80, 255),
+        Color3.fromRGB(180, 100, 255),
+        Color3.fromRGB(120, 60, 220),
+        Color3.fromRGB(200, 120, 255),
+        Color3.fromRGB(160, 90, 240),
+        Color3.fromRGB(140, 70, 230),
+        Color3.fromRGB(170, 85, 250),
+        Color3.fromRGB(130, 65, 210)
+    }
+
+    local emoteIndex = 1
+    for emoteName, _ in pairs(loadedEmotes) do
+        local button = CreateButton(ButtonsContainer, emoteName, emoteColors[(emoteIndex - 1) % #emoteColors + 1], emoteIndex)
+        
+        button.MouseButton1Click:Connect(function()
+            playAnimation(emoteName, loadedEmotes)
+        end)
+        
+        emoteButtons[emoteName] = button
+        emoteIndex = emoteIndex + 1
+    end
+
+    -- Update canvas size based on number of buttons
+    local totalRows = math.ceil((emoteIndex - 1) / 4)
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, totalRows * 60 + 10)
+
+    -- Minimizer button
+    local Minimizer = Instance.new("TextButton")
+    Minimizer.Size = UDim2.new(0, 30, 0, 30)
+    Minimizer.Position = UDim2.new(1, -35, 0, 5)
+    Minimizer.BackgroundColor3 = MAIN_COLOR
+    Minimizer.AutoButtonColor = false
+    Minimizer.Text = "-"
+    Minimizer.TextColor3 = TEXT_COLOR
+    Minimizer.Font = Enum.Font.Arcade
+    Minimizer.TextSize = 20
+    Minimizer.TextStrokeTransparency = 0.5
+    Minimizer.TextStrokeColor3 = GLOW_COLOR
+    Minimizer.Parent = MainFrame
+
+    local MinimizerCorner = Instance.new("UICorner")
+    MinimizerCorner.CornerRadius = UDim.new(0, 6)
+    MinimizerCorner.Parent = Minimizer
+
+    local MinimizerStroke = Instance.new("UIStroke")
+    MinimizerStroke.Color = GLOW_COLOR
+    MinimizerStroke.Thickness = 2
+    MinimizerStroke.Parent = Minimizer
+
+    -- Minimized version
+    local MinimizedFrame = Instance.new("Frame")
+    MinimizedFrame.Size = UDim2.new(0, 40, 0, 40)
+    MinimizedFrame.Position = UDim2.new(0, 10, 0, 10)
+    MinimizedFrame.BackgroundColor3 = BACKGROUND_COLOR
+    MinimizedFrame.BorderSizePixel = 0
+    MinimizedFrame.Visible = false
+    MinimizedFrame.Parent = SimpleEmotes
+
+    local MinimizedCorner = Instance.new("UICorner")
+    MinimizedCorner.CornerRadius = UDim.new(0, 8)
+    MinimizedCorner.Parent = MinimizedFrame
+
+    local MinimizedStroke = Instance.new("UIStroke")
+    MinimizedStroke.Color = GLOW_COLOR
+    MinimizedStroke.Thickness = 2
+    MinimizedStroke.Parent = MinimizedFrame
+
+    local Maximizer = Instance.new("TextButton")
+    Maximizer.Size = UDim2.new(1, 0, 1, 0)
+    Maximizer.BackgroundColor3 = MAIN_COLOR
+    Maximizer.AutoButtonColor = false
+    Maximizer.Text = "+"
+    Maximizer.TextColor3 = TEXT_COLOR
+    Maximizer.Font = Enum.Font.Arcade
+    Maximizer.TextSize = 20
+    Maximizer.TextStrokeTransparency = 0.5
+    Maximizer.TextStrokeColor3 = GLOW_COLOR
+    Maximizer.Parent = MinimizedFrame
+
+    local MaximizerCorner = Instance.new("UICorner")
+    MaximizerCorner.CornerRadius = UDim.new(0, 8)
+    MaximizerCorner.Parent = Maximizer
+
+    -- Minimizer functionality
+    local isMinimized = false
+
+    Minimizer.MouseButton1Click:Connect(function()
+        isMinimized = true
+        MainFrame.Visible = false
+        MinimizedFrame.Visible = true
+        MinimizedFrame.Position = MainFrame.Position
+    end)
+
+    Maximizer.MouseButton1Click:Connect(function()
+        isMinimized = false
+        MainFrame.Visible = true
+        MinimizedFrame.Visible = false
+    end)
+
+    -- Drag functionality
+    local dragging = false
+    local dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        if isMinimized then
+            MinimizedFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        else
+            MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end
+
+    MainFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    MinimizedFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = MinimizedFrame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    MainFrame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    MinimizedFrame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+
+    SimpleEmotes.Parent = PlayerGui
+    notify("Loaded " .. (emoteIndex - 1) .. " emotes!")
+end
+
+-- Keyboard shortcuts
+local UIS = game:GetService("UserInputService")
+
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    
+    -- Add keyboard shortcuts here if needed
+end)
+
+print("SimpleEmotes loaded! Select a reanimation method to begin")
