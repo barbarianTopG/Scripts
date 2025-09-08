@@ -285,17 +285,22 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
-local MAX_SAFE_VELOCITY = 50
+local lastSafePosition = rootPart.Position
+local FLING_THRESHOLD = 50
 
 RunService.Heartbeat:Connect(function()
-    if AntiFlingEnabled and character and humanoid and rootPart then
+    if character and humanoid and rootPart then
         humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
         humanoid.PlatformStand = false
 
-        local vel = rootPart.Velocity
-        if vel.Magnitude > MAX_SAFE_VELOCITY then
-            rootPart.Velocity = Vector3.new(0, vel.Y, 0)
-            rootPart.AssemblyLinearVelocity = Vector3.new(0, vel.Y, 0)
+        if AntiFlingEnabled then
+            local vel = rootPart.Velocity
+            if vel.Magnitude > FLING_THRESHOLD then
+                rootPart.CFrame = CFrame.new(lastSafePosition)
+                rootPart.Velocity = Vector3.new(0,0,0)
+            else
+                lastSafePosition = rootPart.Position
+            end
         end
     end
 end)
