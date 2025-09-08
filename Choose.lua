@@ -226,7 +226,7 @@ local function loadEmotesFromSource()
         return result
     else
         notify("Failed to load emotes, using defaults")
-        -- Return empty table - we'll add default emotes in part 2
+
         return {}
     end
 end
