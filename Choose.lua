@@ -647,4 +647,4 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- Add keyboard shortcuts here if needed
 end)
 
-print("SimpleEmotes loaded! Select a reanimation method to begin")
+print("SimpleEmotes loaded!")
