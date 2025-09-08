@@ -288,26 +288,31 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 local lastPosition = nil
-local maxSpeed = 40
+local maxSpeed = 100
+local lastCheckTime = 0
+local checkInterval = 0.2
 
 RunService.Heartbeat:Connect(function()
-    if AntiFlingEnabled and character then
-        local rootPart = character:FindFirstChild("HumanoidRootPart")
-        if rootPart then
-            local currentPosition = rootPart.Position
-            
-            if lastPosition then
-                local distance = (currentPosition - lastPosition).Magnitude
-                local speed = distance / RunService.Heartbeat:Wait()
-                
-                if speed > maxSpeed then
-                    rootPart.CFrame = CFrame.new(lastPosition)
-                end
-            end
-            
-            lastPosition = currentPosition
+    if not AntiFlingEnabled or not character then return end
+    
+    local currentTime = tick()
+    if currentTime - lastCheckTime < checkInterval then return end
+    lastCheckTime = currentTime
+    
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+    
+    local currentPosition = rootPart.Position
+    
+    if lastPosition then
+        local velocity = (currentPosition - lastPosition).Magnitude / checkInterval
+        
+        if velocity > maxSpeed then
+            rootPart.CFrame = CFrame.new(lastPosition)
         end
     end
+    
+    lastPosition = currentPosition
 end)
 
 workspace.ChildAdded:Connect(function(child)
