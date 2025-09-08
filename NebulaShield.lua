@@ -1,13 +1,11 @@
--- DISCLAIMER I JUST CAME UP WITH A RANDOM NAME DONT SUE ME!
-
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
@@ -241,7 +239,6 @@ TitleBar.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MainFrame.Position
-        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -267,7 +264,6 @@ MinimizedFrame.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MinimizedFrame.Position
-        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -289,15 +285,17 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
+local MAX_SAFE_VELOCITY = 50
+
 RunService.Heartbeat:Connect(function()
-    if AntiFlingEnabled and character and humanoid then
+    if AntiFlingEnabled and character and humanoid and rootPart then
         humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
         humanoid.PlatformStand = false
-        
-        local rootPart = character:FindFirstChild("HumanoidRootPart")
-        if rootPart then
-            rootPart.Velocity = Vector3.new(0, 0, 0)
-            rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+
+        local vel = rootPart.Velocity
+        if vel.Magnitude > MAX_SAFE_VELOCITY then
+            rootPart.Velocity = Vector3.new(0, vel.Y, 0)
+            rootPart.AssemblyLinearVelocity = Vector3.new(0, vel.Y, 0)
         end
     end
 end)
