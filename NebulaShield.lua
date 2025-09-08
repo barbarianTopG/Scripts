@@ -2,10 +2,10 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
@@ -239,6 +239,7 @@ TitleBar.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MainFrame.Position
+        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -264,6 +265,7 @@ MinimizedFrame.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MinimizedFrame.Position
+        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -285,22 +287,25 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
-local lastSafePosition = rootPart.Position
-local FLING_THRESHOLD = 50
+local lastPosition = nil
+local maxSpeed = 40
 
 RunService.Heartbeat:Connect(function()
-    if character and humanoid and rootPart then
-        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-        humanoid.PlatformStand = false
-
-        if AntiFlingEnabled then
-            local vel = rootPart.Velocity
-            if vel.Magnitude > FLING_THRESHOLD then
-                rootPart.CFrame = CFrame.new(lastSafePosition)
-                rootPart.Velocity = Vector3.new(0,0,0)
-            else
-                lastSafePosition = rootPart.Position
+    if AntiFlingEnabled and character then
+        local rootPart = character:FindFirstChild("HumanoidRootPart")
+        if rootPart then
+            local currentPosition = rootPart.Position
+            
+            if lastPosition then
+                local distance = (currentPosition - lastPosition).Magnitude
+                local speed = distance / RunService.Heartbeat:Wait()
+                
+                if speed > maxSpeed then
+                    rootPart.CFrame = CFrame.new(lastPosition)
+                end
             end
+            
+            lastPosition = currentPosition
         end
     end
 end)
