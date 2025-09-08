@@ -1,4 +1,7 @@
 -- SimpleEmotes with External Emote Loading
+
+local Wait = task.wait
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -647,4 +650,12 @@ UIS.InputBegan:Connect(function(input, gameProcessed)
     -- Add keyboard shortcuts here if needed
 end)
 
-print("SimpleEmotes loaded!")
+print("------------------------------------------")
+    print("SimpleEmotes loaded!")
+    Wait(.2)
+    print("Discord server - https://discord.gg/ACbn8EmeuS")
+    Wait(.2)
+    print("Love from PlasmaByte")
+    Wait(.2)
+print("------------------------------------------")
+notify("Check console!", 3)
