@@ -2,10 +2,12 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-local Arcade = Enum.Font.Arcade
+
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
+
+local Arcade = Enum.Font.Arcade
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
@@ -191,9 +193,13 @@ local function ToggleAntiFling()
     if AntiFlingEnabled then
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
+        -- Enable anti-fling
+        disableCollisions()
     else
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
+        -- Disable anti-fling
+        enableCollisions()
     end
 end
 
@@ -207,9 +213,6 @@ local function TogglePreventTools()
         TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
     end
 end
-
-AntiFlingToggle.MouseButton1Click:Connect(ToggleAntiFling)
-PreventToolsToggle.MouseButton1Click:Connect(TogglePreventTools)
 
 local function MinimizeGUI()
     MainFrame.Visible = false
@@ -288,7 +291,6 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 local originalCollisions = {}
-local collisionConnections = {}
 
 local function disableCollisions()
     if not character then return end
@@ -321,22 +323,14 @@ player.CharacterAdded:Connect(function(newChar)
     end
 end)
 
-AntiFlingToggle.MouseButton1Click:Connect(function()
-    ToggleAntiFling()
-    
-    if AntiFlingEnabled then
-        disableCollisions()
-    else
-        enableCollisions()
-    end
-end)
+AntiFlingToggle.MouseButton1Click:Connect(ToggleAntiFling)
+PreventToolsToggle.MouseButton1Click:Connect(TogglePreventTools)
 
 if character then
     disableCollisions()
 end
 
 local toolConnection = nil
-local characterConnection = nil
 
 local function setupToolListener(char)
     if toolConnection then
@@ -361,22 +355,7 @@ if player.Character then
     onCharacterAdded(player.Character)
 end
 
-characterConnection = player.CharacterAdded:Connect(onCharacterAdded)
-
-PreventToolsToggle.MouseButton1Click:Connect(function()
-    TogglePreventTools()
-    
-    local char = player.Character
-    if char and PreventToolsEnabled then
-        local tool = char:FindFirstChildOfClass("Tool")
-        if tool then
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid:UnequipTools()
-            end
-        end
-    end
-end)
+player.CharacterAdded:Connect(onCharacterAdded)
 
 RunService.Heartbeat:Connect(function()
     if PreventToolsEnabled and player.Character then
