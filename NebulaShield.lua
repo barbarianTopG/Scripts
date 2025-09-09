@@ -2,10 +2,7 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-
 local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
@@ -183,12 +180,47 @@ MaximizeButton.Font = Enum.Font.Arcade
 MaximizeButton.TextSize = 16
 MaximizeButton.Parent = MinimizedFrame
 
+-- State variables
 local AntiFlingEnabled = true
-local PreventToolsEnabled = false
+local preventToolsEnabled = false
+local PreventToolsEnabled = false -- alias for compatibility if referenced elsewhere
 
-local function ToggleAntiFling()
-    AntiFlingEnabled = not AntiFlingEnabled
-    if AntiFlingEnabled then
+-- Tool listener
+local toolConnection
+
+local function setupToolListener(char)
+    if toolConnection then
+        pcall(function() toolConnection:Disconnect() end)
+        toolConnection = nil
+    end
+    toolConnection = char.ChildAdded:Connect(function(child)
+        if preventToolsEnabled and child:IsA("Tool") then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                pcall(function() humanoid:UnequipTools() end)
+            end
+        end
+    end)
+end
+
+local character, humanoid, rootPart
+local function onCharacterAdded(char)
+    character = char
+    humanoid = char:WaitForChild("Humanoid")
+    rootPart = char:WaitForChild("HumanoidRootPart")
+    setupToolListener(char)
+    lastSafePosition = rootPart.Position
+end
+
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+player.CharacterAdded:Connect(onCharacterAdded)
+
+-- GUI toggle helpers
+local function setAntiFlingEnabled(value)
+    AntiFlingEnabled = value
+    if value then
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
     else
@@ -197,20 +229,35 @@ local function ToggleAntiFling()
     end
 end
 
-local function TogglePreventTools()
-    PreventToolsEnabled = not PreventToolsEnabled
-    if PreventToolsEnabled then
+local function setPreventTools(value)
+    preventToolsEnabled = value
+    PreventToolsEnabled = value
+    if value then
         TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
         TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
+        if character then
+            local hum = character:FindFirstChildOfClass("Humanoid")
+            if hum then
+                pcall(function() hum:UnequipTools() end)
+            end
+            -- also ensure the listener is active
+            pcall(function() setupToolListener(character) end)
+        end
     else
         TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
     end
 end
 
-AntiFlingToggle.MouseButton1Click:Connect(ToggleAntiFling)
-PreventToolsToggle.MouseButton1Click:Connect(TogglePreventTools)
+AntiFlingToggle.MouseButton1Click:Connect(function()
+    setAntiFlingEnabled(not AntiFlingEnabled)
+end)
 
+PreventToolsToggle.MouseButton1Click:Connect(function()
+    setPreventTools(not preventToolsEnabled)
+end)
+
+-- Minimize / maximize + dragging
 local function MinimizeGUI()
     MainFrame.Visible = false
     MinimizedFrame.Visible = true
@@ -285,68 +332,59 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
-local HRP = character:WaitForChild("HumanoidRootPart")
-local lastSafeCFrame = HRP.CFrame
-local flingThreshold = 30
+-- Anti-fling logic (teleport back to last safe ground position smoothly)
+local lastSafePosition = nil
+local FLING_THRESHOLD = 80
+local SAFE_VEL_FOR_UPDATE = 30
+
+local rayParams = RaycastParams.new()
+rayParams.FilterType = Enum.RaycastFilterType.Blacklist
 
 RunService.Heartbeat:Connect(function()
-    if AntiFlingEnabled and humanoid and humanoid.Health > 0 then
-        local speed = HRP.Velocity.Magnitude
-        if speed < flingThreshold then
-            lastSafeCFrame = HRP.CFrame
+    if not character or not humanoid or not rootPart then return end
+
+    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+    humanoid.PlatformStand = false
+
+    if AntiFlingEnabled then
+        local vel = rootPart.Velocity
+        if vel.Magnitude > FLING_THRESHOLD then
+            -- teleport back to last safe ground position (if available)
+            local safePos = lastSafePosition or rootPart.Position
+            rayParams.FilterDescendantsInstances = {character}
+            local origin = Vector3.new(safePos.X, safePos.Y + 5, safePos.Z)
+            local ray = workspace:Raycast(origin, Vector3.new(0, -200, 0), rayParams)
+            local targetY = safePos.Y
+            if ray and ray.Position then
+                targetY = ray.Position.Y + 3
+            end
+            local targetCFrame = CFrame.new(safePos.X, targetY, safePos.Z)
+            local ok, err = pcall(function()
+                local tween = TweenService:Create(rootPart, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {CFrame = targetCFrame})
+                tween:Play()
+                spawn(function()
+                    tween.Completed:Wait()
+                    if rootPart and rootPart:IsA("BasePart") then
+                        pcall(function() rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0) end)
+                    end
+                end)
+            end)
+            if not ok then
+                -- fallback teleport (non-tween) if tween fails
+                pcall(function()
+                    rootPart.CFrame = targetCFrame
+                    rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+                end)
+            end
         else
-            HRP.CFrame = lastSafeCFrame
-            HRP.Velocity = Vector3.zero
-        end
-    end
-end)
-
-local toolConnection
-local characterConnection
-
-local function setupToolListener(char)
-    if toolConnection then
-        toolConnection:Disconnect()
-    end
-    toolConnection = char.ChildAdded:Connect(function(child)
-        if PreventToolsEnabled and child:IsA("Tool") then
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid:UnequipTools()
-            end
-        end
-    end)
-end
-
-local function onCharacterAdded(char)
-    setupToolListener(char)
-end
-
-if player.Character then
-    onCharacterAdded(player.Character)
-end
-
-characterConnection = player.CharacterAdded:Connect(onCharacterAdded)
-
-PreventToolsToggle.MouseButton1Click:Connect(function()
-    TogglePreventTools()
-    local char = player.Character
-    if char and PreventToolsEnabled then
-        local tool = char:FindFirstChildOfClass("Tool")
-        if tool then
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid:UnequipTools()
+            -- update last safe position only when not moving too fast and standing on ground
+            if vel.Magnitude < SAFE_VEL_FOR_UPDATE and humanoid.FloorMaterial ~= Enum.Material.Air then
+                lastSafePosition = rootPart.Position
             end
         end
     end
 end)
 
-RunService.Heartbeat:Connect(function()
-    if PreventToolsEnabled and player.Character then
-        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid and humanoid:FindFirstChildOfClass("Tool") then
-            humanoid:UnequipTools()
-        end
-    end
-end)
+-- Setup initial toggle visuals based on defaults
+setAntiFlingEnabled(AntiFlingEnabled)
+setPreventTools(preventToolsEnabled)
