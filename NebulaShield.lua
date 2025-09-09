@@ -12,6 +12,7 @@ local Arcade = Enum.Font.Arcade
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
 ScreenGui.Parent = player.PlayerGui
+ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
