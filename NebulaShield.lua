@@ -71,7 +71,7 @@ local AntiFlingLabel = Instance.new("TextLabel")
 AntiFlingLabel.Name = "AntiFlingLabel"
 AntiFlingLabel.Size = UDim2.new(1, -50, 1, 0)
 AntiFlingLabel.BackgroundTransparency = 1
-AntiFlingLabel.Text = "Anti-Fling (Velocity)"
+AntiFlingLabel.Text = "Anti-Fling"
 AntiFlingLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
 AntiFlingLabel.TextXAlignment = Enum.TextXAlignment.Left
 AntiFlingLabel.Font = Enum.Font.Arcade
@@ -103,149 +103,109 @@ local UICorner3 = Instance.new("UICorner")
 UICorner3.CornerRadius = UDim.new(0, 10)
 UICorner3.Parent = ToggleCircle
 
-local PreventToolsFrame = Instance.new("Frame")
-PreventToolsFrame.Name = "PreventToolsFrame"
-PreventToolsFrame.Size = UDim2.new(1, 0, 0, 40)
-PreventToolsFrame.Position = UDim2.new(0, 0, 0, 50)
-PreventToolsFrame.BackgroundTransparency = 1
-PreventToolsFrame.Parent = Content
+local MinimizedFrame = Instance.new("Frame")
+MinimizedFrame.Name = "MinimizedFrame"
+MinimizedFrame.Size = UDim2.new(0, 150, 0, 30)
+MinimizedFrame.Position = UDim2.new(0.5, -75, 0, 10)
+MinimizedFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+MinimizedFrame.BorderSizePixel = 0
+MinimizedFrame.Visible = false
+MinimizedFrame.Parent = ScreenGui
 
-local PreventToolsLabel = Instance.new("TextLabel")
-PreventToolsLabel.Name = "PreventToolsLabel"
-PreventToolsLabel.Size = UDim2.new(1, -50, 1, 0)
-PreventToolsLabel.BackgroundTransparency = 1
-PreventToolsLabel.Text = "Prevent Tools"
-PreventToolsLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-PreventToolsLabel.TextXAlignment = Enum.TextXAlignment.Left
-PreventToolsLabel.Font = Enum.Font.Arcade
-PreventToolsLabel.TextSize = 14
-PreventToolsLabel.Parent = PreventToolsFrame
+local UICorner6 = Instance.new("UICorner")
+UICorner6.CornerRadius = UDim.new(0, 8)
+UICorner6.Parent = MinimizedFrame
 
-local PreventToolsToggle = Instance.new("TextButton")
-PreventToolsToggle.Name = "PreventToolsToggle"
-PreventToolsToggle.Size = UDim2.new(0, 40, 0, 20)
-PreventToolsToggle.Position = UDim2.new(1, -40, 0.5, -10)
-PreventToolsToggle.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
-PreventToolsToggle.BorderSizePixel = 0
-PreventToolsToggle.Text = ""
-PreventToolsToggle.Parent = PreventToolsFrame
+local MinimizedTitle = Instance.new("TextLabel")
+MinimizedTitle.Name = "MinimizedTitle"
+MinimizedTitle.Size = UDim2.new(1, -30, 1, 0)
+MinimizedTitle.Position = UDim2.new(0, 10, 0, 0)
+MinimizedTitle.BackgroundTransparency = 1
+MinimizedTitle.Text = "NEBULA SHIELD"
+MinimizedTitle.TextColor3 = Color3.fromRGB(180, 120, 255)
+MinimizedTitle.TextXAlignment = Enum.TextXAlignment.Left
+MinimizedTitle.Font = Enum.Font.Arcade
+MinimizedTitle.TextSize = 12
+MinimizedTitle.Parent = MinimizedFrame
 
-local UICorner4 = Instance.new("UICorner")
-UICorner4.CornerRadius = UDim.new(0, 10)
-UICorner4.Parent = PreventToolsToggle
-
-local ToggleCircle2 = Instance.new("Frame")
-ToggleCircle2.Name = "ToggleCircle2"
-ToggleCircle2.Size = UDim2.new(0, 16, 0, 16)
-ToggleCircle2.Position = UDim2.new(0.2, -8, 0.5, -8)
-ToggleCircle2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ToggleCircle2.BorderSizePixel = 0
-ToggleCircle2.Parent = PreventToolsToggle
-
-local UICorner5 = Instance.new("UICorner")
-UICorner5.CornerRadius = UDim.new(0, 10)
-UICorner5.Parent = ToggleCircle2
+local MaximizeButton = Instance.new("TextButton")
+MaximizeButton.Name = "MaximizeButton"
+MaximizeButton.Size = UDim2.new(0, 30, 0, 30)
+MaximizeButton.Position = UDim2.new(1, -30, 0, 0)
+MaximizeButton.BackgroundTransparency = 1
+MaximizeButton.Text = "+"
+MaximizeButton.TextColor3 = Color3.fromRGB(180, 120, 255)
+MaximizeButton.Font = Enum.Font.Arcade
+MaximizeButton.TextSize = 16
+MaximizeButton.Parent = MinimizedFrame
 
 local AntiFlingEnabled = true
-local preventToolsEnabled = false
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+local lastCFrame = rootPart.CFrame
 
-local character, humanoid, rootPart
-local lastSafePosition = nil
+RunService.Heartbeat:Connect(function()
+    if AntiFlingEnabled and rootPart and humanoid and humanoid.Health > 0 then
+        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+        humanoid.PlatformStand = false
+        rootPart.CFrame = rootPart.CFrame:Lerp(lastCFrame, 0.1)
+        lastCFrame = rootPart.CFrame
+    end
+end)
 
-local function setupToolListener(char)
-    char.ChildAdded:Connect(function(child)
-        if preventToolsEnabled and child:IsA("Tool") then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                pcall(function() hum:UnequipTools() end)
-            end
-        end
-    end)
-end
-
-local function onCharacterAdded(char)
-    character = char
-    humanoid = char:WaitForChild("Humanoid")
-    rootPart = char:WaitForChild("HumanoidRootPart")
-    setupToolListener(char)
-    lastSafePosition = rootPart.Position
-end
-
-if player.Character then
-    onCharacterAdded(player.Character)
-end
-
-player.CharacterAdded:Connect(onCharacterAdded)
-
-local function setAntiFlingEnabled(value)
-    AntiFlingEnabled = value
-    if value then
+AntiFlingToggle.MouseButton1Click:Connect(function()
+    AntiFlingEnabled = not AntiFlingEnabled
+    if AntiFlingEnabled then
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
     else
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
     end
-end
-
-local function setPreventTools(value)
-    preventToolsEnabled = value
-    if value then
-        TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
-        TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
-    else
-        TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
-        TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
-    end
-end
-
-AntiFlingToggle.MouseButton1Click:Connect(function()
-    setAntiFlingEnabled(not AntiFlingEnabled)
 end)
 
-PreventToolsToggle.MouseButton1Click:Connect(function()
-    setPreventTools(not preventToolsEnabled)
+MinimizeButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    MinimizedFrame.Visible = true
 end)
 
-local FLING_THRESHOLD = 80
-local SAFE_VEL_FOR_UPDATE = 30
-local rayParams = RaycastParams.new()
-rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+MaximizeButton.MouseButton1Click:Connect(function()
+    MainFrame.Visible = true
+    MinimizedFrame.Visible = false
+end)
 
-RunService.Heartbeat:Connect(function()
-    if not character or not humanoid or not rootPart then return end
-    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-    humanoid.PlatformStand = false
+local dragging, dragInput, dragStart, startPos
+local function update(input, frame)
+    local delta = input.Position - dragStart
+    local goal = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    TweenService:Create(frame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = goal}):Play()
+end
 
-    if AntiFlingEnabled then
-        local vel = rootPart.Velocity
-        if vel.Magnitude > FLING_THRESHOLD then
-            local safePos = lastSafePosition or rootPart.Position
-            rayParams.FilterDescendantsInstances = {character}
-            local origin = Vector3.new(safePos.X, safePos.Y + 5, safePos.Z)
-            local ray = workspace:Raycast(origin, Vector3.new(0, -200, 0), rayParams)
-            local targetY = safePos.Y
-            if ray and ray.Position then
-                targetY = ray.Position.Y + 3
-            end
-            local targetCFrame = CFrame.new(safePos.X, targetY, safePos.Z)
-            pcall(function()
-                local tween = TweenService:Create(rootPart, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {CFrame = targetCFrame})
-                tween:Play()
-                spawn(function()
-                    tween.Completed:Wait()
-                    if rootPart and rootPart:IsA("BasePart") then
-                        pcall(function() rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0) end)
-                    end
-                end)
+local function drag(frame)
+    frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
             end)
-        else
-            if vel.Magnitude < SAFE_VEL_FOR_UPDATE and humanoid.FloorMaterial ~= Enum.Material.Air then
-                lastSafePosition = rootPart.Position
-            end
         end
-    end
-end)
+    end)
+    frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input, frame)
+        end
+    end)
+end
 
-setAntiFlingEnabled(AntiFlingEnabled)
-setPreventTools(preventToolsEnabled)
+drag(TitleBar)
+drag(MinimizedFrame)
