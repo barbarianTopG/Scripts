@@ -12,8 +12,8 @@ local Arcade = Enum.Font.Arcade
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
 ScreenGui.Parent = player.PlayerGui
-ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
@@ -290,6 +290,7 @@ UserInputService.InputChanged:Connect(function(input)
         MinimizedFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 end)
+
 
 local originalCollisions = {}
 
