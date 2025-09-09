@@ -6,7 +6,7 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Tag.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/OwnerTag.lua"))()
 
 local Wait = task.wait
 
