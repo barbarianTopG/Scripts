@@ -36,7 +36,7 @@ Title.Name = "Title"
 Title.Size = UDim2.new(1, -60, 1, 0)
 Title.Position = UDim2.new(0, 10, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "NEBULA SHIELD"
+Title.Text = "NEBULA SHIELD v2.1"
 Title.TextColor3 = Color3.fromRGB(180, 120, 255)
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Font = Enum.Font.Arcade
@@ -61,6 +61,7 @@ Content.Position = UDim2.new(0, 10, 0, 40)
 Content.BackgroundTransparency = 1
 Content.Parent = MainFrame
 
+-- Anti-Fling
 local AntiFlingFrame = Instance.new("Frame")
 AntiFlingFrame.Name = "AntiFlingFrame"
 AntiFlingFrame.Size = UDim2.new(1, 0, 0, 40)
@@ -103,6 +104,50 @@ local UICorner3 = Instance.new("UICorner")
 UICorner3.CornerRadius = UDim.new(0, 10)
 UICorner3.Parent = ToggleCircle
 
+-- Prevent Tools
+local PreventToolsFrame = Instance.new("Frame")
+PreventToolsFrame.Name = "PreventToolsFrame"
+PreventToolsFrame.Size = UDim2.new(1, 0, 0, 40)
+PreventToolsFrame.Position = UDim2.new(0, 0, 0, 50)
+PreventToolsFrame.BackgroundTransparency = 1
+PreventToolsFrame.Parent = Content
+
+local PreventToolsLabel = Instance.new("TextLabel")
+PreventToolsLabel.Name = "PreventToolsLabel"
+PreventToolsLabel.Size = UDim2.new(1, -50, 1, 0)
+PreventToolsLabel.BackgroundTransparency = 1
+PreventToolsLabel.Text = "Prevent Tools"
+PreventToolsLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+PreventToolsLabel.TextXAlignment = Enum.TextXAlignment.Left
+PreventToolsLabel.Font = Enum.Font.Arcade
+PreventToolsLabel.TextSize = 14
+PreventToolsLabel.Parent = PreventToolsFrame
+
+local PreventToolsToggle = Instance.new("TextButton")
+PreventToolsToggle.Name = "PreventToolsToggle"
+PreventToolsToggle.Size = UDim2.new(0, 40, 0, 20)
+PreventToolsToggle.Position = UDim2.new(1, -40, 0.5, -10)
+PreventToolsToggle.BackgroundColor3 = Color3.fromRGB(50, 50, 60)
+PreventToolsToggle.BorderSizePixel = 0
+PreventToolsToggle.Text = ""
+PreventToolsToggle.Parent = PreventToolsFrame
+
+local UICorner4 = Instance.new("UICorner")
+UICorner4.CornerRadius = UDim.new(0, 10)
+UICorner4.Parent = PreventToolsToggle
+
+local ToggleCircle2 = Instance.new("Frame")
+ToggleCircle2.Name = "ToggleCircle2"
+ToggleCircle2.Size = UDim2.new(0, 16, 0, 16)
+ToggleCircle2.Position = UDim2.new(0.2, -8, 0.5, -8)
+ToggleCircle2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ToggleCircle2.BorderSizePixel = 0
+ToggleCircle2.Parent = PreventToolsToggle
+
+local UICorner5 = Instance.new("UICorner")
+UICorner5.CornerRadius = UDim.new(0, 10)
+UICorner5.Parent = ToggleCircle2
+
 local MinimizedFrame = Instance.new("Frame")
 MinimizedFrame.Name = "MinimizedFrame"
 MinimizedFrame.Size = UDim2.new(0, 150, 0, 30)
@@ -140,21 +185,24 @@ MaximizeButton.TextSize = 16
 MaximizeButton.Parent = MinimizedFrame
 
 local AntiFlingEnabled = true
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
+local PreventToolsEnabled = false
+local character, humanoid, rootPart = player.Character or player.CharacterAdded:Wait(), nil, nil
 
-RunService.Heartbeat:Connect(function()
-    if AntiFlingEnabled and rootPart and humanoid and humanoid.Health > 0 then
-        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-        humanoid.PlatformStand = false
-        for _, part in ipairs(character:GetDescendants()) do
-            if part:IsA("BasePart") and part.CanCollide then
-                part.CanCollide = false
+local function setupCharacter(char)
+    humanoid = char:WaitForChild("Humanoid")
+    rootPart = char:WaitForChild("HumanoidRootPart")
+    char.ChildAdded:Connect(function(child)
+        if PreventToolsEnabled and child:IsA("Tool") then
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                pcall(function() hum:UnequipTools() end)
             end
         end
-    end
-end)
+    end)
+end
+
+setupCharacter(character)
+player.CharacterAdded:Connect(setupCharacter)
 
 AntiFlingToggle.MouseButton1Click:Connect(function()
     AntiFlingEnabled = not AntiFlingEnabled
@@ -164,9 +212,32 @@ AntiFlingToggle.MouseButton1Click:Connect(function()
     else
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
+        if character then
+            for _, part in ipairs(character:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = true
+                end
+            end
+        end
+    end
+end)
+
+PreventToolsToggle.MouseButton1Click:Connect(function()
+    PreventToolsEnabled = not PreventToolsEnabled
+    if PreventToolsEnabled then
+        TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
+        TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
+    else
+        TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
+        TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if AntiFlingEnabled and character then
         for _, part in ipairs(character:GetDescendants()) do
             if part:IsA("BasePart") then
-                part.CanCollide = true
+                part.CanCollide = false
             end
         end
     end
