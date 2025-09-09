@@ -239,7 +239,6 @@ TitleBar.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MainFrame.Position
-        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -265,7 +264,6 @@ MinimizedFrame.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = MinimizedFrame.Position
-        
         input.Changed:Connect(function()
             if input.UserInputState == Enum.UserInputState.End then
                 dragging = false
@@ -287,37 +285,29 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
-local lastPosition = nil
-local maxSpeed = 50 
-local checkInterval = 0.1
+local HRP = character:WaitForChild("HumanoidRootPart")
+local lastSafeCFrame = HRP.CFrame
+local flingThreshold = 30
 
 RunService.Heartbeat:Connect(function()
-    if not AntiFlingEnabled or not character then return end
-    
-    local rootPart = character:FindFirstChild("HumanoidRootPart")
-    if not rootPart then return end
-    
-    local currentPosition = rootPart.Position
-    
-    if lastPosition then
-        local velocity = (currentPosition - lastPosition).Magnitude / checkInterval
-        
-        if velocity > maxSpeed then
-            rootPart.CFrame = CFrame.new(lastPosition)
+    if AntiFlingEnabled and humanoid and humanoid.Health > 0 then
+        local speed = HRP.Velocity.Magnitude
+        if speed < flingThreshold then
+            lastSafeCFrame = HRP.CFrame
+        else
+            HRP.CFrame = lastSafeCFrame
+            HRP.Velocity = Vector3.zero
         end
     end
-    
-    lastPosition = currentPosition
 end)
 
-local toolConnection = nil
-local characterConnection = nil
+local toolConnection
+local characterConnection
 
 local function setupToolListener(char)
     if toolConnection then
         toolConnection:Disconnect()
     end
-    
     toolConnection = char.ChildAdded:Connect(function(child)
         if PreventToolsEnabled and child:IsA("Tool") then
             local humanoid = char:FindFirstChildOfClass("Humanoid")
@@ -340,7 +330,6 @@ characterConnection = player.CharacterAdded:Connect(onCharacterAdded)
 
 PreventToolsToggle.MouseButton1Click:Connect(function()
     TogglePreventTools()
-    
     local char = player.Character
     if char and PreventToolsEnabled then
         local tool = char:FindFirstChildOfClass("Tool")
