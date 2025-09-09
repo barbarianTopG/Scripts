@@ -2,13 +2,14 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
-
+local Arcade = Enum.Font.Arcade
 local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = player:WaitForChild("PlayerGui")
+ScreenGui.Parent = player.PlayerGui
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
@@ -39,7 +40,7 @@ Title.BackgroundTransparency = 1
 Title.Text = "NEBULA SHIELD v2.1"
 Title.TextColor3 = Color3.fromRGB(180, 120, 255)
 Title.TextXAlignment = Enum.TextXAlignment.Left
-Title.Font = Enum.Font.Arcade
+Title.Font = Arcade
 Title.TextSize = 14
 Title.Parent = TitleBar
 
@@ -50,7 +51,7 @@ MinimizeButton.Position = UDim2.new(1, -30, 0, 0)
 MinimizeButton.BackgroundTransparency = 1
 MinimizeButton.Text = "_"
 MinimizeButton.TextColor3 = Color3.fromRGB(180, 120, 255)
-MinimizeButton.Font = Enum.Font.Arcade
+MinimizeButton.Font = Arcade
 MinimizeButton.TextSize = 16
 MinimizeButton.Parent = TitleBar
 
@@ -61,7 +62,6 @@ Content.Position = UDim2.new(0, 10, 0, 40)
 Content.BackgroundTransparency = 1
 Content.Parent = MainFrame
 
--- Anti-Fling
 local AntiFlingFrame = Instance.new("Frame")
 AntiFlingFrame.Name = "AntiFlingFrame"
 AntiFlingFrame.Size = UDim2.new(1, 0, 0, 40)
@@ -72,10 +72,10 @@ local AntiFlingLabel = Instance.new("TextLabel")
 AntiFlingLabel.Name = "AntiFlingLabel"
 AntiFlingLabel.Size = UDim2.new(1, -50, 1, 0)
 AntiFlingLabel.BackgroundTransparency = 1
-AntiFlingLabel.Text = "Anti-Fling"
+AntiFlingLabel.Text = "Anti-Fling (No Collisions)"
 AntiFlingLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
 AntiFlingLabel.TextXAlignment = Enum.TextXAlignment.Left
-AntiFlingLabel.Font = Enum.Font.Arcade
+AntiFlingLabel.Font = Arcade
 AntiFlingLabel.TextSize = 14
 AntiFlingLabel.Parent = AntiFlingFrame
 
@@ -104,7 +104,6 @@ local UICorner3 = Instance.new("UICorner")
 UICorner3.CornerRadius = UDim.new(0, 10)
 UICorner3.Parent = ToggleCircle
 
--- Prevent Tools
 local PreventToolsFrame = Instance.new("Frame")
 PreventToolsFrame.Name = "PreventToolsFrame"
 PreventToolsFrame.Size = UDim2.new(1, 0, 0, 40)
@@ -119,7 +118,7 @@ PreventToolsLabel.BackgroundTransparency = 1
 PreventToolsLabel.Text = "Prevent Tools"
 PreventToolsLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
 PreventToolsLabel.TextXAlignment = Enum.TextXAlignment.Left
-PreventToolsLabel.Font = Enum.Font.Arcade
+PreventToolsLabel.Font = Arcade
 PreventToolsLabel.TextSize = 14
 PreventToolsLabel.Parent = PreventToolsFrame
 
@@ -169,7 +168,7 @@ MinimizedTitle.BackgroundTransparency = 1
 MinimizedTitle.Text = "NEBULA SHIELD"
 MinimizedTitle.TextColor3 = Color3.fromRGB(180, 120, 255)
 MinimizedTitle.TextXAlignment = Enum.TextXAlignment.Left
-MinimizedTitle.Font = Enum.Font.Arcade
+MinimizedTitle.Font = Arcade
 MinimizedTitle.TextSize = 12
 MinimizedTitle.Parent = MinimizedFrame
 
@@ -180,31 +179,14 @@ MaximizeButton.Position = UDim2.new(1, -30, 0, 0)
 MaximizeButton.BackgroundTransparency = 1
 MaximizeButton.Text = "+"
 MaximizeButton.TextColor3 = Color3.fromRGB(180, 120, 255)
-MaximizeButton.Font = Enum.Font.Arcade
+MaximizeButton.Font = Arcade
 MaximizeButton.TextSize = 16
 MaximizeButton.Parent = MinimizedFrame
 
 local AntiFlingEnabled = true
 local PreventToolsEnabled = false
-local character, humanoid, rootPart = player.Character or player.CharacterAdded:Wait(), nil, nil
 
-local function setupCharacter(char)
-    humanoid = char:WaitForChild("Humanoid")
-    rootPart = char:WaitForChild("HumanoidRootPart")
-    char.ChildAdded:Connect(function(child)
-        if PreventToolsEnabled and child:IsA("Tool") then
-            local hum = char:FindFirstChildOfClass("Humanoid")
-            if hum then
-                pcall(function() hum:UnequipTools() end)
-            end
-        end
-    end)
-end
-
-setupCharacter(character)
-player.CharacterAdded:Connect(setupCharacter)
-
-AntiFlingToggle.MouseButton1Click:Connect(function()
+local function ToggleAntiFling()
     AntiFlingEnabled = not AntiFlingEnabled
     if AntiFlingEnabled then
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
@@ -212,17 +194,10 @@ AntiFlingToggle.MouseButton1Click:Connect(function()
     else
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
-        if character then
-            for _, part in ipairs(character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = true
-                end
-            end
-        end
     end
-end)
+end
 
-PreventToolsToggle.MouseButton1Click:Connect(function()
+local function TogglePreventTools()
     PreventToolsEnabled = not PreventToolsEnabled
     if PreventToolsEnabled then
         TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
@@ -231,59 +206,183 @@ PreventToolsToggle.MouseButton1Click:Connect(function()
         TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
     end
+end
+
+AntiFlingToggle.MouseButton1Click:Connect(ToggleAntiFling)
+PreventToolsToggle.MouseButton1Click:Connect(TogglePreventTools)
+
+local function MinimizeGUI()
+    MainFrame.Visible = false
+    MinimizedFrame.Visible = true
+end
+
+local function MaximizeGUI()
+    MainFrame.Visible = true
+    MinimizedFrame.Visible = false
+end
+
+MinimizeButton.MouseButton1Click:Connect(MinimizeGUI)
+MaximizeButton.MouseButton1Click:Connect(MaximizeGUI)
+
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
 end)
 
-RunService.Heartbeat:Connect(function()
-    if AntiFlingEnabled and character then
-        for _, part in ipairs(character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+
+MinimizedFrame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MinimizedFrame.Position
+        
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+MinimizedFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging and MinimizedFrame.Visible then
+        local delta = input.Position - dragStart
+        MinimizedFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+local originalCollisions = {}
+local collisionConnections = {}
+
+local function disableCollisions()
+    if not character then return end
+    
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("BasePart") and part.CanCollide then
+            originalCollisions[part] = part.CanCollide
+            part.CanCollide = false
+        end
+    end
+end
+
+local function enableCollisions()
+    if not character then return end
+    
+    for part, canCollide in pairs(originalCollisions) do
+        if part.Parent then
+            part.CanCollide = canCollide
+        end
+    end
+    originalCollisions = {}
+end
+
+player.CharacterAdded:Connect(function(newChar)
+    character = newChar
+    humanoid = newChar:WaitForChild("Humanoid")
+    
+    if AntiFlingEnabled then
+        disableCollisions()
+    end
+end)
+
+AntiFlingToggle.MouseButton1Click:Connect(function()
+    ToggleAntiFling()
+    
+    if AntiFlingEnabled then
+        disableCollisions()
+    else
+        enableCollisions()
+    end
+end)
+
+if character then
+    disableCollisions()
+end
+
+local toolConnection = nil
+local characterConnection = nil
+
+local function setupToolListener(char)
+    if toolConnection then
+        toolConnection:Disconnect()
+    end
+    
+    toolConnection = char.ChildAdded:Connect(function(child)
+        if PreventToolsEnabled and child:IsA("Tool") then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:UnequipTools()
+            end
+        end
+    end)
+end
+
+local function onCharacterAdded(char)
+    setupToolListener(char)
+end
+
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+
+characterConnection = player.CharacterAdded:Connect(onCharacterAdded)
+
+PreventToolsToggle.MouseButton1Click:Connect(function()
+    TogglePreventTools()
+    
+    local char = player.Character
+    if char and PreventToolsEnabled then
+        local tool = char:FindFirstChildOfClass("Tool")
+        if tool then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:UnequipTools()
             end
         end
     end
 end)
 
-MinimizeButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-    MinimizedFrame.Visible = true
+RunService.Heartbeat:Connect(function()
+    if PreventToolsEnabled and player.Character then
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid and humanoid:FindFirstChildOfClass("Tool") then
+            humanoid:UnequipTools()
+        end
+    end
 end)
-
-MaximizeButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = true
-    MinimizedFrame.Visible = false
-end)
-
-local dragging, dragInput, dragStart, startPos
-local function update(input, frame)
-    local delta = input.Position - dragStart
-    local goal = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    TweenService:Create(frame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = goal}):Play()
-end
-
-local function drag(frame)
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-    frame.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input, frame)
-        end
-    end)
-end
-
-drag(TitleBar)
-drag(MinimizedFrame)
