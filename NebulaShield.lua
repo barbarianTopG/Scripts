@@ -2,11 +2,13 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+
 local player = Players.LocalPlayer
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "NebulaShield"
-ScreenGui.Parent = player.PlayerGui
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 local MainFrame = Instance.new("Frame")
@@ -144,66 +146,23 @@ local UICorner5 = Instance.new("UICorner")
 UICorner5.CornerRadius = UDim.new(0, 10)
 UICorner5.Parent = ToggleCircle2
 
-local MinimizedFrame = Instance.new("Frame")
-MinimizedFrame.Name = "MinimizedFrame"
-MinimizedFrame.Size = UDim2.new(0, 150, 0, 30)
-MinimizedFrame.Position = UDim2.new(0.5, -75, 0, 10)
-MinimizedFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
-MinimizedFrame.BorderSizePixel = 0
-MinimizedFrame.Visible = false
-MinimizedFrame.Parent = ScreenGui
-
-local UICorner6 = Instance.new("UICorner")
-UICorner6.CornerRadius = UDim.new(0, 8)
-UICorner6.Parent = MinimizedFrame
-
-local MinimizedTitle = Instance.new("TextLabel")
-MinimizedTitle.Name = "MinimizedTitle"
-MinimizedTitle.Size = UDim2.new(1, -30, 1, 0)
-MinimizedTitle.Position = UDim2.new(0, 10, 0, 0)
-MinimizedTitle.BackgroundTransparency = 1
-MinimizedTitle.Text = "NEBULA SHIELD"
-MinimizedTitle.TextColor3 = Color3.fromRGB(180, 120, 255)
-MinimizedTitle.TextXAlignment = Enum.TextXAlignment.Left
-MinimizedTitle.Font = Enum.Font.Arcade
-MinimizedTitle.TextSize = 12
-MinimizedTitle.Parent = MinimizedFrame
-
-local MaximizeButton = Instance.new("TextButton")
-MaximizeButton.Name = "MaximizeButton"
-MaximizeButton.Size = UDim2.new(0, 30, 0, 30)
-MaximizeButton.Position = UDim2.new(1, -30, 0, 0)
-MaximizeButton.BackgroundTransparency = 1
-MaximizeButton.Text = "+"
-MaximizeButton.TextColor3 = Color3.fromRGB(180, 120, 255)
-MaximizeButton.Font = Enum.Font.Arcade
-MaximizeButton.TextSize = 16
-MaximizeButton.Parent = MinimizedFrame
-
--- State variables
 local AntiFlingEnabled = true
 local preventToolsEnabled = false
-local PreventToolsEnabled = false -- alias for compatibility if referenced elsewhere
 
--- Tool listener
-local toolConnection
+local character, humanoid, rootPart
+local lastSafePosition = nil
 
 local function setupToolListener(char)
-    if toolConnection then
-        pcall(function() toolConnection:Disconnect() end)
-        toolConnection = nil
-    end
-    toolConnection = char.ChildAdded:Connect(function(child)
+    char.ChildAdded:Connect(function(child)
         if preventToolsEnabled and child:IsA("Tool") then
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                pcall(function() humanoid:UnequipTools() end)
+            local hum = char:FindFirstChildOfClass("Humanoid")
+            if hum then
+                pcall(function() hum:UnequipTools() end)
             end
         end
     end)
 end
 
-local character, humanoid, rootPart
 local function onCharacterAdded(char)
     character = char
     humanoid = char:WaitForChild("Humanoid")
@@ -215,9 +174,9 @@ end
 if player.Character then
     onCharacterAdded(player.Character)
 end
+
 player.CharacterAdded:Connect(onCharacterAdded)
 
--- GUI toggle helpers
 local function setAntiFlingEnabled(value)
     AntiFlingEnabled = value
     if value then
@@ -231,18 +190,9 @@ end
 
 local function setPreventTools(value)
     preventToolsEnabled = value
-    PreventToolsEnabled = value
     if value then
         TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(120, 70, 200)}):Play()
         TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.8, -8, 0.5, -8)}):Play()
-        if character then
-            local hum = character:FindFirstChildOfClass("Humanoid")
-            if hum then
-                pcall(function() hum:UnequipTools() end)
-            end
-            -- also ensure the listener is active
-            pcall(function() setupToolListener(character) end)
-        end
     else
         TweenService:Create(PreventToolsToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle2, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
@@ -257,99 +207,19 @@ PreventToolsToggle.MouseButton1Click:Connect(function()
     setPreventTools(not preventToolsEnabled)
 end)
 
--- Minimize / maximize + dragging
-local function MinimizeGUI()
-    MainFrame.Visible = false
-    MinimizedFrame.Visible = true
-end
-
-local function MaximizeGUI()
-    MainFrame.Visible = true
-    MinimizedFrame.Visible = false
-end
-
-MinimizeButton.MouseButton1Click:Connect(MinimizeGUI)
-MaximizeButton.MouseButton1Click:Connect(MaximizeGUI)
-
-local dragging
-local dragInput
-local dragStart
-local startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-TitleBar.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = MainFrame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-TitleBar.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
-    end
-end)
-
-MinimizedFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = MinimizedFrame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-MinimizedFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging and MinimizedFrame.Visible then
-        local delta = input.Position - dragStart
-        MinimizedFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-
--- Anti-fling logic (teleport back to last safe ground position smoothly)
-local lastSafePosition = nil
 local FLING_THRESHOLD = 80
 local SAFE_VEL_FOR_UPDATE = 30
-
 local rayParams = RaycastParams.new()
 rayParams.FilterType = Enum.RaycastFilterType.Blacklist
 
 RunService.Heartbeat:Connect(function()
     if not character or not humanoid or not rootPart then return end
-
     humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
     humanoid.PlatformStand = false
 
     if AntiFlingEnabled then
         local vel = rootPart.Velocity
         if vel.Magnitude > FLING_THRESHOLD then
-            -- teleport back to last safe ground position (if available)
             local safePos = lastSafePosition or rootPart.Position
             rayParams.FilterDescendantsInstances = {character}
             local origin = Vector3.new(safePos.X, safePos.Y + 5, safePos.Z)
@@ -359,7 +229,7 @@ RunService.Heartbeat:Connect(function()
                 targetY = ray.Position.Y + 3
             end
             local targetCFrame = CFrame.new(safePos.X, targetY, safePos.Z)
-            local ok, err = pcall(function()
+            pcall(function()
                 local tween = TweenService:Create(rootPart, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {CFrame = targetCFrame})
                 tween:Play()
                 spawn(function()
@@ -369,15 +239,7 @@ RunService.Heartbeat:Connect(function()
                     end
                 end)
             end)
-            if not ok then
-                -- fallback teleport (non-tween) if tween fails
-                pcall(function()
-                    rootPart.CFrame = targetCFrame
-                    rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
-                end)
-            end
         else
-            -- update last safe position only when not moving too fast and standing on ground
             if vel.Magnitude < SAFE_VEL_FOR_UPDATE and humanoid.FloorMaterial ~= Enum.Material.Air then
                 lastSafePosition = rootPart.Position
             end
@@ -385,6 +247,5 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- Setup initial toggle visuals based on defaults
 setAntiFlingEnabled(AntiFlingEnabled)
 setPreventTools(preventToolsEnabled)
