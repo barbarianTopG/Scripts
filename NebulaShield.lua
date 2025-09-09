@@ -37,7 +37,7 @@ Title.Name = "Title"
 Title.Size = UDim2.new(1, -60, 1, 0)
 Title.Position = UDim2.new(0, 10, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "NEBULA SHIELD"
+Title.Text = "NEBULA SHIELD v2.1"
 Title.TextColor3 = Color3.fromRGB(180, 120, 255)
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Font = Enum.Font.Arcade
@@ -287,20 +287,12 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- Improved Anti-Fling System
 local lastPosition = nil
-local maxSpeed = 100
-local checkInterval = 0.2
-local lastCheckTime = 0
-local isBeingFlinged = false
-local flingDetectionThreshold = 50 -- Speed threshold to detect flinging
+local maxSpeed = 50 
+local checkInterval = 0.1
 
 RunService.Heartbeat:Connect(function()
     if not AntiFlingEnabled or not character then return end
-    
-    local currentTime = tick()
-    if currentTime - lastCheckTime < checkInterval then return end
-    lastCheckTime = currentTime
     
     local rootPart = character:FindFirstChild("HumanoidRootPart")
     if not rootPart then return end
@@ -310,15 +302,7 @@ RunService.Heartbeat:Connect(function()
     if lastPosition then
         local velocity = (currentPosition - lastPosition).Magnitude / checkInterval
         
-        -- Detect if being flinged
-        if velocity > flingDetectionThreshold then
-            isBeingFlinged = true
-        elseif velocity < 30 then -- If speed drops below normal, reset detection
-            isBeingFlinged = false
-        end
-        
-        -- Only teleport back if being flinged and speed exceeds max threshold
-        if isBeingFlinged and velocity > maxSpeed then
+        if velocity > maxSpeed then
             rootPart.CFrame = CFrame.new(lastPosition)
         end
     end
@@ -326,21 +310,19 @@ RunService.Heartbeat:Connect(function()
     lastPosition = currentPosition
 end)
 
--- Improved Prevent Tools System
-local toolFriend = nil
-local charFriend = nil
+local toolConnection = nil
+local characterConnection = nil
 
 local function setupToolListener(char)
-    if toolFriend then
-        toolFriend:Disconnect()
+    if toolConnection then
+        toolConnection:Disconnect()
     end
     
-    toolFriend = char.ChildAdded:Connect(function(child)
+    toolConnection = char.ChildAdded:Connect(function(child)
         if PreventToolsEnabled and child:IsA("Tool") then
             local humanoid = char:FindFirstChildOfClass("Humanoid")
             if humanoid then
                 humanoid:UnequipTools()
-                child:Destroy()
             end
         end
     end)
@@ -354,9 +336,8 @@ if player.Character then
     onCharacterAdded(player.Character)
 end
 
-charFriend = player.CharacterAdded:Connect(onCharacterAdded)
+characterConnection = player.CharacterAdded:Connect(onCharacterAdded)
 
--- Update tool prevention when toggle is changed
 PreventToolsToggle.MouseButton1Click:Connect(function()
     TogglePreventTools()
     
@@ -367,8 +348,16 @@ PreventToolsToggle.MouseButton1Click:Connect(function()
             local humanoid = char:FindFirstChildOfClass("Humanoid")
             if humanoid then
                 humanoid:UnequipTools()
-                tool:Destroy()
             end
+        end
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if PreventToolsEnabled and player.Character then
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid and humanoid:FindFirstChildOfClass("Tool") then
+            humanoid:UnequipTools()
         end
     end
 end)
