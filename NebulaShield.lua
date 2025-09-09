@@ -143,14 +143,16 @@ local AntiFlingEnabled = true
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoid = character:WaitForChild("Humanoid")
 local rootPart = character:WaitForChild("HumanoidRootPart")
-local lastCFrame = rootPart.CFrame
 
 RunService.Heartbeat:Connect(function()
     if AntiFlingEnabled and rootPart and humanoid and humanoid.Health > 0 then
         humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
         humanoid.PlatformStand = false
-        rootPart.CFrame = rootPart.CFrame:Lerp(lastCFrame, 0.1)
-        lastCFrame = rootPart.CFrame
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") and part.CanCollide then
+                part.CanCollide = false
+            end
+        end
     end
 end)
 
@@ -162,6 +164,11 @@ AntiFlingToggle.MouseButton1Click:Connect(function()
     else
         TweenService:Create(AntiFlingToggle, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 60)}):Play()
         TweenService:Create(ToggleCircle, TweenInfo.new(0.2), {Position = UDim2.new(0.2, -8, 0.5, -8)}):Play()
+        for _, part in ipairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
     end
 end)
 
