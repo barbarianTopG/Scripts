@@ -61,7 +61,7 @@ surfaceGui.Face = Enum.NormalId.Top
 surfaceGui.Parent = platform
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1, 0, 1, 0)
+frame.Size = UDim2.new(1, 极, 1, 0)
 frame.BackgroundColor3 = Color3.fromRGB(15, 3, 35)
 frame.BorderSizePixel = 0
 frame.Parent = surfaceGui
@@ -135,7 +135,7 @@ for i = 1, 100 do
     rock.Size = Vector3.new(
         math.random(15, 40),
         math.random(15, 40),
-        math.random(15, 40)
+       极 math.random(15, 40)
     )
     rock.Position = Vector3.new(
         playerPosition.X + math.random(-800, 800),
@@ -178,7 +178,7 @@ teleportPad.Color = Color3.fromRGB(0, 170, 255)
 teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
-padLight.Brightness = 6
+pad极.Brightness = 6
 padLight.Range = 20
 padLight.Color = Color3.fromRGB(0, 170, 255)
 padLight.Parent = teleportPad
@@ -222,7 +222,7 @@ uiBg.Parent = mainFrame
 
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 50)
-title.Position = UDim2.new(0, 极, 0, 0)
+title.Position = UDim2.new(0, 0, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "PlasmaMap"
 title.TextColor3 = Color3.fromRGB(210, 210, 255)
@@ -236,15 +236,15 @@ desc.Position = UDim2.new(0, 10, 0, 50)
 desc.BackgroundTransparency = 1
 desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(180, 180, 230)
-极.TextWrapped = true
+desc.TextWrapped = true
 desc.TextScaled = true
 desc.Font = Enum.Font.SourceSans
 desc.Parent = mainFrame
 
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 180, 0, 极0)
+button.Size = UDim2.new(0, 180, 0, 40)
 button.Position = UDim2.new(0.5, -90, 0, 160)
-button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
+button.BackgroundColor3 = Color3.fromRGB(0, 极20, 220)
 button.BorderSizePixel = 0
 button.Text = "TELEPORT TO SPACE"
 button.TextColor3 = Color3.new(1, 1, 1)
@@ -272,10 +272,10 @@ local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 20)
 minimizeButton.Position = UDim2.new(1, -35, 0, 5)
 minimizeButton.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
-minimizeButton.BorderSizePixel = 极
+minimizeButton.BorderSizePixel = 0
 minimizeButton.Text = "X"
 minimizeButton.TextColor3 = Color3.new(1, 1, 1)
-minimizeButton.Font = Enum.Font极ciFi
+minimizeButton.Font = Enum.Font.SciFi
 minimizeButton.TextSize = 14
 minimizeButton.Parent = mainFrame
 
@@ -308,7 +308,7 @@ local function toggleShadows()
     else
         lighting.Ambient = originalLighting.Ambient
         lighting.OutdoorAmbient = originalLighting.OutdoorAmbient
-        lighting.Fog极or = originalLighting.FogColor
+        lighting.FogColor = originalLighting.FogColor
         lighting.FogEnd = originalLighting.FogEnd
         lighting.Brightness = originalLighting.Brightness
         shadowToggle.Text = "SHADOWS: OFF"
@@ -324,7 +324,7 @@ minimizeButton.MouseButton1Click:Connect(function()
     showButton.Visible = true
 end)
 
-showButton.MouseButton1极:Connect(function()
+showButton.MouseButton1Click:Connect(function()
     isUIVisible = true
     mainFrame.Visible = true
     showButton.Visible = false
@@ -353,7 +353,7 @@ spawn(function()
     while true do
         if isUIVisible then
             for i = 1, 20 do
-                mainFrame.Position = UDim2.new(0, 10, 0.5, -125 + math.sin(tick())*2)
+                mainFrame.Position = UDim2.new(0, 10, 0.5, -125 + math.sin(tick())*2
                 wait(0.05)
             end
         else
@@ -372,7 +372,7 @@ local function createFloatingPlanets()
             playerPosition.Y + 500 + math.random(300, 800),
             playerPosition.Z + math.random(-1200, 1200)
         )
-        planet.Anchored =极 true
+        planet.Anchored = true
         planet.Material = Enum.Material.Neon
         planet.Color = Color3.fromRGB(
             math.random(60, 220),
@@ -384,7 +384,7 @@ local function createFloatingPlanets()
         planetLight.Brightness = 4
         planetLight.Range = 60
         planetLight.Color = planet.Color
-        planetLight.Parent = planet
+        planetLight.P极 = planet
         
         local ring = Instance.new("Part")
         ring.Shape = Enum.PartType.Cylinder
