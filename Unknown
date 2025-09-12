@@ -196,7 +196,7 @@ desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(170, 170, 220)
 desc.TextWrapped = true
 desc.TextScaled = true
-desc.Font = Enum.Font.SourceSans
+desc.Font = Enum.Font.Arcade
 desc.Parent = mainFrame
 
 local button = Instance.new("TextButton")
