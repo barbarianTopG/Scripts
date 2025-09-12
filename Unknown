@@ -167,37 +167,6 @@ dome.Transparency = 0.4
 dome.Color = Color3.fromRGB(70, 120, 255)
 dome.Parent = island
 
--- LADDER TO GLASS ORB PLATFORM
-local function createLadder()
-    local ladderBase = Instance.new("Part")
-    ladderBase.Size = Vector3.new(5, 2, 5)
-    ladderBase.Position = Vector3.new(playerPosition.X, playerPosition.Y + 501, playerPosition.Z)
-    ladderBase.Anchored = true
-    ladderBase.Material = Enum.Material.Metal
-    ladderBase.Color = Color3.fromRGB(80, 80, 100)
-    ladderBase.Parent = island
-
-    for i = 1, 15 do
-        local ladderRung = Instance.new("Part")
-        ladderRung.Size = Vector3.new(3, 1, 1)
-        ladderRung.Position = Vector3.new(playerPosition.X, playerPosition.Y + 501 + (i * 3), playerPosition.Z)
-        ladderRung.Anchored = true
-        ladderRung.Material = Enum.Material.Metal
-        ladderRung.Color = Color3.fromRGB(100, 100, 120)
-        ladderRung.Parent = island
-    end
-
-    local ladderTop = Instance.new("Part")
-    ladderTop.Size = Vector3.new(5, 2, 5)
-    ladderTop.Position = Vector3.new(playerPosition.X, playerPosition.Y + 550, playerPosition.Z)
-    ladderTop.Anchored = true
-    ladderTop.Material = Enum.Material.Metal
-    ladderTop.Color = Color3.fromRGB(80, 80, 100)
-    ladderTop.Parent = island
-end
-
-createLadder()
-
 -- TELEPORT PAD AT 1/4 FORWARD POSITION
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
@@ -253,7 +222,7 @@ uiBg.Parent = mainFrame
 
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 50)
-title.Position = UDim2.new(0, 0, 0, 0)
+title.Position = UDim2.new(0, 极, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "PlasmaMap"
 title.TextColor3 = Color3.fromRGB(210, 210, 255)
@@ -267,13 +236,13 @@ desc.Position = UDim2.new(0, 10, 0, 50)
 desc.BackgroundTransparency = 1
 desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(180, 180, 230)
-desc.TextWrapped = true
+极.TextWrapped = true
 desc.TextScaled = true
 desc.Font = Enum.Font.SourceSans
 desc.Parent = mainFrame
 
 local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 180, 0, 40)
+button.Size = UDim2.new(0, 180, 0, 极0)
 button.Position = UDim2.new(0.5, -90, 0, 160)
 button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
 button.BorderSizePixel = 0
@@ -303,10 +272,10 @@ local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 20)
 minimizeButton.Position = UDim2.new(1, -35, 0, 5)
 minimizeButton.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
-minimizeButton.BorderSizePixel = 0
+minimizeButton.BorderSizePixel = 极
 minimizeButton.Text = "X"
 minimizeButton.TextColor3 = Color3.new(1, 1, 1)
-minimizeButton.Font = Enum.Font.SciFi
+minimizeButton.Font = Enum.Font极ciFi
 minimizeButton.TextSize = 14
 minimizeButton.Parent = mainFrame
 
@@ -339,7 +308,7 @@ local function toggleShadows()
     else
         lighting.Ambient = originalLighting.Ambient
         lighting.OutdoorAmbient = originalLighting.OutdoorAmbient
-        lighting.FogColor = originalLighting.FogColor
+        lighting.Fog极or = originalLighting.FogColor
         lighting.FogEnd = originalLighting.FogEnd
         lighting.Brightness = originalLighting.Brightness
         shadowToggle.Text = "SHADOWS: OFF"
@@ -355,7 +324,7 @@ minimizeButton.MouseButton1Click:Connect(function()
     showButton.Visible = true
 end)
 
-showButton.MouseButton1Click:Connect(function()
+showButton.MouseButton1极:Connect(function()
     isUIVisible = true
     mainFrame.Visible = true
     showButton.Visible = false
@@ -403,7 +372,7 @@ local function createFloatingPlanets()
             playerPosition.Y + 500 + math.random(300, 800),
             playerPosition.Z + math.random(-1200, 1200)
         )
-        planet.Anchored = true
+        planet.Anchored =极 true
         planet.Material = Enum.Material.Neon
         planet.Color = Color3.fromRGB(
             math.random(60, 220),
