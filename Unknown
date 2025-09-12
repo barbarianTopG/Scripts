@@ -5,7 +5,7 @@ local lighting = game:GetService("Lighting")
 local tweenService = game:GetService("TweenService")
 local localPlayer = players.LocalPlayer
 local playerPosition = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character.HumanoidRootPart.Position or Vector3.new(0, 0, 0)
-local teleportCFrame = CFrame.new(playerPosition.X + 40, playerPosition.Y + 520, playerPosition.Z + 40)  -- Moved forward and up
+local teleportCFrame = CFrame.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)  -- Moved to 1/4 forward position
 
 local originalLighting = {
     Ambient = lighting.Ambient,
@@ -157,11 +157,42 @@ dome.Transparency = 0.4
 dome.Color = Color3.fromRGB(70, 120, 255)
 dome.Parent = island
 
--- FIXED TELEPORT PAD POSITION (moved forward and up to avoid glass orb)
+-- LADDER TO GLASS ORB PLATFORM
+local function createLadder()
+    local ladderBase = Instance.new("Part")
+    ladderBase.Size = Vector3.new(5, 2, 5)
+    ladderBase.Position = Vector3.new(playerPosition.X, playerPosition.Y + 501, playerPosition.Z)
+    ladderBase.Anchored = true
+    ladderBase.Material = Enum.Material.Metal
+    ladderBase.Color = Color3.fromRGB(80, 80, 100)
+    ladderBase.Parent = island
+
+    for i = 1, 15 do
+        local ladderRung = Instance.new("Part")
+        ladderRung.Size = Vector3.new(3, 1, 1)
+        ladderRung.Position = Vector3.new(playerPosition.X, playerPosition.Y + 501 + (i * 3), playerPosition.Z)
+        ladderRung.Anchored = true
+        ladderRung.Material = Enum.Material.Metal
+        ladderRung.Color = Color3.fromRGB(100, 100, 120)
+        ladderRung.Parent = island
+    end
+
+    local ladderTop = Instance.new("Part")
+    ladderTop.Size = Vector3.new(5, 2, 5)
+    ladderTop.Position = Vector3.new(playerPosition.X, playerPosition.Y + 550, playerPosition.Z)
+    ladderTop.Anchored = true
+    ladderTop.Material = Enum.Material.Metal
+    ladderTop.Color = Color3.fromRGB(80, 80, 100)
+    ladderTop.Parent = island
+end
+
+createLadder()
+
+-- TELEPORT PAD AT 1/4 FORWARD POSITION (smaller size)
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
-teleportPad.Size = Vector3.new(25, 4, 25)
-teleportPad.Position = Vector3.new(playerPosition.X + 40, playerPosition.Y + 520, playerPosition.Z + 40)  -- Moved forward and up
+teleportPad.Size = Vector3.new(15, 2, 15)  -- Smaller size
+teleportPad.Position = Vector3.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)  -- 1/4 forward position
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
@@ -169,7 +200,7 @@ teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
 padLight.Brightness = 6
-padLight.Range = 25
+padLight.Range = 20
 padLight.Color = Color3.fromRGB(0, 170, 255)
 padLight.Parent = teleportPad
 
@@ -180,16 +211,16 @@ particles.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 200, 255))
 })
 particles.Size = NumberSequence.new({
-    NumberSequenceKeypoint.new(0, 1.5),
-    NumberSequenceKeypoint.new(1, 0.5)
+    NumberSequenceKeypoint.new(0, 1.2),
+    NumberSequenceKeypoint.new(1, 0.4)
 })
 particles.Transparency = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 0.2),
     NumberSequenceKeypoint.new(1, 0.8)
 })
-particles.Lifetime = NumberRange.new(5)
-particles.Rate = 25
-particles.Speed = NumberRange.new(5)
+particles.Lifetime = NumberRange.new(4)
+particles.Rate = 20
+particles.Speed = NumberRange.new(4)
 particles.Parent = teleportPad
 
 local screenGui = Instance.new("ScreenGui")
@@ -215,7 +246,7 @@ title.Size = UDim2.new(1, 0, 0, 50)
 title.Position = UDim2.new(0, 0, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "PlasmaMap"
-title.TextColor3 = Color3.fromRGB(210, 210, 255)
+title.TextColor极 = Color3.fromRGB(210, 210, 255)
 title.TextScaled = true
 title.Font = Enum.Font.SciFi
 title.Parent = mainFrame
@@ -224,7 +255,7 @@ local desc = Instance.new("TextLabel")
 desc.Size = UDim2.new(1, -20, 0, 60)
 desc.Position = UDim2.new(0, 10, 0, 50)
 desc.BackgroundTransparency = 1
-desc.Text = "Love from PlasmaByte"
+极desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(180, 180, 230)
 desc.TextWrapped = true
 desc.TextScaled = true
@@ -243,7 +274,7 @@ button.TextSize = 18
 button.Parent = mainFrame
 
 local buttonGlow = Instance.new("UIStroke")
-buttonGlow.Color = Color3.fromRGB(0, 220, 255)
+button极low.Color = Color3.fromRGB(0, 220, 255)
 buttonGlow.Thickness = 3
 buttonGlow.Parent = button
 
@@ -266,12 +297,12 @@ minimizeButton.BorderSizePixel = 0
 minimizeButton.Text = "X"
 minimizeButton.TextColor3 = Color3.new(1, 1, 1)
 minimizeButton.Font = Enum.Font.SciFi
-minimizeButton.TextSize = 14
+minimizeButton.Text极ize = 14
 minimizeButton.Parent = mainFrame
 
 local showButton = Instance.new("TextButton")
 showButton.Size = UDim2.new(0, 100, 0, 30)
-showButton.Position = UDim2.new(0, 10, 1, -35)
+showButton.Position = UDim2.new(0, 极0, 1, -35)
 showButton.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
 showButton.BorderSizePixel = 0
 showButton.Text = "Show UI"
@@ -401,7 +432,7 @@ end
 createFloatingPlanets()
 
 local function createNebulaClouds()
-    for i = 1, 15 do
+    for i = 极, 15 do
         local cloud = Instance.new("Part")
         cloud.Size = Vector3.new(math.random(80, 200), math.random(20, 50), math.random(80, 200))
         cloud.Position = Vector3.new(
