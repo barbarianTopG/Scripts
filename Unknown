@@ -4,7 +4,15 @@ local players = game:GetService("Players")
 local lighting = game:GetService("Lighting")
 local tweenService = game:GetService("TweenService")
 local localPlayer = players.LocalPlayer
-local teleportCFrame = CFrame.new(0, 1000, 0)
+local teleportCFrame = CFrame.new(0, 1002, 0)
+
+local originalLighting = {
+    Ambient = lighting.Ambient,
+    OutdoorAmbient = lighting.OutdoorAmbient,
+    FogColor = lighting.FogColor,
+    FogEnd = lighting.FogEnd,
+    Brightness = lighting.Brightness
+}
 
 lighting.Ambient = Color3.fromRGB(40, 40, 70)
 lighting.OutdoorAmbient = Color3.fromRGB(40, 40, 70)
@@ -137,7 +145,7 @@ dome.Parent = island
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(15, 2, 15)
-teleportPad.Position = Vector3.new(0, 1000.5, 0)
+teleportPad.Position = Vector3.new(0, 1002, 0)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 150, 255)
@@ -158,15 +166,13 @@ particles.Rate = 15
 particles.Speed = NumberRange.new(3)
 particles.Parent = teleportPad
 
-teleportCFrame = CFrame.new(0, 1002, 0)
-
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "PlasmaMapUI"
 screenGui.Parent = game:GetService("CoreGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 320, 0, 220)
-mainFrame.Position = UDim2.new(0, 10, 0.5, -110)
+mainFrame.Size = UDim2.new(0, 320, 0, 250)
+mainFrame.Position = UDim2.new(0, 10, 0.5, -125)
 mainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 35)
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = screenGui
@@ -189,14 +195,14 @@ title.Font = Enum.Font.SciFi
 title.Parent = mainFrame
 
 local desc = Instance.new("TextLabel")
-desc.Size = UDim2.new(1, -20, 0, 70)
+desc.Size = UDim2.new(1, -20, 0, 60)
 desc.Position = UDim2.new(0, 10, 0, 50)
 desc.BackgroundTransparency = 1
 desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(170, 170, 220)
 desc.TextWrapped = true
 desc.TextScaled = true
-desc.Font = Enum.Font.Arcade
+desc.Font = Enum.Font.SourceSans
 desc.Parent = mainFrame
 
 local button = Instance.new("TextButton")
@@ -214,6 +220,17 @@ local buttonGlow = Instance.new("UIStroke")
 buttonGlow.Color = Color3.fromRGB(0, 200, 255)
 buttonGlow.Thickness = 2
 buttonGlow.Parent = button
+
+local shadowToggle = Instance.new("TextButton")
+shadowToggle.Size = UDim2.new(0, 180, 0, 30)
+shadowToggle.Position = UDim2.new(0.5, -90, 0, 120)
+shadowToggle.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
+shadowToggle.BorderSizePixel = 0
+shadowToggle.Text = "SHADOWS: ON"
+shadowToggle.TextColor3 = Color3.new(1, 1, 1)
+shadowToggle.Font = Enum.Font.SciFi
+shadowToggle.TextSize = 14
+shadowToggle.Parent = mainFrame
 
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 20)
@@ -239,6 +256,31 @@ showButton.Visible = false
 showButton.Parent = screenGui
 
 local isUIVisible = true
+local shadowsEnabled = true
+
+local function toggleShadows()
+    shadowsEnabled = not shadowsEnabled
+    
+    if shadowsEnabled then
+        lighting.Ambient = Color3.fromRGB(40, 40, 70)
+        lighting.OutdoorAmbient = Color3.fromRGB(40, 40, 70)
+        lighting.FogColor = Color3.fromRGB(5, 5, 15)
+        lighting.FogEnd = 1500
+        lighting.Brightness = 0.25
+        shadowToggle.Text = "SHADOWS: ON"
+        shadowToggle.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
+    else
+        lighting.Ambient = originalLighting.Ambient
+        lighting.OutdoorAmbient = originalLighting.OutdoorAmbient
+        lighting.FogColor = originalLighting.FogColor
+        lighting.FogEnd = originalLighting.FogEnd
+        lighting.Brightness = originalLighting.Brightness
+        shadowToggle.Text = "SHADOWS: OFF"
+        shadowToggle.BackgroundColor3 = Color3.fromRGB(50, 50, 100)
+    end
+end
+
+shadowToggle.MouseButton1Click:Connect(toggleShadows)
 
 minimizeButton.MouseButton1Click:Connect(function()
     isUIVisible = false
@@ -275,7 +317,7 @@ spawn(function()
     while true do
         if isUIVisible then
             for i = 1, 20 do
-                mainFrame.Position = UDim2.new(0, 10, 0.5, -110 + math.sin(tick())*2)
+                mainFrame.Position = UDim2.new(0, 10, 0.5, -125 + math.sin(tick())*2)
                 wait(0.05)
             end
         else
