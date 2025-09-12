@@ -5,7 +5,7 @@ local lighting = game:GetService("Lighting")
 local tweenService = game:GetService("TweenService")
 local localPlayer = players.LocalPlayer
 local playerPosition = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character.HumanoidRootPart.Position or Vector3.new(0, 0, 0)
-local teleportCFrame = CFrame.new(playerPosition.X, playerPosition.Y + 515, playerPosition.Z)  -- Fixed height
+local teleportCFrame = CFrame.new(playerPosition.X + 40, playerPosition.Y + 520, playerPosition.Z + 40)  -- Moved forward and up
 
 local originalLighting = {
     Ambient = lighting.Ambient,
@@ -157,11 +157,11 @@ dome.Transparency = 0.4
 dome.Color = Color3.fromRGB(70, 120, 255)
 dome.Parent = island
 
--- FIXED TELEPORT PAD POSITION (moved up to be above platform)
+-- FIXED TELEPORT PAD POSITION (moved forward and up to avoid glass orb)
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(25, 4, 25)
-teleportPad.Position = Vector3.new(playerPosition.X, playerPosition.Y + 515, playerPosition.Z)  -- Fixed position
+teleportPad.Position = Vector3.new(playerPosition.X + 40, playerPosition.Y + 520, playerPosition.Z + 40)  -- Moved forward and up
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
