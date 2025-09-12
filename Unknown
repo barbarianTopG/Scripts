@@ -4,8 +4,16 @@ local players = game:GetService("Players")
 local lighting = game:GetService("Lighting")
 local tweenService = game:GetService("TweenService")
 local localPlayer = players.LocalPlayer
-local playerPosition = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character.HumanoidRootPart.Position or Vector3.new(0, 0, 0)
-local teleportCFrame = CFrame.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)  -- Moved to 1/4 forward position
+
+-- Wait for character to load
+local playerPosition
+if localPlayer.Character then
+    playerPosition = localPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character.HumanoidRootPart.Position or Vector3.new(0, 0, 0)
+else
+    playerPosition = Vector3.new(0, 0, 0)
+end
+
+local teleportCFrame = CFrame.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)
 
 local originalLighting = {
     Ambient = lighting.Ambient,
@@ -71,9 +79,11 @@ for i = 1, 200 do
     star.Parent = frame
     
     spawn(function()
-        while star.Parent do
+        while star and star.Parent do
             wait(math.random(4, 12)/10)
-            star.Visible = not star.Visible
+            if star then
+                star.Visible = not star.Visible
+            end
         end
     end)
 end
@@ -188,11 +198,11 @@ end
 
 createLadder()
 
--- TELEPORT PAD AT 1/4 FORWARD POSITION (smaller size)
+-- TELEPORT PAD AT 1/4 FORWARD POSITION
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
-teleportPad.Size = Vector3.new(15, 2, 15)  -- Smaller size
-teleportPad.Position = Vector3.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)  -- 1/4 forward position
+teleportPad.Size = Vector3.new(15, 2, 15)
+teleportPad.Position = Vector3.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
@@ -246,7 +256,7 @@ title.Size = UDim2.new(1, 0, 0, 50)
 title.Position = UDim2.new(0, 0, 0, 0)
 title.BackgroundTransparency = 1
 title.Text = "PlasmaMap"
-title.TextColor极 = Color3.fromRGB(210, 210, 255)
+title.TextColor3 = Color3.fromRGB(210, 210, 255)
 title.TextScaled = true
 title.Font = Enum.Font.SciFi
 title.Parent = mainFrame
@@ -255,7 +265,7 @@ local desc = Instance.new("TextLabel")
 desc.Size = UDim2.new(1, -20, 0, 60)
 desc.Position = UDim2.new(0, 10, 0, 50)
 desc.BackgroundTransparency = 1
-极desc.Text = "Love from PlasmaByte"
+desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(180, 180, 230)
 desc.TextWrapped = true
 desc.TextScaled = true
@@ -274,7 +284,7 @@ button.TextSize = 18
 button.Parent = mainFrame
 
 local buttonGlow = Instance.new("UIStroke")
-button极low.Color = Color3.fromRGB(0, 220, 255)
+buttonGlow.Color = Color3.fromRGB(0, 220, 255)
 buttonGlow.Thickness = 3
 buttonGlow.Parent = button
 
@@ -297,12 +307,12 @@ minimizeButton.BorderSizePixel = 0
 minimizeButton.Text = "X"
 minimizeButton.TextColor3 = Color3.new(1, 1, 1)
 minimizeButton.Font = Enum.Font.SciFi
-minimizeButton.Text极ize = 14
+minimizeButton.TextSize = 14
 minimizeButton.Parent = mainFrame
 
 local showButton = Instance.new("TextButton")
 showButton.Size = UDim2.new(0, 100, 0, 30)
-showButton.Position = UDim2.new(0, 极0, 1, -35)
+showButton.Position = UDim2.new(0, 10, 1, -35)
 showButton.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
 showButton.BorderSizePixel = 0
 showButton.Text = "Show UI"
@@ -420,7 +430,7 @@ local function createFloatingPlanets()
         planet.Parent = island
         
         spawn(function()
-            while planet.Parent do
+            while planet and planet.Parent do
                 planet.CFrame = planet.CFrame * CFrame.Angles(0, math.rad(0.3), 0)
                 ring.CFrame = ring.CFrame * CFrame.Angles(0, math.rad(-0.5), 0)
                 wait()
@@ -432,7 +442,7 @@ end
 createFloatingPlanets()
 
 local function createNebulaClouds()
-    for i = 极, 15 do
+    for i = 1, 15 do
         local cloud = Instance.new("Part")
         cloud.Size = Vector3.new(math.random(80, 200), math.random(20, 50), math.random(80, 200))
         cloud.Position = Vector3.new(
