@@ -1,6 +1,7 @@
-local lighting = game:GetService("Lighting")
 local players = game:GetService("Players")
-local teleportCFrame = CFrame.new(0, 500, 0) -- Default position
+local lighting = game:GetService("Lighting")
+local localPlayer = players.LocalPlayer
+local teleportCFrame = CFrame.new(0, 500, 0)
 
 lighting.Ambient = Color3.fromRGB(50, 50, 80)
 lighting.OutdoorAmbient = Color3.fromRGB(50, 50, 80)
@@ -9,7 +10,7 @@ lighting.FogEnd = 1000
 lighting.Brightness = 0.3
 
 local sky = lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
-sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299" -- Deep space
+sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxDn = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxFt = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxLf = "http://www.roblox.com/asset/?id=159454299"
@@ -17,151 +18,147 @@ sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
 sky.Parent = lighting
 
-local function createMap()
-    for _, obj in pairs(workspace:GetChildren()) do
-        if obj.Name == "SpaceIsland" then
-            obj:Destroy()
-        end
+for _, obj in pairs(workspace:GetChildren()) do
+    if obj.Name == "PlasmaMapIsland" then
+        obj:Destroy()
     end
-
-    local island = Instance.new("Model")
-    island.Name = "SpaceIsland"
-    island.Parent = workspace
-
-    local platform = Instance.new("Part")
-    platform.Name = "NebulaPlatform"
-    platform.Size = Vector3.new(200, 10, 200)
-    platform.Position = Vector3.new(0, 500, 0)
-    platform.Anchored = true
-    platform.Material = Enum.Material.Neon
-    platform.Color = Color3.fromRGB(30, 10, 50)
-    
-    local surfaceGui = Instance.new("SurfaceGui")
-    surfaceGui.Face = Enum.NormalId.Top
-    surfaceGui.Parent = platform
-    
-    local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(1, 0, 1, 0)
-    frame.BackgroundColor3 = Color3.fromRGB(30, 10, 50)
-    frame.BorderSizePixel = 0
-    frame.Parent = surfaceGui
-    
-    for i = 1, 20 do
-        local star = Instance.new("Frame")
-        star.Size = UDim2.new(0, math.random(2, 6), 0, math.random(2, 6))
-        star.Position = UDim2.new(0, math.random(0, 190), 0, math.random(0, 190))
-        star.BackgroundColor3 = Color3.fromRGB(
-            math.random(150, 255),
-            math.random(150, 255),
-            math.random(200, 255)
-        )
-        star.BorderSizePixel = 0
-        star.Parent = frame
-        
-        spawn(function()
-            while star.Parent do
-                wait(math.random(5, 15)/10)
-                star.Visible = not star.Visible
-            end
-        end)
-    end
-    
-    platform.Parent = island
-
-    for i = 1, 15 do
-        local crystal = Instance.new("Part")
-        crystal.Shape = Enum.PartType.Ball
-        crystal.Size = Vector3.new(math.random(5, 15), math.random(5, 15), math.random(5, 15))
-        crystal.Position = Vector3.new(
-            math.random(-80, 80),
-            500 + math.random(10, 50),
-            math.random(-80, 80)
-        )
-        crystal.Anchored = true
-        crystal.Material = Enum.Material.Glass
-        crystal.Color = Color3.fromRGB(
-            math.random(100, 200),
-            math.random(50, 150),
-            math.random(200, 255)
-        )
-        
-        local pointLight = Instance.new("PointLight")
-        pointLight.Brightness = 2
-        pointLight.Range = 15
-        pointLight.Color = crystal.Color
-        pointLight.Parent = crystal
-        
-        crystal.Parent = island
-    end
-
-    for i = 1, 25 do
-        local rock = Instance.new("Part")
-        rock.Size = Vector3.new(
-            math.random(5, 20),
-            math.random(5, 20),
-            math.random(5, 20)
-        )
-        rock.Position = Vector3.new(
-            math.random(-150, 150),
-            500 + math.random(-20, 100),
-            math.random(-150, 150)
-        )
-        rock.Anchored = true
-        rock.Material = Enum.Material.Slate
-        rock.Color = Color3.fromRGB(40, 40, 60)
-        rock.Parent = island
-    end
-
-    local observatory = Instance.new("Part")
-    observatory.Name = "Observatory"
-    observatory.Size = Vector3.new(30, 15, 30)
-    observatory.Position = Vector3.new(0, 507.5, 0)
-    observatory.Anchored = true
-    observatory.Material = Enum.Material.Metal
-    observatory.Color = Color3.fromRGB(60, 60, 80)
-    observatory.Parent = island
-
-    local dome = Instance.new("Part")
-    dome.Shape = Enum.PartType.Ball
-    dome.Size = Vector3.new(25, 15, 25)
-    dome.Position = Vector3.new(0, 520, 0)
-    dome.Anchored = true
-    dome.Material = Enum.Material.Glass
-    dome.Transparency = 0.7
-    dome.Color = Color3.fromRGB(100, 150, 255)
-    dome.Parent = island
-
-    local teleportPad = Instance.new("Part")
-    teleportPad.Name = "TeleportPad"
-    teleportPad.Size = Vector3.new(10, 1, 10)
-    teleportPad.Position = Vector3.new(0, 500.5, 0)
-    teleportPad.Anchored = true
-    teleportPad.Material = Enum.Material.Neon
-    teleportPad.Color = Color3.fromRGB(0, 150, 255)
-    teleportPad.Parent = island
-    
-    local padLight = Instance.new("PointLight")
-    padLight.Brightness = 3
-    padLight.Range = 10
-    padLight.Color = Color3.fromRGB(0, 150, 255)
-    padLight.Parent = teleportPad
-    
-    local particles = Instance.new("ParticleEmitter")
-    particles.Color = ColorSequence.new(Color3.fromRGB(0, 100, 200))
-    particles.Size = NumberSequence.new(0.5)
-    particles.Transparency = NumberSequence.new(0.5)
-    particles.Lifetime = NumberRange.new(2)
-    particles.Rate = 10
-    particles.Speed = NumberRange.new(2)
-    particles.Parent = teleportPad
-
-    teleportCFrame = CFrame.new(0, 502, 0)
-    
-    return island
 end
 
+local island = Instance.new("Model")
+island.Name = "PlasmaMapIsland"
+island.Parent = workspace
+
+local platform = Instance.new("Part")
+platform.Name = "NebulaPlatform"
+platform.Size = Vector3.new(200, 10, 200)
+platform.Position = Vector3.new(0, 500, 0)
+platform.Anchored = true
+platform.Material = Enum.Material.Neon
+platform.Color = Color3.fromRGB(30, 10, 50)
+
+local surfaceGui = Instance.new("SurfaceGui")
+surfaceGui.Face = Enum.NormalId.Top
+surfaceGui.Parent = platform
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(30, 10, 50)
+frame.BorderSizePixel = 0
+frame.Parent = surfaceGui
+
+for i = 1, 20 do
+    local star = Instance.new("Frame")
+    star.Size = UDim2.new(0, math.random(2, 6), 0, math.random(2, 6))
+    star.Position = UDim2.new(0, math.random(0, 190), 0, math.random(0, 190))
+    star.BackgroundColor3 = Color3.fromRGB(
+        math.random(150, 255),
+        math.random(150, 255),
+        math.random(200, 255)
+    )
+    star.BorderSizePixel = 0
+    star.Parent = frame
+    
+    spawn(function()
+        while star.Parent do
+            wait(math.random(5, 15)/10)
+            star.Visible = not star.Visible
+        end
+    end)
+end
+
+platform.Parent = island
+
+for i = 1, 15 do
+    local crystal = Instance.new("Part")
+    crystal.Shape = Enum.PartType.Ball
+    crystal.Size = Vector3.new(math.random(5, 15), math.random(5, 15), math.random(5, 15))
+    crystal.Position = Vector3.new(
+        math.random(-80, 80),
+        500 + math.random(10, 50),
+        math.random(-80, 80)
+    )
+    crystal.Anchored = true
+    crystal.Material = Enum.Material.Glass
+    crystal.Color = Color3.fromRGB(
+        math.random(100, 200),
+        math.random(50, 150),
+        math.random(200, 255)
+    )
+    
+    local pointLight = Instance.new("PointLight")
+    pointLight.Brightness = 2
+    pointLight.Range = 15
+    pointLight.Color = crystal.Color
+    pointLight.Parent = crystal
+    
+    crystal.Parent = island
+end
+
+for i = 1, 25 do
+    local rock = Instance.new("Part")
+    rock.Size = Vector3.new(
+        math.random(5, 20),
+        math.random(5, 20),
+        math.random(5, 20)
+    )
+    rock.Position = Vector3.new(
+        math.random(-150, 150),
+        500 + math.random(-20, 100),
+        math.random(-150, 150)
+    )
+    rock.Anchored = true
+    rock.Material = Enum.Material.Slate
+    rock.Color = Color3.fromRGB(40, 40, 60)
+    rock.Parent = island
+end
+
+local observatory = Instance.new("Part")
+observatory.Name = "Observatory"
+observatory.Size = Vector3.new(30, 15, 30)
+observatory.Position = Vector3.new(0, 507.5, 0)
+observatory.Anchored = true
+observatory.Material = Enum.Material.Metal
+observatory.Color = Color3.fromRGB(60, 60, 80)
+observatory.Parent = island
+
+local dome = Instance.new("Part")
+dome.Shape = Enum.PartType.Ball
+dome.Size = Vector3.new(25, 15, 25)
+dome.Position = Vector3.new(0, 520, 0)
+dome.Anchored = true
+dome.Material = Enum.Material.Glass
+dome.Transparency = 0.7
+dome.Color = Color3.fromRGB(100, 150, 255)
+dome.Parent = island
+
+local teleportPad = Instance.new("Part")
+teleportPad.Name = "TeleportPad"
+teleportPad.Size = Vector3.new(10, 1, 10)
+teleportPad.Position = Vector3.new(0, 500.5, 0)
+teleportPad.Anchored = true
+teleportPad.Material = Enum.Material.Neon
+teleportPad.Color = Color3.fromRGB(0, 150, 255)
+teleportPad.Parent = island
+
+local padLight = Instance.new("PointLight")
+padLight.Brightness = 3
+padLight.Range = 10
+padLight.Color = Color3.fromRGB(0, 150, 255)
+padLight.Parent = teleportPad
+
+local particles = Instance.new("ParticleEmitter")
+particles.Color = ColorSequence.new(Color3.fromRGB(0, 100, 200))
+particles.Size = NumberSequence.new(0.5)
+particles.Transparency = NumberSequence.new(0.5)
+particles.Lifetime = NumberRange.new(2)
+particles.Rate = 10
+particles.Speed = NumberRange.new(2)
+particles.Parent = teleportPad
+
+teleportCFrame = CFrame.new(0, 502, 0)
+
 local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "SpaceTeleporterUI"
+screenGui.Name = "PlasmaMapUI"
 screenGui.Parent = game:GetService("CoreGui")
 
 local frame = Instance.new("Frame")
@@ -182,7 +179,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 50)
 title.Position = UDim2.new(0, 0, 0, 0)
 title.BackgroundTransparency = 1
-title.Text = "🌌 SPACE OBSERVATORY 🌌"
+title.Text = "PlasmaMap"
 title.TextColor3 = Color3.fromRGB(200, 200, 255)
 title.TextScaled = true
 title.Font = Enum.Font.SciFi
@@ -192,7 +189,7 @@ local desc = Instance.new("TextLabel")
 desc.Size = UDim2.new(1, -20, 0, 60)
 desc.Position = UDim2.new(0, 10, 0, 50)
 desc.BackgroundTransparency = 1
-desc.Text = "Teleport to a floating observatory high above the world.\nLove from Plasmabyte"
+desc.Text = "Love from PlasmaByte"
 desc.TextColor3 = Color3.fromRGB(170, 170, 220)
 desc.TextWrapped = true
 desc.TextScaled = true
@@ -204,7 +201,7 @@ button.Size = UDim2.new(0, 180, 0, 40)
 button.Position = UDim2.new(0.5, -90, 0, 150)
 button.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
 button.BorderSizePixel = 0
-button.Text = "TP"
+button.Text = "TELEPORT TO SPACE"
 button.TextColor3 = Color3.new(1, 1, 1)
 button.Font = Enum.Font.SciFi
 button.TextSize = 18
@@ -225,12 +222,9 @@ button.MouseLeave:Connect(function()
     buttonGlow.Thickness = 2
 end)
 
-createSpaceIsland()
-
 button.MouseButton1Click:Connect(function()
-    local player = game.Players.LocalPlayer
-    if player and player.Character then
-        local humanoid = player.Character:FindFirstChild("HumanoidRootPart")
+    if localPlayer and localPlayer.Character then
+        local humanoid = localPlayer.Character:FindFirstChild("HumanoidRootPart")
         if humanoid then
             humanoid.CFrame = teleportCFrame
         end
@@ -245,5 +239,3 @@ spawn(function()
         end
     end
 end)
-
-print("Love from Plasmabyte")
