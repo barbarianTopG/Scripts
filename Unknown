@@ -4,7 +4,8 @@ local players = game:GetService("Players")
 local lighting = game:GetService("Lighting")
 local tweenService = game:GetService("TweenService")
 local localPlayer = players.LocalPlayer
-local teleportCFrame = CFrame.new(0, 1002, 0)
+local playerPosition = localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character.HumanoidRootPart.Position or Vector3.new(0, 0, 0)
+local teleportCFrame = CFrame.new(playerPosition.X, playerPosition.Y + 502, playerPosition.Z)
 
 local originalLighting = {
     Ambient = lighting.Ambient,
@@ -17,7 +18,7 @@ local originalLighting = {
 lighting.Ambient = Color3.fromRGB(40, 40, 70)
 lighting.OutdoorAmbient = Color3.fromRGB(40, 40, 70)
 lighting.FogColor = Color3.fromRGB(5, 5, 15)
-lighting.FogEnd = 1500
+lighting.FogEnd = 2000
 lighting.Brightness = 0.25
 
 local sky = lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
@@ -41,8 +42,8 @@ island.Parent = workspace
 
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
-platform.Size = Vector3.new(400, 15, 400)
-platform.Position = Vector3.new(0, 1000, 0)
+platform.Size = Vector3.new(600, 20, 600)
+platform.Position = Vector3.new(playerPosition.X, playerPosition.Y + 500, playerPosition.Z)
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
 platform.Color = Color3.fromRGB(20, 5, 40)
@@ -57,10 +58,10 @@ frame.BackgroundColor3 = Color3.fromRGB(20, 5, 40)
 frame.BorderSizePixel = 0
 frame.Parent = surfaceGui
 
-for i = 1, 50 do
+for i = 1, 100 do
     local star = Instance.new("Frame")
-    star.Size = UDim2.new(0, math.random(2, 8), 0, math.random(2, 8))
-    star.Position = UDim2.new(0, math.random(0, 380), 0, math.random(0, 380))
+    star.Size = UDim2.new(0, math.random(2, 10), 0, math.random(2, 10))
+    star.Position = UDim2.new(0, math.random(0, 580), 0, math.random(0, 580))
     star.BackgroundColor3 = Color3.fromRGB(
         math.random(150, 255),
         math.random(150, 255),
@@ -79,14 +80,14 @@ end
 
 platform.Parent = island
 
-for i = 1, 30 do
+for i = 1, 50 do
     local crystal = Instance.new("Part")
     crystal.Shape = Enum.PartType.Ball
-    crystal.Size = Vector3.new(math.random(8, 20), math.random(8, 20), math.random(8, 20))
+    crystal.Size = Vector3.new(math.random(10, 25), math.random(10, 25), math.random(10, 25))
     crystal.Position = Vector3.new(
-        math.random(-150, 150),
-        1000 + math.random(15, 80),
-        math.random(-150, 150)
+        playerPosition.X + math.random(-250, 250),
+        playerPosition.Y + 500 + math.random(20, 100),
+        playerPosition.Z + math.random(-250, 250)
     )
     crystal.Anchored = true
     crystal.Material = Enum.Material.Glass
@@ -97,25 +98,25 @@ for i = 1, 30 do
     )
     
     local pointLight = Instance.new("PointLight")
-    pointLight.Brightness = 3
-    pointLight.Range = 20
+    pointLight.Brightness = 4
+    pointLight.Range = 25
     pointLight.Color = crystal.Color
     pointLight.Parent = crystal
     
     crystal.Parent = island
 end
 
-for i = 1, 40 do
+for i = 1, 60 do
     local rock = Instance.new("Part")
     rock.Size = Vector3.new(
-        math.random(8, 25),
-        math.random(8, 25),
-        math.random(8, 25)
+        math.random(10, 30),
+        math.random(10, 30),
+        math.random(10, 30)
     )
     rock.Position = Vector3.new(
-        math.random(-250, 250),
-        1000 + math.random(-30, 150),
-        math.random(-250, 250)
+        playerPosition.X + math.random(-350, 350),
+        playerPosition.Y + 500 + math.random(-40, 200),
+        playerPosition.Z + math.random(-350, 350)
     )
     rock.Anchored = true
     rock.Material = Enum.Material.Slate
@@ -125,8 +126,8 @@ end
 
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
-observatory.Size = Vector3.new(50, 20, 50)
-observatory.Position = Vector3.new(0, 1010, 0)
+observatory.Size = Vector3.new(60, 25, 60)
+observatory.Position = Vector3.new(playerPosition.X, playerPosition.Y + 510, playerPosition.Z)
 observatory.Anchored = true
 observatory.Material = Enum.Material.Metal
 observatory.Color = Color3.fromRGB(50, 50, 70)
@@ -134,36 +135,36 @@ observatory.Parent = island
 
 local dome = Instance.new("Part")
 dome.Shape = Enum.PartType.Ball
-dome.Size = Vector3.new(40, 20, 40)
-dome.Position = Vector3.new(0, 1025, 0)
+dome.Size = Vector3.new(50, 25, 50)
+dome.Position = Vector3.new(playerPosition.X, playerPosition.Y + 530, playerPosition.Z)
 dome.Anchored = true
 dome.Material = Enum.Material.Glass
-dome.Transparency = 0.6
+dome.Transparency = 0.5
 dome.Color = Color3.fromRGB(80, 130, 255)
 dome.Parent = island
 
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
-teleportPad.Size = Vector3.new(15, 2, 15)
-teleportPad.Position = Vector3.new(0, 1002, 0)
+teleportPad.Size = Vector3.new(20, 3, 20)
+teleportPad.Position = Vector3.new(playerPosition.X, playerPosition.Y + 502, playerPosition.Z)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 150, 255)
 teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
-padLight.Brightness = 4
-padLight.Range = 15
+padLight.Brightness = 5
+padLight.Range = 20
 padLight.Color = Color3.fromRGB(0, 150, 255)
 padLight.Parent = teleportPad
 
 local particles = Instance.new("ParticleEmitter")
 particles.Color = ColorSequence.new(Color3.fromRGB(0, 100, 200))
-particles.Size = NumberSequence.new(0.8)
-particles.Transparency = NumberSequence.new(0.4)
-particles.Lifetime = NumberRange.new(3)
-particles.Rate = 15
-particles.Speed = NumberRange.new(3)
+particles.Size = NumberSequence.new(1)
+particles.Transparency = NumberSequence.new(0.3)
+particles.Lifetime = NumberRange.new(4)
+particles.Rate = 20
+particles.Speed = NumberRange.new(4)
 particles.Parent = teleportPad
 
 local screenGui = Instance.new("ScreenGui")
@@ -265,7 +266,7 @@ local function toggleShadows()
         lighting.Ambient = Color3.fromRGB(40, 40, 70)
         lighting.OutdoorAmbient = Color3.fromRGB(40, 40, 70)
         lighting.FogColor = Color3.fromRGB(5, 5, 15)
-        lighting.FogEnd = 1500
+        lighting.FogEnd = 2000
         lighting.Brightness = 0.25
         shadowToggle.Text = "SHADOWS: ON"
         shadowToggle.BackgroundColor3 = Color3.fromRGB(100, 0, 150)
@@ -327,14 +328,14 @@ spawn(function()
 end)
 
 local function createFloatingPlanets()
-    for i = 1, 5 do
+    for i = 1, 8 do
         local planet = Instance.new("Part")
         planet.Shape = Enum.PartType.Ball
-        planet.Size = Vector3.new(math.random(30, 60), math.random(30, 60), math.random(30, 60))
+        planet.Size = Vector3.new(math.random(40, 80), math.random(40, 80), math.random(40, 80))
         planet.Position = Vector3.new(
-            math.random(-600, 600),
-            1000 + math.random(200, 400),
-            math.random(-600, 600)
+            playerPosition.X + math.random(-800, 800),
+            playerPosition.Y + 500 + math.random(250, 600),
+            playerPosition.Z + math.random(-800, 800)
         )
         planet.Anchored = true
         planet.Material = Enum.Material.Neon
@@ -343,6 +344,13 @@ local function createFloatingPlanets()
             math.random(50, 200),
             math.random(50, 200)
         )
+        
+        local planetLight = Instance.new("PointLight")
+        planetLight.Brightness = 3
+        planetLight.Range = 40
+        planetLight.Color = planet.Color
+        planetLight.Parent = planet
+        
         planet.Parent = island
         
         spawn(function()
