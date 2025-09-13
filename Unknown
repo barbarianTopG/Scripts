@@ -3,17 +3,17 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
-local playerPosition = Vector3.new(0, 0, 0)
+local playerPosition = Vector3.new(0,0,0)
 
 if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     playerPosition = LocalPlayer.Character.HumanoidRootPart.Position
 end
 
--- Teleport destination
-local teleportCFrame = CFrame.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)
+local teleportCFrame = CFrame.new(playerPosition.X + 500, playerPosition.Y + 700, playerPosition.Z + 500)
 
--- Save original lighting
+-- Lighting
 local originalLighting = {
     Ambient = Lighting.Ambient,
     OutdoorAmbient = Lighting.OutdoorAmbient,
@@ -22,12 +22,14 @@ local originalLighting = {
     Brightness = Lighting.Brightness
 }
 
--- Space lighting
-Lighting.Ambient = Color3.fromRGB(35, 35, 65)
-Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 65)
-Lighting.FogColor = Color3.fromRGB(3, 3, 12)
-Lighting.FogEnd = 2500
-Lighting.Brightness = 0.2
+local function setSpaceLighting()
+    Lighting.Ambient = Color3.fromRGB(20,20,50)
+    Lighting.OutdoorAmbient = Color3.fromRGB(20,20,50)
+    Lighting.FogColor = Color3.fromRGB(2,2,10)
+    Lighting.FogEnd = 4000
+    Lighting.Brightness = 0.15
+end
+setSpaceLighting()
 
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
 sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
@@ -38,10 +40,9 @@ sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
 if not sky.Parent then sky.Parent = Lighting end
 
+-- Remove previous map
 for _, obj in pairs(workspace:GetChildren()) do
-    if obj.Name == "PlasmaMapIsland" then
-        obj:Destroy()
-    end
+    if obj.Name == "PlasmaMapIsland" then obj:Destroy() end
 end
 
 local island = Instance.new("Model")
@@ -51,144 +52,150 @@ island.Parent = workspace
 -- Main platform
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
-platform.Size = Vector3.new(1200, 25, 1200)
+platform.Size = Vector3.new(2500, 40, 2500)
 platform.Position = Vector3.new(playerPosition.X, playerPosition.Y + 500, playerPosition.Z)
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
-platform.Color = Color3.fromRGB(15, 3, 35)
+platform.Color = Color3.fromRGB(20,5,50)
 platform.CanCollide = true
 platform.Parent = island
 
--- Background stars (surface GUI)
-local surfaceGui = Instance.new("SurfaceGui")
-surfaceGui.Face = Enum.NormalId.Top
-surfaceGui.Parent = platform
-
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(1, 0, 1, 0)
-frame.BackgroundColor3 = Color3.fromRGB(15, 3, 35)
-frame.BorderSizePixel = 0
-frame.Parent = surfaceGui
-
-for i = 1, 200 do
-    local star = Instance.new("Frame")
-    star.Size = UDim2.new(0, math.random(3, 12), 0, math.random(3, 12))
-    star.Position = UDim2.new(0, math.random(0, 1180), 0, math.random(0, 1180))
-    star.BackgroundColor3 = Color3.fromRGB(math.random(160, 255), math.random(160, 255), math.random(210, 255))
-    star.BorderSizePixel = 0
-    star.Parent = frame
-    task.spawn(function()
-        while star and star.Parent do
-            task.wait(math.random(4, 12) / 10)
-            if star then star.Visible = not star.Visible end
-        end
-    end)
-end
-
--- Nebula overlay
-local nebulaPattern = Instance.new("Frame")
-nebulaPattern.Size = UDim2.new(1, 0, 1, 0)
-nebulaPattern.BackgroundColor3 = Color3.fromRGB(15, 3, 35)
-nebulaPattern.BackgroundTransparency = 0.7
-nebulaPattern.BorderSizePixel = 0
-nebulaPattern.Parent = frame
-
 -- Floating crystals
-for i = 1, 80 do
+for i = 1, 150 do
     local crystal = Instance.new("Part")
     crystal.Shape = Enum.PartType.Ball
-    crystal.Size = Vector3.new(math.random(12, 30), math.random(12, 30), math.random(12, 30))
-    crystal.Position = Vector3.new(
-        playerPosition.X + math.random(-550, 550),
-        playerPosition.Y + 500 + math.random(25, 120),
-        playerPosition.Z + math.random(-550, 550)
-    )
+    crystal.Size = Vector3.new(math.random(15,40), math.random(15,40), math.random(15,40))
+    crystal.Position = Vector3.new(playerPosition.X + math.random(-1000,1000), playerPosition.Y + 550 + math.random(25,250), playerPosition.Z + math.random(-1000,1000))
     crystal.Anchored = true
     crystal.Material = Enum.Material.Glass
     crystal.Transparency = 0.2
-    crystal.Color = Color3.fromRGB(math.random(120, 220), math.random(70, 180), math.random(220, 255))
+    crystal.Color = Color3.fromRGB(math.random(100,220),math.random(50,200),math.random(200,255))
     crystal.CanCollide = true
     local pointLight = Instance.new("PointLight")
-    pointLight.Brightness = 5
-    pointLight.Range = 35
+    pointLight.Brightness = 6
+    pointLight.Range = 50
     pointLight.Color = crystal.Color
     pointLight.Parent = crystal
-    local glow = Instance.new("SurfaceLight")
-    glow.Brightness = 8
-    glow.Range = 20
-    glow.Color = crystal.Color
-    glow.Parent = crystal
     crystal.Parent = island
 end
 
+-- Mini floating islands
+for i = 1, 10 do
+    local miniPlatform = Instance.new("Part")
+    miniPlatform.Size = Vector3.new(math.random(300,600), 20, math.random(300,600))
+    miniPlatform.Position = Vector3.new(playerPosition.X + math.random(-2000,2000), playerPosition.Y + 600 + math.random(-100,300), playerPosition.Z + math.random(-2000,2000))
+    miniPlatform.Anchored = true
+    miniPlatform.Material = Enum.Material.Neon
+    miniPlatform.Color = Color3.fromRGB(25,10,50)
+    miniPlatform.CanCollide = true
+    miniPlatform.Parent = island
+end
+
 -- Asteroids
-for i = 1, 100 do
+for i = 1, 200 do
     local rock = Instance.new("Part")
-    rock.Size = Vector3.new(math.random(15, 40), math.random(15, 40), math.random(15, 40))
-    rock.Position = Vector3.new(
-        playerPosition.X + math.random(-800, 800),
-        playerPosition.Y + 500 + math.random(-50, 250),
-        playerPosition.Z + math.random(-800, 800)
-    )
+    rock.Size = Vector3.new(math.random(15,50),math.random(15,50),math.random(15,50))
+    rock.Position = Vector3.new(playerPosition.X + math.random(-1500,1500), playerPosition.Y + 500 + math.random(-100,400), playerPosition.Z + math.random(-1500,1500))
     rock.Anchored = true
     rock.Material = Enum.Material.Slate
-    rock.Color = Color3.fromRGB(25, 25, 45)
+    rock.Color = Color3.fromRGB(30,30,60)
     rock.CanCollide = false
     rock.Parent = island
 end
 
--- Observatory
-local observatory = Instance.new("Part")
-observatory.Name = "Observatory"
-observatory.Size = Vector3.new(80, 30, 80)
-observatory.Position = Vector3.new(playerPosition.X, playerPosition.Y + 515, playerPosition.Z)
-observatory.Anchored = true
-observatory.Material = Enum.Material.Metal
-observatory.Color = Color3.fromRGB(45, 45, 65)
-observatory.CanCollide = true
-observatory.Parent = island
+-- Observatories + Domes
+for i = 1, 4 do
+    local observatory = Instance.new("Part")
+    observatory.Size = Vector3.new(120,30,120)
+    observatory.Position = Vector3.new(playerPosition.X + math.random(-1200,1200), playerPosition.Y + 550 + math.random(50,150), playerPosition.Z + math.random(-1200,1200))
+    observatory.Anchored = true
+    observatory.Material = Enum.Material.Metal
+    observatory.Color = Color3.fromRGB(50,50,80)
+    observatory.CanCollide = true
+    observatory.Parent = island
 
--- Dome
-local dome = Instance.new("Part")
-dome.Shape = Enum.PartType.Ball
-dome.Size = Vector3.new(70, 30, 70)
-dome.Position = Vector3.new(playerPosition.X, playerPosition.Y + 540, playerPosition.Z)
-dome.Anchored = true
-dome.Material = Enum.Material.Glass
-dome.Transparency = 0.4
-dome.Color = Color3.fromRGB(70, 120, 255)
-dome.CanCollide = true
-dome.Parent = island
+    local dome = Instance.new("Part")
+    dome.Shape = Enum.PartType.Ball
+    dome.Size = Vector3.new(100,50,100)
+    dome.Position = observatory.Position + Vector3.new(0,40,0)
+    dome.Anchored = true
+    dome.Material = Enum.Material.Glass
+    dome.Transparency = 0.5
+    dome.Color = Color3.fromRGB(80,140,255)
+    dome.CanCollide = true
+    dome.Parent = island
+end
 
 -- Teleport pad
 local teleportPad = Instance.new("Part")
-teleportPad.Name = "TeleportPad"
-teleportPad.Size = Vector3.new(15, 2, 15)
-teleportPad.Position = Vector3.new(playerPosition.X + 100, playerPosition.Y + 520, playerPosition.Z + 50)
+teleportPad.Size = Vector3.new(20,2,20)
+teleportPad.Position = Vector3.new(playerPosition.X + 200, playerPosition.Y + 520, playerPosition.Z + 150)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
-teleportPad.Color = Color3.fromRGB(0, 170, 255)
+teleportPad.Color = Color3.fromRGB(0,200,255)
 teleportPad.CanCollide = true
 teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
 padLight.Brightness = 6
-padLight.Range = 20
-padLight.Color = Color3.fromRGB(0, 170, 255)
+padLight.Range = 40
+padLight.Color = Color3.fromRGB(0,200,255)
 padLight.Parent = teleportPad
 
-local particles = Instance.new("ParticleEmitter")
-particles.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 120, 220)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 170, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 200, 255))
-})
-particles.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 1.2), NumberSequenceKeypoint.new(1, 0.4)})
-particles.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(1, 0.8)})
-particles.Lifetime = NumberRange.new(4)
-particles.Rate = 20
-particles.Speed = NumberRange.new(4)
-particles.Parent = teleportPad
+-- Floating planets + orbit rings
+for i = 1, 15 do
+    local planet = Instance.new("Part")
+    planet.Shape = Enum.PartType.Ball
+    planet.Size = Vector3.new(math.random(60,120), math.random(60,120), math.random(60,120))
+    planet.Position = Vector3.new(playerPosition.X + math.random(-1800,1800), playerPosition.Y + 600 + math.random(200,800), playerPosition.Z + math.random(-1800,1800))
+    planet.Anchored = true
+    planet.Material = Enum.Material.Neon
+    planet.Color = Color3.fromRGB(math.random(60,220),math.random(60,220),math.random(60,220))
+    planet.CanCollide = false
+    local planetLight = Instance.new("PointLight")
+    planetLight.Brightness = 5
+    planetLight.Range = 80
+    planetLight.Color = planet.Color
+    planetLight.Parent = planet
+    planet.Parent = island
+
+    local ring = Instance.new("Part")
+    ring.Shape = Enum.PartType.Cylinder
+    ring.Size = Vector3.new(2, planet.Size.X*1.5, planet.Size.X*1.5)
+    ring.CFrame = CFrame.new(planet.Position)
+    ring.Anchored = true
+    ring.Material = Enum.Material.Neon
+    ring.Color = Color3.fromRGB(200,200,255)
+    ring.Transparency = 0.3
+    ring.CanCollide = false
+    ring.Parent = island
+
+    task.spawn(function()
+        while planet and planet.Parent do
+            planet.CFrame = planet.CFrame * CFrame.Angles(0,math.rad(0.2),0)
+            ring.CFrame = ring.CFrame * CFrame.Angles(0,math.rad(-0.4),0)
+            task.wait()
+        end
+    end)
+end
+
+-- Dynamic nebula clouds
+for i = 1, 20 do
+    local cloud = Instance.new("Part")
+    cloud.Size = Vector3.new(math.random(100,250),math.random(20,60),math.random(100,250))
+    cloud.Position = Vector3.new(playerPosition.X + math.random(-1200,1200), playerPosition.Y + 600 + math.random(400,1000), playerPosition.Z + math.random(-1200,1200))
+    cloud.Anchored = true
+    cloud.Material = Enum.Material.Neon
+    cloud.Transparency = 0.7
+    cloud.Color = Color3.fromRGB(math.random(100,180),math.random(80,150),math.random(180,255))
+    cloud.CanCollide = false
+    cloud.Parent = island
+    local cloudLight = Instance.new("PointLight")
+    cloudLight.Brightness = 3
+    cloudLight.Range = 100
+    cloudLight.Color = cloud.Color
+    cloudLight.Parent = cloud
+end
 
 -- UI
 local screenGui = Instance.new("ScreenGui")
@@ -196,103 +203,58 @@ screenGui.Name = "PlasmaMapUI"
 screenGui.Parent = game:GetService("CoreGui")
 
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0, 320, 0, 250)
-mainFrame.Position = UDim2.new(0, 10, 0.5, -125)
-mainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 30)
+mainFrame.Size = UDim2.new(0, 380, 0, 280)
+mainFrame.Position = UDim2.new(0, 15, 0.5, -140)
+mainFrame.BackgroundColor3 = Color3.fromRGB(15,15,35)
 mainFrame.BorderSizePixel = 0
 mainFrame.Parent = screenGui
 
 local uiBg = Instance.new("ImageLabel")
-uiBg.Size = UDim2.new(1, 0, 1, 0)
+uiBg.Size = UDim2.new(1,0,1,0)
 uiBg.Image = "http://www.roblox.com/asset/?id=7489111525"
-uiBg.ImageTransparency = 0.9
+uiBg.ImageTransparency = 0.85
 uiBg.BackgroundTransparency = 1
 uiBg.Parent = mainFrame
 
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 50)
-title.Position = UDim2.new(0, 0, 0, 0)
+title.Size = UDim2.new(1,0,0,50)
+title.Position = UDim2.new(0,0,0,0)
 title.BackgroundTransparency = 1
 title.Text = "PlasmaMap"
-title.TextColor3 = Color3.fromRGB(210, 210, 255)
+title.TextColor3 = Color3.fromRGB(210,210,255)
 title.TextScaled = true
 title.Font = Enum.Font.SciFi
 title.Parent = mainFrame
 
 local desc = Instance.new("TextLabel")
-desc.Size = UDim2.new(1, -20, 0, 60)
-desc.Position = UDim2.new(0, 10, 0, 50)
+desc.Size = UDim2.new(1,-20,0,60)
+desc.Position = UDim2.new(0,10,0,50)
 desc.BackgroundTransparency = 1
-desc.Text = "Love from PlasmaByte"
-desc.TextColor3 = Color3.fromRGB(180, 180, 230)
+desc.Text = "Explore the endless floating islands!"
+desc.TextColor3 = Color3.fromRGB(180,180,230)
 desc.TextWrapped = true
 desc.TextScaled = true
 desc.Font = Enum.Font.SourceSans
 desc.Parent = mainFrame
 
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 180, 0, 40)
-button.Position = UDim2.new(0.5, -90, 0, 160)
-button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
-button.BorderSizePixel = 0
-button.Text = "TP somewhere" -- changed text
-button.TextColor3 = Color3.new(1, 1, 1)
-button.Font = Enum.Font.SciFi
-button.TextSize = 18
-button.Parent = mainFrame
-
-local buttonGlow = Instance.new("UIStroke")
-buttonGlow.Color = Color3.fromRGB(0, 220, 255)
-buttonGlow.Thickness = 3
-buttonGlow.Parent = button
-
+local shadowsEnabled = true
 local shadowToggle = Instance.new("TextButton")
-shadowToggle.Size = UDim2.new(0, 180, 0, 30)
-shadowToggle.Position = UDim2.new(0.5, -90, 0, 120)
-shadowToggle.BackgroundColor3 = Color3.fromRGB(120, 0, 180)
+shadowToggle.Size = UDim2.new(0,180,0,30)
+shadowToggle.Position = UDim2.new(0.5,-90,0,120)
+shadowToggle.BackgroundColor3 = Color3.fromRGB(120,0,180)
 shadowToggle.BorderSizePixel = 0
 shadowToggle.Text = "SHADOWS: ON"
-shadowToggle.TextColor3 = Color3.new(1, 1, 1)
+shadowToggle.TextColor3 = Color3.new(1,1,1)
 shadowToggle.Font = Enum.Font.SciFi
 shadowToggle.TextSize = 14
 shadowToggle.Parent = mainFrame
 
-local minimizeButton = Instance.new("TextButton")
-minimizeButton.Size = UDim2.new(0, 30, 0, 20)
-minimizeButton.Position = UDim2.new(1, -35, 0, 5)
-minimizeButton.BackgroundColor3 = Color3.fromRGB(120, 0, 0)
-minimizeButton.BorderSizePixel = 0
-minimizeButton.Text = "X"
-minimizeButton.TextColor3 = Color3.new(1, 1, 1)
-minimizeButton.Font = Enum.Font.SciFi
-minimizeButton.TextSize = 14
-minimizeButton.Parent = mainFrame
-
-local showButton = Instance.new("TextButton")
-showButton.Size = UDim2.new(0, 100, 0, 30)
-showButton.Position = UDim2.new(0, 10, 1, -35)
-showButton.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
-showButton.BorderSizePixel = 0
-showButton.Text = "Show UI"
-showButton.TextColor3 = Color3.new(1, 1, 1)
-showButton.Font = Enum.Font.SciFi
-showButton.TextSize = 14
-showButton.Visible = false
-showButton.Parent = screenGui
-
-local isUIVisible = true
-local shadowsEnabled = true
-
-local function toggleShadows()
+shadowToggle.MouseButton1Click:Connect(function()
     shadowsEnabled = not shadowsEnabled
     if shadowsEnabled then
-        Lighting.Ambient = Color3.fromRGB(35, 35, 65)
-        Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 65)
-        Lighting.FogColor = Color3.fromRGB(3, 3, 12)
-        Lighting.FogEnd = 2500
-        Lighting.Brightness = 0.2
+        setSpaceLighting()
         shadowToggle.Text = "SHADOWS: ON"
-        shadowToggle.BackgroundColor3 = Color3.fromRGB(120, 0, 180)
+        shadowToggle.BackgroundColor3 = Color3.fromRGB(120,0,180)
     else
         Lighting.Ambient = originalLighting.Ambient
         Lighting.OutdoorAmbient = originalLighting.OutdoorAmbient
@@ -300,109 +262,83 @@ local function toggleShadows()
         Lighting.FogEnd = originalLighting.FogEnd
         Lighting.Brightness = originalLighting.Brightness
         shadowToggle.Text = "SHADOWS: OFF"
-        shadowToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 120)
+        shadowToggle.BackgroundColor3 = Color3.fromRGB(60,60,120)
     end
-end
-shadowToggle.MouseButton1Click:Connect(toggleShadows)
+end)
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0,200,0,45)
+button.Position = UDim2.new(0.5,-100,0,180)
+button.BackgroundColor3 = Color3.fromRGB(0,120,220)
+button.BorderSizePixel = 0
+button.Text = "TP somewhere"
+button.TextColor3 = Color3.new(1,1,1)
+button.Font = Enum.Font.SciFi
+button.TextSize = 18
+button.Parent = mainFrame
+
+local buttonGlow = Instance.new("UIStroke")
+buttonGlow.Color = Color3.fromRGB(0,220,255)
+buttonGlow.Thickness = 3
+buttonGlow.Parent = button
+
+button.MouseEnter:Connect(function()
+    button.BackgroundColor3 = Color3.fromRGB(0,160,240)
+    buttonGlow.Thickness = 4
+end)
+button.MouseLeave:Connect(function()
+    button.BackgroundColor3 = Color3.fromRGB(0,120,220)
+    buttonGlow.Thickness = 3
+end)
+button.MouseButton1Click:Connect(function()
+    if LocalPlayer and LocalPlayer.Character then
+        local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        if root then root.CFrame = teleportCFrame end
+    end
+end)
+
+local minimizeButton = Instance.new("TextButton")
+minimizeButton.Size = UDim2.new(0,30,0,20)
+minimizeButton.Position = UDim2.new(1,-35,0,5)
+minimizeButton.BackgroundColor3 = Color3.fromRGB(120,0,0)
+minimizeButton.BorderSizePixel = 0
+minimizeButton.Text = "X"
+minimizeButton.TextColor3 = Color3.new(1,1,1)
+minimizeButton.Font = Enum.Font.SciFi
+minimizeButton.TextSize = 14
+minimizeButton.Parent = mainFrame
+
+local showButton = Instance.new("TextButton")
+showButton.Size = UDim2.new(0,100,0,30)
+showButton.Position = UDim2.new(0,10,1,-35)
+showButton.BackgroundColor3 = Color3.fromRGB(0,120,0)
+showButton.BorderSizePixel = 0
+showButton.Text = "Show UI"
+showButton.TextColor3 = Color3.new(1,1,1)
+showButton.Font = Enum.Font.SciFi
+showButton.TextSize = 14
+showButton.Visible = false
+showButton.Parent = screenGui
 
 minimizeButton.MouseButton1Click:Connect(function()
-    isUIVisible = false
     mainFrame.Visible = false
     showButton.Visible = true
 end)
-
 showButton.MouseButton1Click:Connect(function()
-    isUIVisible = true
     mainFrame.Visible = true
     showButton.Visible = false
 end)
 
-button.MouseEnter:Connect(function()
-    button.BackgroundColor3 = Color3.fromRGB(0, 160, 240)
-    buttonGlow.Thickness = 4
-end)
-button.MouseLeave:Connect(function()
-    button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
-    buttonGlow.Thickness = 3
-end)
+-- Motion Blur based on camera movement
+local blurEffect = Instance.new("BlurEffect")
+blurEffect.Size = 0
+blurEffect.Parent = Lighting
+local lastCameraCFrame = workspace.CurrentCamera.CFrame
+local blurMultiplier = 0.15
 
-button.MouseButton1Click:Connect(function()
-    if LocalPlayer and LocalPlayer.Character then
-        local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if root then
-            root.CFrame = teleportCFrame
-        end
-    end
+RunService.RenderStepped:Connect(function()
+    local cam = workspace.CurrentCamera
+    local velocity = (cam.CFrame.Position - lastCameraCFrame.Position).Magnitude
+    blurEffect.Size = math.clamp(velocity * blurMultiplier,0,20)
+    lastCameraCFrame = cam.CFrame
 end)
-
-task.spawn(function()
-    while true do
-        if isUIVisible then
-            mainFrame.Position = UDim2.new(0, 10, 0.5, -125 + math.sin(tick()) * 2)
-            task.wait(0.05)
-        else
-            task.wait(0.1)
-        end
-    end
-end)
-
--- Floating planets
-for i = 1, 12 do
-    local planet = Instance.new("Part")
-    planet.Shape = Enum.PartType.Ball
-    planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
-    planet.Position = Vector3.new(
-        playerPosition.X + math.random(-1200, 1200),
-        playerPosition.Y + 500 + math.random(300, 800),
-        playerPosition.Z + math.random(-1200, 1200)
-    )
-    planet.Anchored = true
-    planet.Material = Enum.Material.Neon
-    planet.Color = Color3.fromRGB(math.random(60, 220), math.random(60, 220), math.random(60, 220))
-    planet.CanCollide = false
-    local planetLight = Instance.new("PointLight")
-    planetLight.Brightness = 4
-    planetLight.Range = 60
-    planetLight.Color = planet.Color
-    planetLight.Parent = planet
-    local ring = Instance.new("Part")
-    ring.Shape = Enum.PartType.Cylinder
-    ring.Size = Vector3.new(2, planet.Size.X * 1.5, planet.Size.X * 1.5)
-    ring.CFrame = CFrame.new(planet.Position)
-    ring.Anchored = true
-    ring.Material = Enum.Material.Neon
-    ring.Color = Color3.fromRGB(200, 200, 255)
-    ring.Transparency = 0.3
-    ring.CanCollide = false
-    ring.Parent = island
-    planet.Parent = island
-    task.spawn(function()
-        while planet and planet.Parent do
-            planet.CFrame = planet.CFrame * CFrame.Angles(0, math.rad(0.3), 0)
-            ring.CFrame = ring.CFrame * CFrame.Angles(0, math.rad(-0.5), 0)
-            task.wait()
-        end
-    end)
-end
-
--- Nebula clouds
-for i = 1, 15 do
-    local cloud = Instance.new("Part")
-    cloud.Size = Vector3.new(math.random(80, 200), math.random(20, 50), math.random(80, 200))
-    cloud.Position = Vector3.new(
-        playerPosition.X + math.random(-1000, 1000),
-        playerPosition.Y + 500 + math.random(400, 900),
-        playerPosition.Z + math.random(-1000, 1000)
-    )
-    cloud.Anchored = true
-    cloud.Material = Enum.Material.Neon
-    cloud.Transparency = 0.7
-    cloud.Color = Color3.fromRGB(math.random(100, 180), math.random(80, 150), math.random(180, 255))
-    cloud.CanCollide = false
-    cloud.Parent = island
-    local cloudLight = Instance.new("PointLight")
-    cloudLight.Brightness = 2
-    cloudLight.Range = 80
-    cloudLight.Color = cloud.Color
-    cloudLight.Parent = cloud
-end
