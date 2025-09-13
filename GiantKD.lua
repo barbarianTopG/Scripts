@@ -6,7 +6,7 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/OwnerTag.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
 
 local Wait = task.wait
 
@@ -52,11 +52,9 @@ minimizer.Text = "Enable"
 minimizer.Parent = gui
 minimizer.ZIndex = 10
 
--- Create squircle shape for minimizer
 local corner = Instance.new("UICorner", minimizer)
 corner.CornerRadius = UDim.new(0, 20)
 
--- Create background shape layer for outline effect
 local minimizerBg = Instance.new("Frame")
 minimizerBg.Size = UDim2.new(1, 6, 1, 6)
 minimizerBg.Position = UDim2.new(0, -3, 0, -3)
@@ -68,7 +66,7 @@ local cornerBg = Instance.new("UICorner", minimizerBg)
 cornerBg.CornerRadius = UDim.new(0, 23)
 
 local popup = Instance.new("Frame")
-popup.Size = UDim2.new(0, 350, 0, 300) -- Increased height for the stop button
+popup.Size = UDim2.new(0, 350, 0, 300)
 popup.Position = UDim2.new(0.5, -175, 0.5, -150)
 popup.BackgroundColor3 = colorScheme.background
 popup.Visible = false
@@ -77,7 +75,6 @@ popup.Parent = gui
 local corner = Instance.new("UICorner", popup)
 corner.CornerRadius = UDim.new(0, 40)
 
--- Add a subtle gradient
 local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new{
     ColorSequenceKeypoint.new(0, colorScheme.background),
@@ -107,7 +104,6 @@ descLabel.TextWrapped = true
 descLabel.Text = "I do not own Krystal Dance V3, press 'Click Me!' button for more details"
 descLabel.Parent = popup
 
--- Create button template function
 local function createButton(name, text, color, position)
     local buttonContainer = Instance.new("Frame")
     buttonContainer.Size = UDim2.new(0.45, 0, 0, 40)
@@ -115,7 +111,6 @@ local function createButton(name, text, color, position)
     buttonContainer.BackgroundTransparency = 1
     buttonContainer.Parent = popup
     
-    -- Background shape layer
     local buttonBg = Instance.new("Frame")
     buttonBg.Size = UDim2.new(1, 6, 1, 6)
     buttonBg.Position = UDim2.new(0, -3, 0, -3)
@@ -126,7 +121,6 @@ local function createButton(name, text, color, position)
     local cornerBg = Instance.new("UICorner", buttonBg)
     cornerBg.CornerRadius = UDim.new(0, 15)
     
-    -- Main button
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(1, 0, 1, 0)
     button.BackgroundColor3 = color
@@ -144,7 +138,6 @@ local function createButton(name, text, color, position)
     return button
 end
 
--- Create buttons using template
 local reanimateBtn = createButton("ReanimateBtn", "Reanimate", colorScheme.success, UDim2.new(0.05, 0, 0.6, 0))
 local creditsBtn = createButton("CreditsBtn", "Click Me!", colorScheme.accent, UDim2.new(0.5, 0, 0.6, 0))
 local stopBtn = createButton("StopBtn", "Stop Script", colorScheme.danger, UDim2.new(0.05, 0, 0.75, 0))
@@ -160,10 +153,8 @@ footerLabel.TextColor3 = colorScheme.subtext
 footerLabel.Text = "Made by PlasmaByte"
 footerLabel.Parent = popup
 
--- UI state
 local uiEnabled = false
 
--- Toggle UI function
 local function toggleUI()
     uiEnabled = not uiEnabled
     
@@ -185,10 +176,8 @@ local function toggleUI()
     end
 end
 
--- Minimizer button click
 minimizer.MouseButton1Click:Connect(toggleUI)
 
--- Close popup function
 local function closePopup()
     local tween = TweenService:Create(popup, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
         Size = UDim2.new(0, 0, 0, 0)
@@ -200,14 +189,12 @@ local function closePopup()
     minimizer.Text = "Enable"
 end
 
--- Stop button click (Rejoins)
 stopBtn.MouseButton1Click:Connect(function()
     closePopup()
     Send("-rj "..tostring(Haha))
-    notify("Giant Krystal Dance", "Stopping script...", 3)
+    notify("Giant Krystal Dance", "Rejooning :P", 3)
 end)
 
--- Reanimate button click
 reanimateBtn.MouseButton1Click:Connect(function()
     closePopup()
     Send("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
@@ -396,25 +383,27 @@ reanimateBtn.MouseButton1Click:Connect(function()
     end))
     StarterGui:SetCore("ResetButtonCallback", reset)
     Wait(5)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
+    
+loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 end)
 
--- Credits button click
 creditsBtn.MouseButton1Click:Connect(function()
     closePopup()
     print("------------------------------------------")
     print("Krystal Dance V3 - Made by NITRO-GT")
-    Wait(.2)
+    Wait(.1)
     print("Krystal Dance V3 - Fixed by MrY7zz")
-    Wait(.2)
+    Wait(.1)
     print("Krystal Dance V3 - Credits goes to them!!")
-    Wait(.2)
+    Wait(.1)
     print("Controls:")
-    Wait(.2)
-    print("Q, E, R, T, Y, U, I, P, F, G, H, J, K, L, Z, X, C, V, N, Sometimes the comma key, M to scroll pages")
-    Wait(.2)
+    Wait(.1)
+    print("1st Page:")
+    Wait(.1)
+    print("Q - Rat Dance, E - Boogie, R , T, Y, U - Caramella Dancen, P, F, G, H, J, K, L, Z, X, C, V, N")
+    Wait(.1)
     print("Love from PlasmaByte :)")
-    Wait(.2)
+    Wait(.1)
     print("------------------------------------------")
     Wait(.1)
     notify("Giant Krystal Dance", "Check Console!")
