@@ -10,8 +10,10 @@ if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChil
     playerPosition = LocalPlayer.Character.HumanoidRootPart.Position
 end
 
+-- Teleport destination (unchanged logic)
 local teleportCFrame = CFrame.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)
 
+-- Save original lighting
 local originalLighting = {
     Ambient = Lighting.Ambient,
     OutdoorAmbient = Lighting.OutdoorAmbient,
@@ -20,6 +22,7 @@ local originalLighting = {
     Brightness = Lighting.Brightness
 }
 
+-- Space lighting
 Lighting.Ambient = Color3.fromRGB(35, 35, 65)
 Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 65)
 Lighting.FogColor = Color3.fromRGB(3, 3, 12)
@@ -47,6 +50,7 @@ local island = Instance.new("Model")
 island.Name = "PlasmaMapIsland"
 island.Parent = workspace
 
+-- Main platform
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
 platform.Size = Vector3.new(1200, 25, 1200)
@@ -57,6 +61,7 @@ platform.Color = Color3.fromRGB(15, 3, 35)
 platform.CanCollide = false
 platform.Parent = island
 
+-- Background stars
 local surfaceGui = Instance.new("SurfaceGui")
 surfaceGui.Face = Enum.NormalId.Top
 surfaceGui.Parent = platform
@@ -78,7 +83,6 @@ for i = 1, 200 do
     )
     star.BorderSizePixel = 0
     star.Parent = frame
-
     task.spawn(function()
         while star and star.Parent do
             task.wait(math.random(4, 12) / 10)
@@ -96,6 +100,7 @@ nebulaPattern.BackgroundTransparency = 0.7
 nebulaPattern.BorderSizePixel = 0
 nebulaPattern.Parent = frame
 
+-- Floating crystals
 for i = 1, 80 do
     local crystal = Instance.new("Part")
     crystal.Shape = Enum.PartType.Ball
@@ -114,22 +119,20 @@ for i = 1, 80 do
         math.random(220, 255)
     )
     crystal.CanCollide = false
-
     local pointLight = Instance.new("PointLight")
     pointLight.Brightness = 5
     pointLight.Range = 35
     pointLight.Color = crystal.Color
     pointLight.Parent = crystal
-
     local glow = Instance.new("SurfaceLight")
     glow.Brightness = 8
     glow.Range = 20
     glow.Color = crystal.Color
     glow.Parent = crystal
-
     crystal.Parent = island
 end
 
+-- Asteroids
 for i = 1, 100 do
     local rock = Instance.new("Part")
     rock.Size = Vector3.new(
@@ -149,6 +152,7 @@ for i = 1, 100 do
     rock.Parent = island
 end
 
+-- Observatory base
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
 observatory.Size = Vector3.new(80, 30, 80)
@@ -159,6 +163,7 @@ observatory.Color = Color3.fromRGB(45, 45, 65)
 observatory.CanCollide = false
 observatory.Parent = island
 
+-- Dome
 local dome = Instance.new("Part")
 dome.Shape = Enum.PartType.Ball
 dome.Size = Vector3.new(70, 30, 70)
@@ -170,10 +175,11 @@ dome.Color = Color3.fromRGB(70, 120, 255)
 dome.CanCollide = false
 dome.Parent = island
 
+-- Teleport pad (moved near dome)
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(15, 2, 15)
-teleportPad.Position = Vector3.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)
+teleportPad.Position = Vector3.new(playerPosition.X + 100, playerPosition.Y + 520, playerPosition.Z + 50)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
@@ -204,6 +210,10 @@ particles.Lifetime = NumberRange.new(4)
 particles.Rate = 20
 particles.Speed = NumberRange.new(4)
 particles.Parent = teleportPad
+
+-- UI stays the same...
+-- (rest of your UI + toggle + planets + nebula code unchanged below)
+
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "PlasmaMapUI"
