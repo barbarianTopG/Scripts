@@ -56,10 +56,10 @@ platform.Position = Vector3.new(playerPosition.X, playerPosition.Y + 500, player
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
 platform.Color = Color3.fromRGB(15, 3, 35)
-platform.CanCollide = false
+platform.CanCollide = true
 platform.Parent = island
 
--- Background stars
+-- Background stars (surface GUI)
 local surfaceGui = Instance.new("SurfaceGui")
 surfaceGui.Face = Enum.NormalId.Top
 surfaceGui.Parent = platform
@@ -74,24 +74,18 @@ for i = 1, 200 do
     local star = Instance.new("Frame")
     star.Size = UDim2.new(0, math.random(3, 12), 0, math.random(3, 12))
     star.Position = UDim2.new(0, math.random(0, 1180), 0, math.random(0, 1180))
-    star.BackgroundColor3 = Color3.fromRGB(
-        math.random(160, 255),
-        math.random(160, 255),
-        math.random(210, 255)
-    )
+    star.BackgroundColor3 = Color3.fromRGB(math.random(160, 255), math.random(160, 255), math.random(210, 255))
     star.BorderSizePixel = 0
     star.Parent = frame
-
     task.spawn(function()
         while star and star.Parent do
             task.wait(math.random(4, 12) / 10)
-            if star then
-                star.Visible = not star.Visible
-            end
+            if star then star.Visible = not star.Visible end
         end
     end)
 end
 
+-- Nebula overlay
 local nebulaPattern = Instance.new("Frame")
 nebulaPattern.Size = UDim2.new(1, 0, 1, 0)
 nebulaPattern.BackgroundColor3 = Color3.fromRGB(15, 3, 35)
@@ -112,36 +106,25 @@ for i = 1, 80 do
     crystal.Anchored = true
     crystal.Material = Enum.Material.Glass
     crystal.Transparency = 0.2
-    crystal.Color = Color3.fromRGB(
-        math.random(120, 220),
-        math.random(70, 180),
-        math.random(220, 255)
-    )
-    crystal.CanCollide = false
-
+    crystal.Color = Color3.fromRGB(math.random(120, 220), math.random(70, 180), math.random(220, 255))
+    crystal.CanCollide = true
     local pointLight = Instance.new("PointLight")
     pointLight.Brightness = 5
     pointLight.Range = 35
     pointLight.Color = crystal.Color
     pointLight.Parent = crystal
-
     local glow = Instance.new("SurfaceLight")
     glow.Brightness = 8
     glow.Range = 20
     glow.Color = crystal.Color
     glow.Parent = crystal
-
     crystal.Parent = island
 end
 
 -- Asteroids
 for i = 1, 100 do
     local rock = Instance.new("Part")
-    rock.Size = Vector3.new(
-        math.random(15, 40),
-        math.random(15, 40),
-        math.random(15, 40)
-    )
+    rock.Size = Vector3.new(math.random(15, 40), math.random(15, 40), math.random(15, 40))
     rock.Position = Vector3.new(
         playerPosition.X + math.random(-800, 800),
         playerPosition.Y + 500 + math.random(-50, 250),
@@ -154,7 +137,7 @@ for i = 1, 100 do
     rock.Parent = island
 end
 
--- Observatory base
+-- Observatory
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
 observatory.Size = Vector3.new(80, 30, 80)
@@ -162,7 +145,7 @@ observatory.Position = Vector3.new(playerPosition.X, playerPosition.Y + 515, pla
 observatory.Anchored = true
 observatory.Material = Enum.Material.Metal
 observatory.Color = Color3.fromRGB(45, 45, 65)
-observatory.CanCollide = false
+observatory.CanCollide = true
 observatory.Parent = island
 
 -- Dome
@@ -174,7 +157,7 @@ dome.Anchored = true
 dome.Material = Enum.Material.Glass
 dome.Transparency = 0.4
 dome.Color = Color3.fromRGB(70, 120, 255)
-dome.CanCollide = false
+dome.CanCollide = true
 dome.Parent = island
 
 -- Teleport pad
@@ -185,7 +168,7 @@ teleportPad.Position = Vector3.new(playerPosition.X + 100, playerPosition.Y + 52
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
-teleportPad.CanCollide = false
+teleportPad.CanCollide = true
 teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
@@ -200,14 +183,8 @@ particles.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 170, 255)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 200, 255))
 })
-particles.Size = NumberSequence.new({
-    NumberSequenceKeypoint.new(0, 1.2),
-    NumberSequenceKeypoint.new(1, 0.4)
-})
-particles.Transparency = NumberSequence.new({
-    NumberSequenceKeypoint.new(0, 0.2),
-    NumberSequenceKeypoint.new(1, 0.8)
-})
+particles.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 1.2), NumberSequenceKeypoint.new(1, 0.4)})
+particles.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.2), NumberSequenceKeypoint.new(1, 0.8)})
 particles.Lifetime = NumberRange.new(4)
 particles.Rate = 20
 particles.Speed = NumberRange.new(4)
@@ -258,7 +235,7 @@ button.Size = UDim2.new(0, 180, 0, 40)
 button.Position = UDim2.new(0.5, -90, 0, 160)
 button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
 button.BorderSizePixel = 0
-button.Text = "TELEPORT TO SPACE"
+button.Text = "TP somewhere" -- changed text
 button.TextColor3 = Color3.new(1, 1, 1)
 button.Font = Enum.Font.SciFi
 button.TextSize = 18
@@ -269,7 +246,6 @@ buttonGlow.Color = Color3.fromRGB(0, 220, 255)
 buttonGlow.Thickness = 3
 buttonGlow.Parent = button
 
--- Shadows toggle
 local shadowToggle = Instance.new("TextButton")
 shadowToggle.Size = UDim2.new(0, 180, 0, 30)
 shadowToggle.Position = UDim2.new(0.5, -90, 0, 120)
@@ -281,7 +257,6 @@ shadowToggle.Font = Enum.Font.SciFi
 shadowToggle.TextSize = 14
 shadowToggle.Parent = mainFrame
 
--- Minimize/Show UI buttons
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 20)
 minimizeButton.Position = UDim2.new(1, -35, 0, 5)
@@ -328,13 +303,14 @@ local function toggleShadows()
         shadowToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 120)
     end
 end
-
 shadowToggle.MouseButton1Click:Connect(toggleShadows)
+
 minimizeButton.MouseButton1Click:Connect(function()
     isUIVisible = false
     mainFrame.Visible = false
     showButton.Visible = true
 end)
+
 showButton.MouseButton1Click:Connect(function()
     isUIVisible = true
     mainFrame.Visible = true
@@ -349,6 +325,7 @@ button.MouseLeave:Connect(function()
     button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
     buttonGlow.Thickness = 3
 end)
+
 button.MouseButton1Click:Connect(function()
     if LocalPlayer and LocalPlayer.Character then
         local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -370,81 +347,62 @@ task.spawn(function()
 end)
 
 -- Floating planets
-local function createFloatingPlanets()
-    for i = 1, 12 do
-        local planet = Instance.new("Part")
-        planet.Shape = Enum.PartType.Ball
-        planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
-        planet.Position = Vector3.new(
-            playerPosition.X + math.random(-1200, 1200),
-            playerPosition.Y + 500 + math.random(300, 800),
-            playerPosition.Z + math.random(-1200, 1200)
-        )
-        planet.Anchored = true
-        planet.Material = Enum.Material.Neon
-        planet.Color = Color3.fromRGB(
-            math.random(60, 220),
-            math.random(60, 220),
-            math.random(60, 220)
-        )
-        planet.CanCollide = false
-
-        local planetLight = Instance.new("PointLight")
-        planetLight.Brightness = 4
-        planetLight.Range = 60
-        planetLight.Color = planet.Color
-        planetLight.Parent = planet
-
-        local ring = Instance.new("Part")
-        ring.Shape = Enum.PartType.Cylinder
-        ring.Size = Vector3.new(2, planet.Size.X * 1.5, planet.Size.X * 1.5)
-        ring.CFrame = CFrame.new(planet.Position)
-        ring.Anchored = true
-        ring.Material = Enum.Material.Neon
-        ring.Color = Color3.fromRGB(200, 200, 255)
-        ring.Transparency = 0.3
-        ring.CanCollide = false
-        ring.Parent = island
-
-        planet.Parent = island
-
-        task.spawn(function()
-            while planet and planet.Parent do
-                planet.CFrame = planet.CFrame * CFrame.Angles(0, math.rad(0.3), 0)
-                ring.CFrame = ring.CFrame * CFrame.Angles(0, math.rad(-0.5), 0)
-                task.wait()
-            end
-        end)
-    end
+for i = 1, 12 do
+    local planet = Instance.new("Part")
+    planet.Shape = Enum.PartType.Ball
+    planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
+    planet.Position = Vector3.new(
+        playerPosition.X + math.random(-1200, 1200),
+        playerPosition.Y + 500 + math.random(300, 800),
+        playerPosition.Z + math.random(-1200, 1200)
+    )
+    planet.Anchored = true
+    planet.Material = Enum.Material.Neon
+    planet.Color = Color3.fromRGB(math.random(60, 220), math.random(60, 220), math.random(60, 220))
+    planet.CanCollide = false
+    local planetLight = Instance.new("PointLight")
+    planetLight.Brightness = 4
+    planetLight.Range = 60
+    planetLight.Color = planet.Color
+    planetLight.Parent = planet
+    local ring = Instance.new("Part")
+    ring.Shape = Enum.PartType.Cylinder
+    ring.Size = Vector3.new(2, planet.Size.X * 1.5, planet.Size.X * 1.5)
+    ring.CFrame = CFrame.new(planet.Position)
+    ring.Anchored = true
+    ring.Material = Enum.Material.Neon
+    ring.Color = Color3.fromRGB(200, 200, 255)
+    ring.Transparency = 0.3
+    ring.CanCollide = false
+    ring.Parent = island
+    planet.Parent = island
+    task.spawn(function()
+        while planet and planet.Parent do
+            planet.CFrame = planet.CFrame * CFrame.Angles(0, math.rad(0.3), 0)
+            ring.CFrame = ring.CFrame * CFrame.Angles(0, math.rad(-0.5), 0)
+            task.wait()
+        end
+    end)
 end
-createFloatingPlanets()
 
 -- Nebula clouds
-local function createNebulaClouds()
-    for i = 1, 15 do
-        local cloud = Instance.new("Part")
-        cloud.Size = Vector3.new(math.random(80, 200), math.random(20, 50), math.random(80, 200))
-        cloud.Position = Vector3.new(
-            playerPosition.X + math.random(-1000, 1000),
-            playerPosition.Y + 500 + math.random(400, 900),
-            playerPosition.Z + math.random(-1000, 1000)
-        )
-        cloud.Anchored = true
-        cloud.Material = Enum.Material.Neon
-        cloud.Transparency = 0.7
-        cloud.Color = Color3.fromRGB(
-            math.random(100, 180),
-            math.random(80, 150),
-            math.random(180, 255)
-        )
-        cloud.CanCollide = false
-        cloud.Parent = island
-
-        local cloudLight = Instance.new("PointLight")
-        cloudLight.Brightness = 2
-        cloudLight.Range = 80
-        cloudLight.Color = cloud.Color
-        cloudLight.Parent = cloud
-    end
+for i = 1, 15 do
+    local cloud = Instance.new("Part")
+    cloud.Size = Vector3.new(math.random(80, 200), math.random(20, 50), math.random(80, 200))
+    cloud.Position = Vector3.new(
+        playerPosition.X + math.random(-1000, 1000),
+        playerPosition.Y + 500 + math.random(400, 900),
+        playerPosition.Z + math.random(-1000, 1000)
+    )
+    cloud.Anchored = true
+    cloud.Material = Enum.Material.Neon
+    cloud.Transparency = 0.7
+    cloud.Color = Color3.fromRGB(math.random(100, 180), math.random(80, 150), math.random(180, 255))
+    cloud.CanCollide = false
+    cloud.Parent = island
+    local cloudLight = Instance.new("PointLight")
+    cloudLight.Brightness = 2
+    cloudLight.Range = 80
+    cloudLight.Color = cloud.Color
+    cloudLight.Parent = cloud
 end
-createNebulaClouds()
