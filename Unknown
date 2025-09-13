@@ -4,13 +4,13 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
-
 local playerPosition = Vector3.new(0, 0, 0)
+
 if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     playerPosition = LocalPlayer.Character.HumanoidRootPart.Position
 end
 
--- Teleport destination (unchanged logic)
+-- Teleport destination
 local teleportCFrame = CFrame.new(playerPosition.X + 300, playerPosition.Y + 520, playerPosition.Z + 300)
 
 -- Save original lighting
@@ -36,9 +36,7 @@ sky.SkyboxFt = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxLf = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
-if not sky.Parent then
-    sky.Parent = Lighting
-end
+if not sky.Parent then sky.Parent = Lighting end
 
 for _, obj in pairs(workspace:GetChildren()) do
     if obj.Name == "PlasmaMapIsland" then
@@ -83,6 +81,7 @@ for i = 1, 200 do
     )
     star.BorderSizePixel = 0
     star.Parent = frame
+
     task.spawn(function()
         while star and star.Parent do
             task.wait(math.random(4, 12) / 10)
@@ -119,16 +118,19 @@ for i = 1, 80 do
         math.random(220, 255)
     )
     crystal.CanCollide = false
+
     local pointLight = Instance.new("PointLight")
     pointLight.Brightness = 5
     pointLight.Range = 35
     pointLight.Color = crystal.Color
     pointLight.Parent = crystal
+
     local glow = Instance.new("SurfaceLight")
     glow.Brightness = 8
     glow.Range = 20
     glow.Color = crystal.Color
     glow.Parent = crystal
+
     crystal.Parent = island
 end
 
@@ -175,7 +177,7 @@ dome.Color = Color3.fromRGB(70, 120, 255)
 dome.CanCollide = false
 dome.Parent = island
 
--- Teleport pad (moved near dome)
+-- Teleport pad
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(15, 2, 15)
@@ -211,6 +213,7 @@ particles.Rate = 20
 particles.Speed = NumberRange.new(4)
 particles.Parent = teleportPad
 
+-- UI
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "PlasmaMapUI"
 screenGui.Parent = game:GetService("CoreGui")
@@ -266,6 +269,7 @@ buttonGlow.Color = Color3.fromRGB(0, 220, 255)
 buttonGlow.Thickness = 3
 buttonGlow.Parent = button
 
+-- Shadows toggle
 local shadowToggle = Instance.new("TextButton")
 shadowToggle.Size = UDim2.new(0, 180, 0, 30)
 shadowToggle.Position = UDim2.new(0.5, -90, 0, 120)
@@ -277,6 +281,7 @@ shadowToggle.Font = Enum.Font.SciFi
 shadowToggle.TextSize = 14
 shadowToggle.Parent = mainFrame
 
+-- Minimize/Show UI buttons
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 20)
 minimizeButton.Position = UDim2.new(1, -35, 0, 5)
@@ -305,7 +310,6 @@ local shadowsEnabled = true
 
 local function toggleShadows()
     shadowsEnabled = not shadowsEnabled
-
     if shadowsEnabled then
         Lighting.Ambient = Color3.fromRGB(35, 35, 65)
         Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 65)
@@ -326,13 +330,11 @@ local function toggleShadows()
 end
 
 shadowToggle.MouseButton1Click:Connect(toggleShadows)
-
 minimizeButton.MouseButton1Click:Connect(function()
     isUIVisible = false
     mainFrame.Visible = false
     showButton.Visible = true
 end)
-
 showButton.MouseButton1Click:Connect(function()
     isUIVisible = true
     mainFrame.Visible = true
@@ -343,12 +345,10 @@ button.MouseEnter:Connect(function()
     button.BackgroundColor3 = Color3.fromRGB(0, 160, 240)
     buttonGlow.Thickness = 4
 end)
-
 button.MouseLeave:Connect(function()
     button.BackgroundColor3 = Color3.fromRGB(0, 120, 220)
     buttonGlow.Thickness = 3
 end)
-
 button.MouseButton1Click:Connect(function()
     if LocalPlayer and LocalPlayer.Character then
         local root = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
@@ -369,6 +369,7 @@ task.spawn(function()
     end
 end)
 
+-- Floating planets
 local function createFloatingPlanets()
     for i = 1, 12 do
         local planet = Instance.new("Part")
@@ -416,9 +417,9 @@ local function createFloatingPlanets()
         end)
     end
 end
-
 createFloatingPlanets()
 
+-- Nebula clouds
 local function createNebulaClouds()
     for i = 1, 15 do
         local cloud = Instance.new("Part")
@@ -446,5 +447,4 @@ local function createNebulaClouds()
         cloudLight.Parent = cloud
     end
 end
-
 createNebulaClouds()
