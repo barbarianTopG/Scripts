@@ -4,9 +4,20 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
+
+-- Space Skybox
+local sky = Instance.new("Sky", Lighting)
+sky.SkyboxBk = "http://www.roblox.com/asset/?id=7018684000"
+sky.SkyboxDn = "http://www.roblox.com/asset/?id=7018687833"
+sky.SkyboxFt = "http://www.roblox.com/asset/?id=7018684000"
+sky.SkyboxLf = "http://www.roblox.com/asset/?id=7018684000"
+sky.SkyboxRt = "http://www.roblox.com/asset/?id=7018684000"
+sky.SkyboxUp = "http://www.roblox.com/asset/?id=7018689553"
+sky.StarCount = 5000
 
 -- UI Setup
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -79,15 +90,15 @@ sliderKnob.BackgroundColor3 = Color3.fromRGB(0,200,255)
 
 -- Minimize Button
 local showButton = Instance.new("TextButton", screenGui)
-showButton.Size = UDim2.new(0, 100, 0, 30)
+showButton.Size = UDim2.new(0, 30, 0, 30)
 showButton.Position = UDim2.new(0, 20, 0.5, -15)
-showButton.Text = "Show UI"
+showButton.Text = "+"
 showButton.Visible = false
 
 local minimizeButton = Instance.new("TextButton", mainFrame)
-minimizeButton.Size = UDim2.new(0, 80, 0, 30)
-minimizeButton.Position = UDim2.new(1, -90, 0, 5)
-minimizeButton.Text = "Minimize"
+minimizeButton.Size = UDim2.new(0, 30, 0, 30)
+minimizeButton.Position = UDim2.new(1, -40, 0, 5)
+minimizeButton.Text = "-"
 
 -- Effects
 local blurEffect = Instance.new("BlurEffect", Lighting)
@@ -117,7 +128,7 @@ for i = 1, 200 do
     flash.Parent = platform
     task.spawn(function()
         while true do
-            flash.Transparency = math.random()
+            TweenService:Create(flash, TweenInfo.new(0.3), {Transparency = math.random()}):Play()
             task.wait(math.random(1,5)/10)
         end
     end)
@@ -189,13 +200,14 @@ shadowButton.MouseButton1Click:Connect(function()
     Lighting.GlobalShadows = shadowsEnabled
 end)
 
--- Render distance slider
+-- Render distance slider (disabled when minimized)
 renderSlider.MouseButton1Down:Connect(function(x,y)
+    if not mainFrame.Visible then return end
     dragging = true
     local moveConn
     moveConn = RunService.RenderStepped:Connect(function()
-        if dragging then
-            local rel = math.clamp((game:GetService("UserInputService"):GetMouseLocation().X - renderSlider.AbsolutePosition.X) / renderSlider.AbsoluteSize.X,0,1)
+        if dragging and mainFrame.Visible then
+            local rel = math.clamp((UserInputService:GetMouseLocation().X - renderSlider.AbsolutePosition.X) / renderSlider.AbsoluteSize.X,0,1)
             sliderKnob.Position = UDim2.new(rel, -10,0,0)
             renderDistance = 1000 + rel * 5000
             renderLabel.Text = "Render Distance: "..math.floor(renderDistance)
@@ -204,7 +216,7 @@ renderSlider.MouseButton1Down:Connect(function(x,y)
         end
     end)
 end)
-game:GetService("UserInputService").InputEnded:Connect(function(input)
+UserInputService.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = false
     end
@@ -218,6 +230,14 @@ end)
 showButton.MouseButton1Click:Connect(function()
     mainFrame.Visible = true
     showButton.Visible = false
+end)
+
+-- Update symbols
+mainFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+    if mainFrame.Visible then
+        minimizeButton.Text = "-"
+        showButton.Text = "+"
+    end
 end)
 
 -- Motion blur + Render Distance manager
