@@ -10,7 +10,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools
 
 local Wait = task.wait
 
-local Haha = " ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
+local Sup = " ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
 
 local function Send(message)
     TextChatService.TextChannels.RBXGeneral:SendAsync(message)
@@ -40,10 +40,9 @@ local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
--- Create minimizer button with squircle shape
 local minimizer = Instance.new("TextButton")
 minimizer.Size = UDim2.new(0, 100, 0, 40)
-minimizer.Position = UDim2.new(0, 10, 0, 10) -- Moved to left side
+minimizer.Position = UDim2.new(0, 10, 0, 10) 
 minimizer.BackgroundColor3 = colorScheme.primary
 minimizer.Font = Enum.Font.Arcade
 minimizer.TextSize = 16
@@ -90,7 +89,7 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.Font = Enum.Font.Arcade
 titleLabel.TextSize = 24
 titleLabel.TextColor3 = colorScheme.text
-titleLabel.Text = "Giant Krystal Dance"
+titleLabel.Text = "Titan Dance"
 titleLabel.Parent = popup
 
 local descLabel = Instance.new("TextLabel")
@@ -101,7 +100,7 @@ descLabel.Font = Enum.Font.Arcade
 descLabel.TextSize = 16
 descLabel.TextColor3 = colorScheme.subtext
 descLabel.TextWrapped = true
-descLabel.Text = "I do not own Krystal Dance V3, press 'Click Me!' button for more details"
+descLabel.Text = "I do not own Krystal Dance V3, press 'Click Me!' button for more details."
 descLabel.Parent = popup
 
 local function createButton(name, text, color, position)
@@ -192,7 +191,7 @@ end
 stopBtn.MouseButton1Click:Connect(function()
     closePopup()
     Send("-rj "..tostring(Haha))
-    notify("Giant Krystal Dance", "Rejooning :P", 3)
+    notify("Titan Dance", "Rejooning :P", 3)
 end)
 
 reanimateBtn.MouseButton1Click:Connect(function()
@@ -396,26 +395,34 @@ creditsBtn.MouseButton1Click:Connect(function()
     Wait(.1)
     print("Krystal Dance V3 - Credits goes to them!!")
     Wait(.1)
-    print("Controls:")
+    print("------------------Controls------------------")
     Wait(.1)
-    print("1st Page:")
+    print("Page 1:")
     Wait(.1)
     print("Q - Rat Dance, E - Boogie, R - Unlock it, T - Hypnotic Data, Y - Sturdy V2, U - CaramellaDansen, P, F, G, H, J, K, L, Z, X, C, V, N")
     Wait(.1)
-    print("Love from PlasmaByte :)")
+    print("Page 2:")
+    Wait(.1)
+    print("i am still adding the names it takes time")
+    Wait(.1)
+    print("Changelog V1.2:")
+    Wait(.1)
+    print("Renamed from Giant Krystal Dance to Titan Dance.")
+    Wait(.1)
+    print("Love from PlasmaByte 💖")
     Wait(.1)
     print("------------------------------------------")
     Wait(.1)
-    notify("Giant Krystal Dance", "Check Console!")
+    notify("Titan Dance", "Check Console!")
 end)
 
 Wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Keyboards"))()
-notify("Giant Krystal Dance", "Please, choose a keyboard,")
+notify("Titan Dance", "Please, choose a keyboard,")
 Wait(.95)
-notify("Giant Krystal Dance", "becuz without one you")
+notify("Titan Dance", "bc without one you")
 Wait(.95)
-notify("Giant Krystal Dance", "wouldn't be able to use this")
+notify("Titan Dance", "won't be able to use this")
 Wait(.95)
 setclipboard("https://www.roblox.com/games/88308889239232/Green-baseplate")
-notify("Giant Krystal Dance", "Supported game link copied.")
+notify("Titan Dance", "Supported game link copied.")
