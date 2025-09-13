@@ -1,3 +1,4 @@
+-- Sup Skid
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -399,7 +400,7 @@ creditsBtn.MouseButton1Click:Connect(function()
     Wait(.1)
     print("Page 1:")
     Wait(.1)
-    print("Q - Rat Dance, E - Boogie, R - Unlock it, T - Hypnotic Data, Y - Sturdy V2, U - CaramellaDansen, P - Forget, F - Billy Bounce, G - Gangnam Style, H, J, K, L, Z, X, C, V, N")
+    print("Q - Rat Dance, E - Boogie, R - Unlock it, T - Hypnotic Data, Y - Sturdy V2, U - CaramellaDansen, P - Forget, F - Billy Bounce, G - Gangnam Style, H - Stadium Rave, J, K, L, Z, X, C, V, N")
     Wait(.1)
     print("Page 2:")
     Wait(.1)
