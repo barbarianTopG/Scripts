@@ -211,10 +211,6 @@ particles.Rate = 20
 particles.Speed = NumberRange.new(4)
 particles.Parent = teleportPad
 
--- UI stays the same...
--- (rest of your UI + toggle + planets + nebula code unchanged below)
-
-
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "PlasmaMapUI"
 screenGui.Parent = game:GetService("CoreGui")
