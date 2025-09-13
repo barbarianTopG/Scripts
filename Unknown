@@ -21,7 +21,6 @@ local originalLighting = {
     GlobalShadows = Lighting.GlobalShadows
 }
 
--- Space lighting (with shadows ON)
 local function applySpaceLighting()
     Lighting.Ambient = Color3.fromRGB(35, 35, 65)
     Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 65)
@@ -31,14 +30,13 @@ local function applySpaceLighting()
     Lighting.GlobalShadows = true
 end
 
--- Normal lighting
 local function applyNormalLighting()
     for k, v in pairs(originalLighting) do
         Lighting[k] = v
     end
 end
 
-applySpaceLighting() -- default
+applySpaceLighting()
 
 -- Skybox
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
@@ -81,7 +79,7 @@ observatory.Color = Color3.fromRGB(45, 45, 65)
 observatory.CanCollide = true
 observatory.Parent = island
 
--- Dome
+-- Dome (non-collidable)
 local dome = Instance.new("Part")
 dome.Shape = Enum.PartType.Ball
 dome.Size = Vector3.new(70, 30, 70)
@@ -90,7 +88,7 @@ dome.Anchored = true
 dome.Material = Enum.Material.Glass
 dome.Transparency = 0.4
 dome.Color = Color3.fromRGB(70, 120, 255)
-dome.CanCollide = false
+dome.CanCollide = false -- <-- you can go through it
 dome.Parent = island
 
 -- Teleport pad on observatory
@@ -186,7 +184,7 @@ screenGui.Parent = PlayerGui
 
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 300, 0, 150)
-frame.Position = UDim2.new(0.5, -150, 0, 50)
+frame.Position = UDim2.new(0, 50, 1, -200) -- start bottom-left
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
 frame.BorderSizePixel = 2
 frame.Parent = screenGui
@@ -232,7 +230,6 @@ shadowsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 shadowsButton.Parent = frame
 
 local shadowsOn = true
-
 tpButton.MouseButton1Click:Connect(function()
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         LocalPlayer.Character.HumanoidRootPart.CFrame = teleportPad.CFrame + Vector3.new(0, 3, 0)
@@ -250,31 +247,48 @@ shadowsButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Minimizer
+-- Minimizer (bottom-left)
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 30)
-minimizeButton.Position = UDim2.new(1, -35, 0, 5)
-minimizeButton.Text = "-"
+minimizeButton.Position = UDim2.new(0, 10, 1, -40)
+minimizeButton.Text = "+"
 minimizeButton.TextScaled = true
 minimizeButton.BackgroundColor3 = Color3.fromRGB(150, 150, 200)
 minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeButton.Parent = frame
+minimizeButton.Parent = screenGui -- outside frame for always-visible
 
 local uiExpanded = true
-
 minimizeButton.MouseButton1Click:Connect(function()
     uiExpanded = not uiExpanded
-    if uiExpanded then
-        frame.Size = UDim2.new(0, 300, 0, 150)
-        tpButton.Visible = true
-        shadowsButton.Visible = true
-        infoText.Visible = true
-        minimizeButton.Text = "-"
-    else
-        frame.Size = UDim2.new(0, 100, 0, 40)
-        tpButton.Visible = false
-        shadowsButton.Visible = false
-        infoText.Visible = false
-        minimizeButton.Text = "+"
+    frame.Visible = uiExpanded
+end)
+
+-- Draggable UI
+local dragging = false
+local dragInput, mousePos, framePos
+
+frame.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        mousePos = input.Position
+        framePos = frame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+frame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+RunService.RenderStepped:Connect(function()
+    if dragging and dragInput then
+        local delta = dragInput.Position - mousePos
+        frame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
     end
 end)
