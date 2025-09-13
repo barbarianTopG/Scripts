@@ -90,7 +90,7 @@ dome.Anchored = true
 dome.Material = Enum.Material.Glass
 dome.Transparency = 0.4
 dome.Color = Color3.fromRGB(70, 120, 255)
-dome.CanCollide = true
+dome.CanCollide = false
 dome.Parent = island
 
 -- Teleport pad on observatory
