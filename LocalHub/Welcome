@@ -12,7 +12,7 @@ local function loadHub()
     if not _G.LocalHub then _G.LocalHub = {} end
     _G.LocalHub.HubLoaded = true
     
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/MainScripts/refs/heads/main/LocalHub/Main.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/LocalHub/Main.lua"))()
 end
 
 if not _G.LocalHub then
