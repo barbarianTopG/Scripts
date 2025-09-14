@@ -28,7 +28,7 @@ UICorner.Parent = MainFrame
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 30)
 Title.BackgroundTransparency = 1
-Title.Text = "Plasma Map Controls"
+Title.Text = "NebulaSpace Controls"
 Title.TextColor3 = Color3.fromRGB(200, 200, 255)
 Title.Font = Enum.Font.SciFi
 Title.TextSize = 18
@@ -147,19 +147,19 @@ observatory.Reflectance = 0.2
 observatory.CanCollide = true
 observatory.Parent = island
 
-local dome = Instance.new("Part")
-dome.Shape = Enum.PartType.Ball
-dome.Size = Vector3.new(70, 30, 70)
-dome.Position = playerPosition + Vector3.new(0, 540, 0)
-dome.Anchored = true
-dome.Material = Enum.Material.Glass
-dome.Transparency = 0.4
-dome.Reflectance = 0.3
-dome.Color = Color3.fromRGB(70, 120, 255)
-dome.CanCollide = false
-dome.Parent = island
+local bubble = Instance.new("Part")
+bubble.Shape = Enum.PartType.Ball
+bubble.Size = Vector3.new(70, 30, 70)
+bubble.Position = playerPosition + Vector3.new(0, 540, 0)
+bubble.Anchored = true
+bubble.Material = Enum.Material.Glass
+bubble.Transparency = 0.4
+bubble.Reflectance = 0.3
+bubble.Color = Color3.fromRGB(70, 120, 255)
+bubble.CanCollide = false
+bubble.Parent = island
 
-local teleportPad = Instance.new("Part")
+local teleportPad = Instance.new("SpawnLocation")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(15, 2, 15)
 teleportPad.Position = observatory.Position + Vector3.new(0, 16, 0)
@@ -167,6 +167,7 @@ teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
 teleportPad.CanCollide = true
+teleportPad.AllowTeamChangeOnTouch = false
 teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
@@ -182,27 +183,16 @@ local pulseTween = TweenService:Create(
 )
 pulseTween:Play()
 
-local respawnPart = Instance.new("Part")
-respawnPart.Name = "RespawnPoint"
-respawnPart.Size = Vector3.new(10, 1, 10)
-respawnPart.Position = teleportPad.Position + Vector3.new(0, -2, 0)
-respawnPart.Anchored = true
-respawnPart.Transparency = 1
-respawnPart.CanCollide = false
-respawnPart.Parent = island
-
-LocalPlayer:SetAttribute("SpawnLocation", respawnPart.Position)
-
 -- =================== Planets ===================
 local planets = {}
-local minY = platform.Position.Y + 50 -- minimum Y so planets float above the platform
+local minY = platform.Position.Y + 50 
 for i = 1, 12 do
     local planet = Instance.new("Part")
     planet.Shape = Enum.PartType.Ball
     planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
     planet.Position = Vector3.new(
         playerPosition.X + math.random(-1200, 1200),
-        minY + math.random(200, 800), -- random height above minY
+        minY + math.random(200, 800), 
         playerPosition.Z + math.random(-1200, 1200)
     )
     planet.Anchored = true
@@ -221,10 +211,40 @@ for i = 1, 12 do
     table.insert(planets, {planet = planet})
 end
 
--- =================== Teleport function ===================
+-- =================== Void Barrier ===================
+local barrierHeight = 1000
+local barrierRadius = 800
+local segmentCount = 36
+for i = 1, segmentCount do
+    local angle = math.rad(i * (360 / segmentCount))
+    local x = playerPosition.X + math.cos(angle) * barrierRadius
+    local z = playerPosition.Z + math.sin(angle) * barrierRadius
+
+    local wall = Instance.new("Part")
+    wall.Size = Vector3.new(10, barrierHeight, 10)
+    wall.Position = Vector3.new(x, platform.Position.Y + barrierHeight/2, z)
+    wall.Anchored = true
+    wall.Transparency = 0.6
+    wall.Material = Enum.Material.ForceField
+    wall.Color = Color3.fromRGB(50, 20, 80)
+    wall.CanCollide = true
+    wall.Parent = island
+end
+
+local bottomBarrier = Instance.new("Part")
+bottomBarrier.Size = Vector3.new(barrierRadius*2 + 200, 5, barrierRadius*2 + 200)
+bottomBarrier.Position = Vector3.new(playerPosition.X, platform.Position.Y - 10, playerPosition.Z)
+bottomBarrier.Anchored = true
+bottomBarrier.Transparency = 0.6
+bottomBarrier.Material = Enum.Material.ForceField
+bottomBarrier.Color = Color3.fromRGB(50, 20, 80)
+bottomBarrier.CanCollide = true
+bottomBarrier.Parent = island
+
+-- =================== Teleport / Reanimate ===================
 local function teleportToPad()
     if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0, 5, 0))
+        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(teleportPad.Position + Vector3.new(0, 5, 0))
         task.delay(3, function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua"))()
             task.wait(5)
@@ -232,12 +252,6 @@ local function teleportToPad()
         end)
     end
 end
-
-teleportPad.Touched:Connect(function(hit)
-    if hit.Parent == LocalPlayer.Character then
-        teleportToPad()
-    end
-end)
 
 RunService.Heartbeat:Connect(function(dt)
     for _, planetData in pairs(planets) do
