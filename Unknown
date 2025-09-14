@@ -1,5 +1,7 @@
+-- Tag at start
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
 
+-- Services
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
@@ -7,16 +9,64 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
+-- =================== GUI ===================
 local PlasmaMapUI = Instance.new("ScreenGui")
 PlasmaMapUI.Name = "PlasmaMapUI"
 PlasmaMapUI.ResetOnSpawn = false
 PlasmaMapUI.Parent = game:GetService("CoreGui")
 
-local playerPosition = Vector3.new(0, 0, 0)
-if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+local Frame = Instance.new("Frame")
+Frame.Size = UDim2.new(0, 220, 0, 130)
+Frame.Position = UDim2.new(0, 20, 0, 200)
+Frame.BackgroundColor3 = Color3.fromRGB(15,10,35)
+Frame.BorderSizePixel = 2
+Frame.BorderColor3 = Color3.fromRGB(0,170,255)
+Frame.Parent = PlasmaMapUI
+
+-- Make GUI draggable
+Frame.Active = true
+Frame.Draggable = true
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1,0,0,30)
+Title.BackgroundTransparency = 1
+Title.Text = "☄️ PlasmaMap"
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 18
+Title.TextColor3 = Color3.fromRGB(0,170,255)
+Title.Parent = Frame
+
+local SprintBtn = Instance.new("TextButton")
+SprintBtn.Size = UDim2.new(1,-20,0,40)
+SprintBtn.Position = UDim2.new(0,10,0,40)
+SprintBtn.Text = "🚀 Sprint: OFF"
+SprintBtn.Font = Enum.Font.GothamBold
+SprintBtn.TextSize = 16
+SprintBtn.BackgroundColor3 = Color3.fromRGB(30,20,60)
+SprintBtn.BorderSizePixel = 2
+SprintBtn.BorderColor3 = Color3.fromRGB(0,170,255)
+SprintBtn.TextColor3 = Color3.fromRGB(200,200,255)
+SprintBtn.Parent = Frame
+
+local LightingBtn = Instance.new("TextButton")
+LightingBtn.Size = UDim2.new(1,-20,0,40)
+LightingBtn.Position = UDim2.new(0,10,0,90)
+LightingBtn.Text = "💡 Space Lighting: ON"
+LightingBtn.Font = Enum.Font.GothamBold
+LightingBtn.TextSize = 16
+LightingBtn.BackgroundColor3 = Color3.fromRGB(30,20,60)
+LightingBtn.BorderSizePixel = 2
+LightingBtn.BorderColor3 = Color3.fromRGB(0,170,255)
+LightingBtn.TextColor3 = Color3.fromRGB(200,200,255)
+LightingBtn.Parent = Frame
+
+-- =================== Player Position ===================
+local playerPosition = Vector3.new(0,0,0)
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     playerPosition = LocalPlayer.Character.HumanoidRootPart.Position
 end
 
+-- =================== Lighting ===================
 local originalLighting = {
     Ambient = Lighting.Ambient,
     OutdoorAmbient = Lighting.OutdoorAmbient,
@@ -26,23 +76,25 @@ local originalLighting = {
     GlobalShadows = Lighting.GlobalShadows
 }
 
+local shadowsEnabled = true
 local function applySpaceLighting()
-    Lighting.Ambient = Color3.fromRGB(60, 35, 100)
-    Lighting.OutdoorAmbient = Color3.fromRGB(60, 35, 100)
-    Lighting.FogColor = Color3.fromRGB(30, 10, 60)
+    Lighting.Ambient = Color3.fromRGB(60,35,100)
+    Lighting.OutdoorAmbient = Color3.fromRGB(60,35,100)
+    Lighting.FogColor = Color3.fromRGB(30,10,60)
     Lighting.FogEnd = 2500
     Lighting.Brightness = 0.2
-    Lighting.GlobalShadows = true
+    Lighting.GlobalShadows = shadowsEnabled
 end
 
 local function applyNormalLighting()
-    for k, v in pairs(originalLighting) do
+    for k,v in pairs(originalLighting) do
         Lighting[k] = v
     end
 end
 
 applySpaceLighting()
 
+-- Space Skybox
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
 sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
 sky.SkyboxDn = "http://www.roblox.com/asset/?id=159454299"
@@ -53,6 +105,8 @@ sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
 sky.StarCount = 5000
 if not sky.Parent then sky.Parent = Lighting end
 
+-- =================== Map Creation ===================
+-- Remove existing map
 for _, obj in pairs(workspace:GetChildren()) do
     if obj.Name == "PlasmaMapIsland" then obj:Destroy() end
 end
@@ -61,431 +115,117 @@ local island = Instance.new("Model")
 island.Name = "PlasmaMapIsland"
 island.Parent = workspace
 
+-- Platform
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
-platform.Size = Vector3.new(1200, 25, 1200)
-platform.Position = Vector3.new(playerPosition.X, playerPosition.Y + 500, playerPosition.Z)
+platform.Size = Vector3.new(1200,25,1200)
+platform.Position = playerPosition + Vector3.new(0,500,0)
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
-platform.Color = Color3.fromRGB(15, 3, 35)
+platform.Color = Color3.fromRGB(15,3,35)
 platform.Reflectance = 0.1
-platform.CanCollide = true
 platform.Parent = island
 
-local pattern = Instance.new("Decal")
-pattern.Face = Enum.NormalId.Top
-pattern.Texture = "http://www.roblox.com/asset/?id=5107151155"
-pattern.Parent = platform
-
+-- Observatory
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
-observatory.Size = Vector3.new(80, 30, 80)
-observatory.Position = Vector3.new(playerPosition.X, playerPosition.Y + 515, playerPosition.Z)
+observatory.Size = Vector3.new(80,30,80)
+observatory.Position = playerPosition + Vector3.new(0,515,0)
 observatory.Anchored = true
 observatory.Material = Enum.Material.Metal
-observatory.Color = Color3.fromRGB(45, 45, 65)
-observatory.Reflectance = 0.2
-observatory.CanCollide = true
+observatory.Color = Color3.fromRGB(45,45,65)
 observatory.Parent = island
 
+-- Dome
 local dome = Instance.new("Part")
 dome.Shape = Enum.PartType.Ball
-dome.Size = Vector3.new(70, 30, 70)
-dome.Position = Vector3.new(playerPosition.X, playerPosition.Y + 540, playerPosition.Z)
+dome.Size = Vector3.new(70,30,70)
+dome.Position = playerPosition + Vector3.new(0,540,0)
 dome.Anchored = true
 dome.Material = Enum.Material.Glass
 dome.Transparency = 0.4
 dome.Reflectance = 0.3
-dome.Color = Color3.fromRGB(70, 120, 255)
+dome.Color = Color3.fromRGB(70,120,255)
 dome.CanCollide = false
 dome.Parent = island
 
+-- Teleport Pad (spawn)
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
-teleportPad.Size = Vector3.new(15, 2, 15)
-teleportPad.Position = observatory.Position + Vector3.new(0, 16, 0)
+teleportPad.Size = Vector3.new(15,2,15)
+teleportPad.Position = observatory.Position + Vector3.new(0,16,0)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
-teleportPad.Color = Color3.fromRGB(0, 170, 255)
-teleportPad.CanCollide = true
+teleportPad.Color = Color3.fromRGB(0,170,255)
 teleportPad.Parent = island
 
-local padLight = Instance.new("PointLight")
-padLight.Brightness = 6
-padLight.Range = 20
-padLight.Color = Color3.fromRGB(0, 170, 255)
-padLight.Parent = teleportPad
-
-local pulseTween = TweenService:Create(
-    padLight,
-    TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-    {Brightness = 12}
-)
-pulseTween:Play()
-
+-- Spawn respawn part
 local respawnPart = Instance.new("Part")
 respawnPart.Name = "RespawnPoint"
-respawnPart.Size = Vector3.new(10, 1, 10)
-respawnPart.Position = teleportPad.Position + Vector3.new(0, -2, 0)
+respawnPart.Size = Vector3.new(10,1,10)
+respawnPart.Position = teleportPad.Position + Vector3.new(0,5,0)
 respawnPart.Anchored = true
 respawnPart.Transparency = 1
 respawnPart.CanCollide = false
 respawnPart.Parent = island
 
-LocalPlayer:SetAttribute("SpawnLocation", respawnPart.Position)
-
-for i = 1, 80 do
-    local crystal = Instance.new("Part")
-    crystal.Shape = Enum.PartType.Ball
-    crystal.Size = Vector3.new(math.random(12, 30), math.random(12, 30), math.random(12, 30))
-    crystal.Position = Vector3.new(
-        playerPosition.X + math.random(-550, 550),
-        playerPosition.Y + 500 + math.random(25, 120),
-        playerPosition.Z + math.random(-550, 550)
-    )
-    crystal.Anchored = true
-    crystal.Material = Enum.Material.Glass
-    crystal.Transparency = 0.2
-    crystal.Reflectance = 0.2
-    crystal.Color = Color3.fromRGB(math.random(120, 220), math.random(70, 180), math.random(220, 255))
-    crystal.CanCollide = true
-    crystal.Parent = island
-    
-    if math.random(1, 3) == 1 then
-        local glow = Instance.new("PointLight")
-        glow.Brightness = math.random(3, 8)
-        glow.Range = math.random(10, 20)
-        glow.Color = crystal.Color
-        glow.Parent = crystal
+-- Teleport player to pad
+local function teleportPlayer()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0,5,0))
     end
 end
+teleportPlayer()
+LocalPlayer.CharacterAdded:Connect(function(char)
+    char:WaitForChild("HumanoidRootPart")
+    task.wait(0.1)
+    teleportPlayer()
+end)
 
-local planets = {}
-for i = 1, 12 do
-    local planet = Instance.new("Part")
-    planet.Shape = Enum.PartType.Ball
-    planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
-    planet.Position = Vector3.new(
-        playerPosition.X + math.random(-1200, 1200),
-        playerPosition.Y + 500 + math.random(300, 800),
-        playerPosition.Z + math.random(-1200, 1200)
-    )
-    planet.Anchored = true
-    planet.Material = Enum.Material.Neon
-    planet.Color = Color3.fromRGB(math.random(60, 220), math.random(60, 220), math.random(60, 220))
-    planet.Reflectance = 0.1
-    planet.CanCollide = true
-    planet.Parent = island
-    
-    local planetGlow = Instance.new("PointLight")
-    planetGlow.Brightness = math.random(5, 10)
-    planetGlow.Range = planet.Size.X * 2
-    planetGlow.Color = planet.Color
-    planetGlow.Parent = planet
-    
-    if math.random(1, 3) == 1 then
-        local ring = Instance.new("Part")
-        ring.Shape = Enum.PartType.Cylinder
-        ring.Size = Vector3.new(2, planet.Size.X * 1.5, planet.Size.X * 1.5)
-        ring.Position = planet.Position
-        ring.Anchored = true
-        ring.Material = Enum.Material.Neon
-        ring.Color = Color3.fromRGB(math.random(150, 255), math.random(150, 255), math.random(150, 255))
-        ring.Transparency = 0.3
-        ring.CanCollide = false
-        ring.Orientation = Vector3.new(0, 0, 90)
-        ring.Parent = island
-        
-        table.insert(planets, {planet = planet, ring = ring})
-    else
-        table.insert(planets, {planet = planet})
-    end
-end
-
-local clouds = {}
-for i = 1, 20 do
-    local cloud = Instance.new("Part")
-    cloud.Size = Vector3.new(math.random(80, 160), 20, math.random(80, 160))
-    cloud.Position = Vector3.new(
-        playerPosition.X + math.random(-1000, 1000),
-        playerPosition.Y + 600 + math.random(100, 300),
-        playerPosition.Z + math.random(-1000, 1000)
-    )
-    cloud.Anchored = true
-    cloud.Material = Enum.Material.SmoothPlastic
-    cloud.Transparency = 0.4
-    cloud.Color = Color3.fromRGB(200, 200, 200)
-    cloud.CanCollide = false
-    cloud.Parent = island
-    
-    local cloudGlow = Instance.new("PointLight")
-    cloudGlow.Brightness = 0.5
-    cloudGlow.Range = cloud.Size.X / 2
-    cloudGlow.Color = Color3.fromRGB(200, 200, 255)
-    cloudGlow.Parent = cloud
-    
-    table.insert(clouds, cloud)
-end
-
-local barrierRadius = 650
+-- =================== Barrier Walls ===================
 local barrierHeight = 1000
-
-local function createBarrierSegment(position)
+local barrierRadius = 650
+local function createBarrierSegment(position, size)
     local barrier = Instance.new("Part")
-    barrier.Size = Vector3.new(10, barrierHeight, 10)
+    barrier.Size = size
     barrier.Position = position
     barrier.Anchored = true
-    barrier.Transparency = 0.7
     barrier.Material = Enum.Material.ForceField
-    barrier.Color = Color3.fromRGB(0, 100, 255)
-    barrier.CanCollide = true
+    barrier.Color = Color3.fromRGB(0,100,255)
     barrier.Parent = island
     return barrier
 end
 
-local barrierSegments = {}
-local segmentCount = 36
-for i = 1, segmentCount do
-    local angle = math.rad(i * (360 / segmentCount))
-    local x = playerPosition.X + math.cos(angle) * barrierRadius
-    local z = playerPosition.Z + math.sin(angle) * barrierRadius
-    local barrier = createBarrierSegment(Vector3.new(x, playerPosition.Y + 500 + barrierHeight/2, z))
-    table.insert(barrierSegments, barrier)
+-- Circular walls
+for i = 1,36 do
+    local angle = math.rad(i*(360/36))
+    local x = playerPosition.X + math.cos(angle)*barrierRadius
+    local z = playerPosition.Z + math.sin(angle)*barrierRadius
+    createBarrierSegment(Vector3.new(x,playerPosition.Y+500+barrierHeight/2,z), Vector3.new(10,barrierHeight,10))
 end
 
-local killBoundary = Instance.new("Part")
-killBoundary.Size = Vector3.new(1500, 5, 1500)
-killBoundary.Position = Vector3.new(playerPosition.X, playerPosition.Y + 250, playerPosition.Z)
-killBoundary.Anchored = true
-killBoundary.Transparency = 1
-killBoundary.CanCollide = false
-killBoundary.Parent = island
+-- Floor barrier below map
+createBarrierSegment(Vector3.new(playerPosition.X,playerPosition.Y+500-50,playerPosition.Z), Vector3.new(1500,10,1500))
 
-killBoundary.Touched:Connect(function(part)
-    if part.Parent and part.Parent:FindFirstChild("Humanoid") then
-        part.Parent.Humanoid.Health = 0
+-- =================== Space Lighting Toggle ===================
+local spaceLightingEnabled = true
+LightingBtn.MouseButton1Click:Connect(function()
+    spaceLightingEnabled = not spaceLightingEnabled
+    if spaceLightingEnabled then
+        applySpaceLighting()
+        LightingBtn.Text = "💡 Space Lighting: ON"
+    else
+        applyNormalLighting()
+        LightingBtn.Text = "💡 Space Lighting: OFF"
     end
 end)
 
--- Custom Animation System for R6 using CFrame manipulation
-local AnimationController = {}
-AnimationController.__index = AnimationController
-
-function AnimationController.new(character)
-    local self = setmetatable({}, AnimationController)
-    self.Character = character
-    self.Humanoid = character:WaitForChild("Humanoid")
-    self.RootPart = character:WaitForChild("HumanoidRootPart")
-    self.Enabled = true
-    self.CurrentAnimation = "Idle"
-    self.AnimationSpeed = 1
-    self.Joints = {}
-    self.AnimationTime = 0
-    
-    -- Get all motor6D joints
-    for _, child in pairs(character:GetDescendants()) do
-        if child:IsA("Motor6D") then
-            self.Joints[child.Name] = {
-                Part0 = child.Part0,
-                Part1 = child.Part1,
-                C0 = child.C0,
-                C1 = child.C1,
-                Motor = child
-            }
-        end
-    end
-    
-    -- Disable default animations
-    if character:FindFirstChild("Animate") then
-        character.Animate:Destroy()
-    end
-    
-    -- Start animation loop
-    self.AnimationConnection = RunService.Heartbeat:Connect(function(dt)
-        if self.Enabled and self.Character and self.Character.Parent then
-            self:Animate(dt)
-        end
-    end)
-    
-    -- Connect to state changes
-    self.Humanoid.Running:Connect(function(speed)
-        if speed > 0.5 then
-            self:PlayAnimation("Walk")
-        else
-            self:PlayAnimation("Idle")
-        end
-    end)
-    
-    self.Humanoid.Jumping:Connect(function(active)
-        if active then
-            self:PlayAnimation("Jump")
-        else
-            self:PlayAnimation("Idle")
-        end
-    end)
-    
-    self.Humanoid.FreeFalling:Connect(function(active)
-        if active then
-            self:PlayAnimation("Fall")
-        end
-    end)
-    
-    return self
-end
-
-function AnimationController:PlayAnimation(name)
-    self.CurrentAnimation = name
-    self.AnimationTime = 0
-end
-
-function AnimationController:Animate(dt)
-    self.AnimationTime = (self.AnimationTime or 0) + dt * self.AnimationSpeed
-    
-    if self.CurrentAnimation == "Idle" then
-        self:IdleAnimation()
-    elseif self.CurrentAnimation == "Walk" then
-        self:WalkAnimation()
-    elseif self.CurrentAnimation == "Jump" then
-        self:JumpAnimation()
-    elseif self.CurrentAnimation == "Fall" then
-        self:FallAnimation()
-    end
-end
-
-function AnimationController:IdleAnimation()
-    local time = self.AnimationTime
-    local breathe = math.sin(time * 0.5) * 0.02
-    
-    -- Slight breathing motion
-    if self.Joints.RightShoulder then
-        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(breathe, 0, 0)
-    end
-    
-    if self.Joints.LeftShoulder then
-        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(breathe, 0, 0)
-    end
-    
-    -- Slight head movement
-    if self.Joints.Neck then
-        self.Joints.Neck.Motor.C0 = self.Joints.Neck.C0 * CFrame.Angles(math.sin(time * 0.3) * 0.03, 0, 0)
-    end
-end
-
-function AnimationController:WalkAnimation()
-    local time = self.AnimationTime
-    local walkSpeed = 12
-    
-    -- Arm swing
-    local armSwing = math.sin(time * walkSpeed) * 0.8
-    if self.Joints.RightShoulder then
-        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(armSwing, 0, 0)
-    end
-    
-    if self.Joints.LeftShoulder then
-        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(-armSwing, 0, 0)
-    end
-    
-    -- Leg movement
-    local legSwing = math.sin(time * walkSpeed) * 0.6
-    if self.Joints.RightHip then
-        self.Joints.RightHip.Motor.C0 = self.Joints.RightHip.C0 * CFrame.Angles(-legSwing, 0, 0)
-    end
-    
-    if self.Joints.LeftHip then
-        self.Joints.LeftHip.Motor.C0 = self.Joints.LeftHip.C0 * CFrame.Angles(legSwing, 0, 0)
-    end
-    
-    -- Body bounce
-    local bounce = math.abs(math.sin(time * walkSpeed)) * 0.05
-    if self.Joints.RootJoint then
-        self.Joints.RootJoint.Motor.C0 = self.Joints.RootJoint.C0 * CFrame.new(0, bounce, 0)
-    end
-end
-
-function AnimationController:JumpAnimation()
-    -- Arms up
-    if self.Joints.RightShoulder then
-        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(math.rad(-45), 0, 0)
-    end
-    
-    if self.Joints.LeftShoulder then
-        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(math.rad(-45), 0, 0)
-    end
-    
-    -- Legs bent
-    if self.Joints.RightHip then
-        self.Joints.RightHip.Motor.C0 = self.Joints.RightHip.C0 * CFrame.Angles(math.rad(-30), 0, 0)
-    end
-    
-    if self.Joints.LeftHip then
-        self.Joints.LeftHip.Motor.C0 = self.Joints.LeftHip.C0 * CFrame.Angles(math.rad(-30), 0, 0)
-    end
-end
-
-function AnimationController:FallAnimation()
-    -- Arms out for balance
-    if self.Joints.RightShoulder then
-        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(math.rad(-20), 0, math.rad(10))
-    end
-    
-    if self.Joints.LeftShoulder then
-        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(math.rad(-20), 0, math.rad(-10))
-    end
-    
-    -- Legs slightly apart
-    if self.Joints.RightHip then
-        self.Joints.RightHip.Motor.C0 = self.Joints.RightHip.C0 * CFrame.Angles(math.rad(10), 0, math.rad(5))
-    end
-    
-    if self.Joints.LeftHip then
-        self.Joints.LeftHip.Motor.C0 = self.Joints.LeftHip.C0 * CFrame.Angles(math.rad(10), 0, math.rad(-5))
-    end
-end
-
--- Initialize animation controller for the player
-local function setupPlayerAnimations()
-    if LocalPlayer.Character then
-        local animController = AnimationController.new(LocalPlayer.Character)
-        
-        -- Handle character respawns
-        LocalPlayer.CharacterAdded:Connect(function(character)
-            animController = AnimationController.new(character)
-        end)
-    end
-end
-
-setupPlayerAnimations()
-
--- Animation for the planets
-local planetAnimation = RunService.Heartbeat:Connect(function(dt)
-    for _, planetData in pairs(planets) do
-        if planetData.planet then
-            planetData.planet.CFrame = planetData.planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
-        end
-        if planetData.ring then
-            planetData.ring.CFrame = planetData.ring.CFrame * CFrame.Angles(0, dt * 0.05, 0)
-        end
-    end
-    
-    for _, cloud in pairs(clouds) do
-        cloud.CFrame = cloud.CFrame + Vector3.new(math.sin(cloud.Position.X * 0.01) * 0.1, 0, math.cos(cloud.Position.Z * 0.01) * 0.1)
+-- =================== Sprint Toggle ===================
+local sprintEnabled = false
+SprintBtn.MouseButton1Click:Connect(function()
+    sprintEnabled = not sprintEnabled
+    SprintBtn.Text = sprintEnabled and "🚀 Sprint: ON" or "🚀 Sprint: OFF"
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        LocalPlayer.Character.Humanoid.WalkSpeed = sprintEnabled and 32 or 16
     end
 end)
-
--- Cleanup function
-local function cleanup()
-    applyNormalLighting()
-    if sky then sky:Destroy() end
-    if island then island:Destroy() end
-    if planetAnimation then planetAnimation:Disconnect() end
-end
-
--- Connect cleanup to player leaving
-game:BindToClose(function()
-    cleanup()
-end)
-
--- Teleport player to the platform
-if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0, 5, 0))
-end
