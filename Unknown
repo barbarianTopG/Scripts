@@ -259,7 +259,7 @@ RunService.Heartbeat:Connect(function(dt)
     end
 end)
 
--- Cleanup on leave
+-- Cleanup on leave (DONT TOUCH)
 local function cleanup()
     for k, v in pairs(originalLighting) do
         Lighting[k] = v
