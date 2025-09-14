@@ -6,6 +6,7 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
+local Debris = game:GetService("Debris")
 
 -- ========= Configuration =========
 local CONFIG = {
@@ -20,11 +21,18 @@ local CONFIG = {
     AuraSize = Vector3.new(3000, 3000, 3000),
     SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",
     PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",
+    AsteroidCount = 50,
+    AsteroidSizeRange = {10, 30},
+    AsteroidDistanceRange = {-1000, 1000},
+    AsteroidHeightRange = {100, 800},
+    CrystalCount = 20,
+    CrystalSize = Vector3.new(5, 15, 5),
+    NebulaParticleRate = 50,
 }
 
 -- ========= GUI =========
 local PlasmaMapUI = Instance.new("ScreenGui")
-PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false) -- Unique name to avoid conflicts
+PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false)
 PlasmaMapUI.ResetOnSpawn = false
 PlasmaMapUI.Parent = game:GetService("CoreGui")
 
@@ -197,7 +205,7 @@ padLight.Parent = teleportPad
 local pulseTween = TweenService:Create(
     padLight,
     TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-    {Brightness = 12}
+    { Brightness = 12}
 )
 pulseTween:Play()
 
@@ -211,11 +219,7 @@ spawnLocation.Transparency = 1
 spawnLocation.CanCollide = false
 spawnLocation.Parent = island
 
-if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
-end
-
--- ========= Load External Scripts =========
+-- ========= Teleport Player and Load Scripts Sequentially =========
 local function loadExternalScript(url)
     local success, result = pcall(function()
         return game:HttpGet(url)
@@ -231,12 +235,18 @@ local function loadExternalScript(url)
 end
 
 loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
-task.spawn(function()
-    task.wait(1)
-    loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua")
-    task.wait(5)
-    loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
-end)
+
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
+    
+    -- Spawn a task for delayed loading after TP
+    task.spawn(function()
+        task.wait(2)
+        loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua")
+        task.wait(5) 
+        loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
+    end)
+end
 
 -- ========= Planets =========
 local planets = {}
@@ -264,6 +274,104 @@ for i = 1, CONFIG.PlanetCount do
     glow.Parent = planet
 
     table.insert(planets, planet)
+end
+
+-- ========= Floating Asteroids =========
+local asteroids = {}
+for i = 1, CONFIG.AsteroidCount do
+    local asteroid = Instance.new("Part")
+    asteroid.Shape = Enum.PartType.Ball
+    local size = math.random(CONFIG.AsteroidSizeRange[1], CONFIG.AsteroidSizeRange[2])
+    asteroid.Size = Vector3.new(size, size, size)
+    asteroid.Position = Vector3.new(
+        playerPos.X + math.random(CONFIG.AsteroidDistanceRange[1], CONFIG.AsteroidDistanceRange[2]),
+        playerPos.Y + math.random(CONFIG.AsteroidHeightRange[1], CONFIG.AsteroidHeightRange[2]),
+        playerPos.Z + math.random(CONFIG.AsteroidDistanceRange[1], CONFIG.AsteroidDistanceRange[2])
+    )
+    asteroid.Anchored = true
+    asteroid.Material = Enum.Material.Rock
+    asteroid.Color = Color3.fromRGB(math.random(50, 100), math.random(50, 100), math.random(50, 100))
+    asteroid.Reflectance = 0.05
+    asteroid.CanCollide = false  -- Floating, non-collidable for decoration
+    asteroid.Parent = island
+
+    -- Slow random rotation
+    task.spawn(function()
+        while asteroid.Parent do
+            asteroid.CFrame = asteroid.CFrame * CFrame.Angles(math.rad(math.random(1, 5)/10), math.rad(math.random(1, 5)/10), math.rad(math.random(1, 5)/10))
+            task.wait(0.1)
+        end
+    end)
+
+    table.insert(asteroids, asteroid)
+end
+
+-- ========= Floating Crystals =========
+local crystals = {}
+for i = 1, CONFIG.CrystalCount do
+    local crystal = Instance.new("Part")
+    crystal.Shape = Enum.PartType.Cylinder
+    crystal.Size = CONFIG.CrystalSize
+    crystal.Orientation = Vector3.new(0, 0, math.random(0, 360))
+    crystal.Position = Vector3.new(
+        playerPos.X + math.random(-600, 600),
+        playerPos.Y + 525 + math.random(-50, 50),  -- Around platform height
+        playerPos.Z + math.random(-600, 600)
+    )
+    crystal.Anchored = true
+    crystal.Material = Enum.Material.DiamondPlate
+    crystal.Color = Color3.fromRGB(math.random(100, 255), math.random(100, 255), math.random(100, 255))
+    crystal.Transparency = 0.2
+    crystal.Reflectance = 0.5
+    crystal.CanCollide = true
+    crystal.Parent = island
+
+    local crystalLight = Instance.new("PointLight")
+    crystalLight.Brightness = 3
+    crystalLight.Range = 15
+    crystalLight.Color = crystal.Color
+    crystalLight.Parent = crystal
+
+    -- Pulsing tween for crystals
+    local crystalTween = TweenService:Create(
+        crystalLight,
+        TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+        { Brightness = 8 }
+    )
+    crystalTween:Play()
+
+    table.insert(crystals, crystal)
+end
+
+-- ========= Nebula Particles =========
+local nebulaEmitter = Instance.new("ParticleEmitter")
+nebulaEmitter.Name = "NebulaParticles"
+nebulaEmitter.Texture = "rbxassetid://243660364"  -- Starry or cloudy texture (replace with a suitable asset ID if needed)
+nebulaEmitter.Lifetime = NumberRange.new(10, 20)
+nebulaEmitter.Rate = CONFIG.NebulaParticleRate
+nebulaEmitter.Speed = NumberRange.new(5, 10)
+nebulaEmitter.SpreadAngle = Vector2.new(360, 360)
+nebulaEmitter.EmissionDirection = Enum.NormalId.Top
+nebulaEmitter.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 50, 180)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 120, 255))
+})
+nebulaEmitter.Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 0.5),
+    NumberSequenceKeypoint.new(1, 1)
+})
+nebulaEmitter.Size = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 5),
+    NumberSequenceKeypoint.new(1, 20)
+})
+nebulaEmitter.Parent = platform  -- Emit from the platform
+nebulaEmitter.Enabled = true
+
+-- Add a few more emitters around the map for density
+for i = 1, 5 do
+    local extraEmitter = nebulaEmitter:Clone()
+    extraEmitter.Position = Vector3.new(math.random(-600, 600), 0, math.random(-600, 600))
+    extraEmitter.Parent = platform
 end
 
 local planetConnection
@@ -300,7 +408,7 @@ auraLight.Parent = aura
 local auraTween = TweenService:Create(
     auraLight,
     TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-    {Brightness = 12}
+    { Brightness = 12}
 )
 auraTween:Play()
 
