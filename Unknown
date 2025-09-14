@@ -4,6 +4,7 @@ local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
 local PlasmaMapUI = Instance.new("ScreenGui")
@@ -26,9 +27,9 @@ local originalLighting = {
 }
 
 local function applySpaceLighting()
-    Lighting.Ambient = Color3.fromRGB(35, 35, 65)
-    Lighting.OutdoorAmbient = Color3.fromRGB(35, 35, 65)
-    Lighting.FogColor = Color3.fromRGB(3, 3, 12)
+    Lighting.Ambient = Color3.fromRGB(60, 35, 100)
+    Lighting.OutdoorAmbient = Color3.fromRGB(60, 35, 100)
+    Lighting.FogColor = Color3.fromRGB(30, 10, 60)
     Lighting.FogEnd = 2500
     Lighting.Brightness = 0.2
     Lighting.GlobalShadows = true
@@ -43,12 +44,12 @@ end
 applySpaceLighting()
 
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
-sky.SkyboxBk = "rbxassetid://159454299"
-sky.SkyboxDn = "rbxassetid://159454299"
-sky.SkyboxFt = "rbxassetid://159454299"
-sky.SkyboxLf = "rbxassetid://159454299"
-sky.SkyboxRt = "rbxassetid://159454299"
-sky.SkyboxUp = "rbxassetid://159454299"
+sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxDn = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxFt = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxLf = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
 sky.StarCount = 5000
 if not sky.Parent then sky.Parent = Lighting end
 
@@ -73,7 +74,7 @@ platform.Parent = island
 
 local pattern = Instance.new("Decal")
 pattern.Face = Enum.NormalId.Top
-pattern.Texture = "rbxassetid://5107151155"
+pattern.Texture = "http://www.roblox.com/asset/?id=5107151155"
 pattern.Parent = platform
 
 local observatory = Instance.new("Part")
@@ -184,13 +185,15 @@ for i = 1, 12 do
     
     if math.random(1, 3) == 1 then
         local ring = Instance.new("Part")
-        ring.Size = Vector3.new(planet.Size.X * 2.5, 2, planet.Size.X * 2.5)
+        ring.Shape = Enum.PartType.Cylinder
+        ring.Size = Vector3.new(2, planet.Size.X * 1.5, planet.Size.X * 1.5)
         ring.Position = planet.Position
         ring.Anchored = true
         ring.Material = Enum.Material.Neon
         ring.Color = Color3.fromRGB(math.random(150, 255), math.random(150, 255), math.random(150, 255))
         ring.Transparency = 0.3
         ring.CanCollide = false
+        ring.Orientation = Vector3.new(0, 0, 90)
         ring.Parent = island
         
         table.insert(planets, {planet = planet, ring = ring})
@@ -264,263 +267,225 @@ killBoundary.Touched:Connect(function(part)
     end
 end)
 
-RunService.Heartbeat:Connect(function(dt)
-    for _, planetData in ipairs(planets) do
-        planetData.planet.CFrame = planetData.planet.CFrame * CFrame.Angles(0, math.rad(10) * dt, 0)
-        if planetData.ring then
-            planetData.ring.CFrame = planetData.planet.CFrame * CFrame.Angles(0, math.rad(-5) * dt, 0)
-        end
-    end
-    for _, cloud in ipairs(clouds) do
-        cloud.CFrame = cloud.CFrame + Vector3.new(0.5 * dt, 0, 0)
-        if cloud.Position.X > playerPosition.X + 1500 then
-            cloud.Position = Vector3.new(playerPosition.X - 1500, cloud.Position.Y, cloud.Position.Z)
+-- Custom Animation System for R6 using CFrame manipulation
+local AnimationController = {}
+AnimationController.__index = AnimationController
+
+function AnimationController.new(character)
+    local self = setmetatable({}, AnimationController)
+    self.Character = character
+    self.Humanoid = character:WaitForChild("Humanoid")
+    self.RootPart = character:WaitForChild("HumanoidRootPart")
+    self.Enabled = true
+    self.CurrentAnimation = "Idle"
+    self.AnimationSpeed = 1
+    self.Joints = {}
+    self.AnimationTime = 0
+    
+    -- Get all motor6D joints
+    for _, child in pairs(character:GetDescendants()) do
+        if child:IsA("Motor6D") then
+            self.Joints[child.Name] = {
+                Part0 = child.Part0,
+                Part1 = child.Part1,
+                C0 = child.C0,
+                C1 = child.C1,
+                Motor = child
+            }
         end
     end
     
-    for i, barrier in ipairs(barrierSegments) do
-        local pulse = (math.sin(os.clock() * 2 + i * 0.2) + 1) / 2
-        barrier.Transparency = 0.3 + pulse * 0.4
+    -- Disable default animations
+    if character:FindFirstChild("Animate") then
+        character.Animate:Destroy()
     end
-end)
-
-local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 300, 0, 150)
-frame.Position = UDim2.new(0, 50, 1, -200)
-frame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
-frame.BackgroundTransparency = 0.2
-frame.BorderSizePixel = 2
-frame.BorderColor3 = Color3.fromRGB(0, 150, 255)
-frame.Parent = PlasmaMapUI
-
-local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, 0, 0, 40)
-title.Position = UDim2.new(0, 0, 0, 0)
-title.Text = "PlasmaMap"
-title.TextScaled = true
-title.TextColor3 = Color3.fromRGB(170, 255, 255)
-title.BackgroundTransparency = 1
-title.TextStrokeTransparency = 0.8
-title.TextStrokeColor3 = Color3.fromRGB(0, 0, 50)
-title.Parent = frame
-
-local infoText = Instance.new("TextLabel")
-infoText.Size = UDim2.new(1, -20, 0, 40)
-infoText.Position = UDim2.new(0, 10, 0, 45)
-infoText.Text = "Welcome to your personal space island!"
-infoText.TextScaled = true
-infoText.TextColor3 = Color3.fromRGB(200, 200, 255)
-infoText.BackgroundTransparency = 1
-infoText.Parent = frame
-
-local tpButton = Instance.new("TextButton")
-tpButton.Size = UDim2.new(0.45, 0, 0, 30)
-tpButton.Position = UDim2.new(0.05, 0, 0, 100)
-tpButton.Text = "TP"
-tpButton.TextScaled = true
-tpButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
-tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-tpButton.Parent = frame
-
-local shadowsButton = Instance.new("TextButton")
-shadowsButton.Size = UDim2.new(0.45, 0, 0, 30)
-shadowsButton.Position = UDim2.new(0.5, 0, 0, 100)
-shadowsButton.Text = "Shadows: ON"
-shadowsButton.TextScaled = true
-shadowsButton.BackgroundColor3 = Color3.fromRGB(100, 100, 255)
-shadowsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-shadowsButton.Parent = frame
-
-local shadowsOn = true
-tpButton.MouseButton1Click:Connect(function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        LocalPlayer.Character.HumanoidRootPart.CFrame = teleportPad.CFrame + Vector3.new(0, 3, 0)
-    end
-end)
-
-shadowsButton.MouseButton1Click:Connect(function()
-    shadowsOn = not shadowsOn
-    if shadowsOn then
-        applySpaceLighting()
-        shadowsButton.Text = "Shadows: ON"
-    else
-        applyNormalLighting()
-        shadowsButton.Text = "Shadows: OFF"
-    end
-end)
-
-local minimizeButton = Instance.new("TextButton")
-minimizeButton.Size = UDim2.new(0, 30, 0, 30)
-minimizeButton.Position = UDim2.new(0, 10, 1, -40)
-minimizeButton.Text = "+"
-minimizeButton.TextScaled = true
-minimizeButton.BackgroundColor3 = Color3.fromRGB(150, 150, 200)
-minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeButton.Parent = PlasmaMapUI
-
-local uiExpanded = true
-minimizeButton.MouseButton1Click:Connect(function()
-    uiExpanded = not uiExpanded
-    frame.Visible = uiExpanded
-end)
-
-local dragging = false
-local dragInput, mousePos, framePos
-
-frame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        mousePos = input.Position
-        framePos = frame.Position
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-frame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        dragInput = input
-    end
-end)
-
-RunService.RenderStepped:Connect(function()
-    if dragging and dragInput then
-        local delta = dragInput.Position - mousePos
-        frame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
-    end
-end)
-
-local function applyCustomWalkAnimation()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        local humanoid = LocalPlayer.Character.Humanoid
-        
-        if humanoid.RigType == Enum.HumanoidRigType.R6 then
-            local animateScript = LocalPlayer.Character:FindFirstChild("Animate")
-            if animateScript then
-                animateScript:Destroy()
-            end
-            
-            local newAnimate = Instance.new("LocalScript")
-            newAnimate.Name = "Animate"
-            newAnimate.Parent = LocalPlayer.Character
-            
-            local scriptContent = [[
-                local Figure = script.Parent
-                local Torso = Figure:WaitForChild("Torso")
-                local RightShoulder = Torso:WaitForChild("Right Shoulder")
-                local LeftShoulder = Torso:WaitForChild("Left Shoulder")
-                local RightHip = Torso:WaitForChild("Right Hip")
-                local LeftHip = Torso:WaitForChild("Left Hip")
-                local Neck = Torso:WaitForChild("Neck")
-                local Humanoid = Figure:WaitForChild("Humanoid")
-                local pose = "Standing"
-                
-                local currentAnim = ""
-                local currentAnimInstance = nil
-                local currentAnimTrack = nil
-                local currentAnimKeyframeHandler = nil
-                local currentAnimSpeed = 1.0
-                
-                local animTable = {}
-                local animNames = { 
-                    idle = 	{	
-                        { id = "http://www.roblox.com/asset/?id=180435571", weight = 9 },
-                        { id = "http://www.roblox.com/asset/?id=180435792", weight = 1 }
-                    },
-                    walk = 	{ 	
-                        { id = "http://www.roblox.com/asset/?id=180426354", weight = 10 } 
-                    }, 
-                    run = 	{
-                        { id = "run.xml", weight = 10 } 
-                    }, 
-                    jump = 	{
-                        { id = "http://www.roblox.com/asset/?id=125750702", weight = 10 } 
-                    }, 
-                    fall = 	{
-                        { id = "http://www.roblox.com/asset/?id=180436148", weight = 10 } 
-                    }, 
-                    climb = {
-                        { id = "http://www.roblox.com/asset/?id=180436334", weight = 10 } 
-                    }, 
-                    sit = 	{
-                        { id = "http://www.roblox.com/asset/?id=178130996", weight = 10 } 
-                    },	
-                    toolnone = {
-                        { id = "http://www.roblox.com/asset/?id=182393478", weight = 10 } 
-                    },
-                    toolslash = {
-                        { id = "http://www.roblox.com/asset/?id=129967390", weight = 10 } 
-                    },
-                    toollunge = {
-                        { id = "http://www.roblox.com/asset/?id=129967478", weight = 10 } 
-                    },
-                    toolwave = {
-                        { id = "http://www.roblox.com/asset/?id=128777973", weight = 10 } 
-                    },
-                    point = {
-                        { id = "http://www.roblox.com/asset/?id=128853357", weight = 10 } 
-                    },
-                    dance1 = {
-                        { id = "http://www.roblox.com/asset/?id=182435998", weight = 10 }, 
-                        { id = "http://www.roblox.com/asset/?id=182491037", weight = 10 }, 
-                        { id = "http://www.roblox.com/asset/?id=182491065", weight = 10 } 
-                    },
-                    dance2 = {
-                        { id = "http://www.roblox.com/asset/?id=182436842", weight = 10 }, 
-                        { id = "http://www.roblox.com/asset/?id=182491248", weight = 10 }, 
-                        { id = "http://www.roblox.com/asset/?id=182491277", weight = 10 } 
-                    },
-                    dance3 = {
-                        { id = "http://www.roblox.com/asset/?id=182436935", weight = 10 }, 
-                        { id = "http://www.roblox.com/asset/?id=182491453", weight = 10 }, 
-                        { id = "http://www.roblox.com/asset/?id=182491487", weight = 10 } 
-                    },
-                    laugh = {
-                        { id = "http://www.roblox.com/asset/?id=129423131", weight = 10 } 
-                    },
-                    cheer = {
-                        { id = "http://www.roblox.com/asset/?id=129423030", weight = 10 } 
-                    },
-                }
-                
-                local customWalkAnim = Instance.new("Animation")
-                customWalkAnim.AnimationId = "rbxassetid://9965516774"
-                customWalkAnim.Name = "CustomSpaceWalk"
-                
-                local walkTrack = Humanoid:LoadAnimation(customWalkAnim)
-                walkTrack:AdjustSpeed(1.2)
-                walkTrack.Priority = Enum.AnimationPriority.Movement
-                
-                local function onRunning(speed)
-                    if speed > 0 then
-                        pose = "Running"
-                        if walkTrack.IsPlaying ~= true then
-                            walkTrack:Play()
-                        end
-                    else
-                        if walkTrack.IsPlaying == true then
-                            walkTrack:Stop()
-                        end
-                        pose = "Standing"
-                    end
-                end
-                
-                Humanoid.Running:Connect(onRunning)
-            ]]
-            
-            newAnimate.Source = scriptContent
+    
+    -- Start animation loop
+    self.AnimationConnection = RunService.Heartbeat:Connect(function(dt)
+        if self.Enabled and self.Character and self.Character.Parent then
+            self:Animate(dt)
         end
+    end)
+    
+    -- Connect to state changes
+    self.Humanoid.Running:Connect(function(speed)
+        if speed > 0.5 then
+            self:PlayAnimation("Walk")
+        else
+            self:PlayAnimation("Idle")
+        end
+    end)
+    
+    self.Humanoid.Jumping:Connect(function(active)
+        if active then
+            self:PlayAnimation("Jump")
+        else
+            self:PlayAnimation("Idle")
+        end
+    end)
+    
+    self.Humanoid.FreeFalling:Connect(function(active)
+        if active then
+            self:PlayAnimation("Fall")
+        end
+    end)
+    
+    return self
+end
+
+function AnimationController:PlayAnimation(name)
+    self.CurrentAnimation = name
+    self.AnimationTime = 0
+end
+
+function AnimationController:Animate(dt)
+    self.AnimationTime = (self.AnimationTime or 0) + dt * self.AnimationSpeed
+    
+    if self.CurrentAnimation == "Idle" then
+        self:IdleAnimation()
+    elseif self.CurrentAnimation == "Walk" then
+        self:WalkAnimation()
+    elseif self.CurrentAnimation == "Jump" then
+        self:JumpAnimation()
+    elseif self.CurrentAnimation == "Fall" then
+        self:FallAnimation()
     end
 end
 
-LocalPlayer.CharacterAdded:Connect(function(character)
-    character:WaitForChild("Humanoid")
-    applyCustomWalkAnimation()
+function AnimationController:IdleAnimation()
+    local time = self.AnimationTime
+    local breathe = math.sin(time * 0.5) * 0.02
+    
+    -- Slight breathing motion
+    if self.Joints.RightShoulder then
+        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(breathe, 0, 0)
+    end
+    
+    if self.Joints.LeftShoulder then
+        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(breathe, 0, 0)
+    end
+    
+    -- Slight head movement
+    if self.Joints.Neck then
+        self.Joints.Neck.Motor.C0 = self.Joints.Neck.C0 * CFrame.Angles(math.sin(time * 0.3) * 0.03, 0, 0)
+    end
+end
+
+function AnimationController:WalkAnimation()
+    local time = self.AnimationTime
+    local walkSpeed = 12
+    
+    -- Arm swing
+    local armSwing = math.sin(time * walkSpeed) * 0.8
+    if self.Joints.RightShoulder then
+        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(armSwing, 0, 0)
+    end
+    
+    if self.Joints.LeftShoulder then
+        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(-armSwing, 0, 0)
+    end
+    
+    -- Leg movement
+    local legSwing = math.sin(time * walkSpeed) * 0.6
+    if self.Joints.RightHip then
+        self.Joints.RightHip.Motor.C0 = self.Joints.RightHip.C0 * CFrame.Angles(-legSwing, 0, 0)
+    end
+    
+    if self.Joints.LeftHip then
+        self.Joints.LeftHip.Motor.C0 = self.Joints.LeftHip.C0 * CFrame.Angles(legSwing, 0, 0)
+    end
+    
+    -- Body bounce
+    local bounce = math.abs(math.sin(time * walkSpeed)) * 0.05
+    if self.Joints.RootJoint then
+        self.Joints.RootJoint.Motor.C0 = self.Joints.RootJoint.C0 * CFrame.new(0, bounce, 0)
+    end
+end
+
+function AnimationController:JumpAnimation()
+    -- Arms up
+    if self.Joints.RightShoulder then
+        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(math.rad(-45), 0, 0)
+    end
+    
+    if self.Joints.LeftShoulder then
+        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(math.rad(-45), 0, 0)
+    end
+    
+    -- Legs bent
+    if self.Joints.RightHip then
+        self.Joints.RightHip.Motor.C0 = self.Joints.RightHip.C0 * CFrame.Angles(math.rad(-30), 0, 0)
+    end
+    
+    if self.Joints.LeftHip then
+        self.Joints.LeftHip.Motor.C0 = self.Joints.LeftHip.C0 * CFrame.Angles(math.rad(-30), 0, 0)
+    end
+end
+
+function AnimationController:FallAnimation()
+    -- Arms out for balance
+    if self.Joints.RightShoulder then
+        self.Joints.RightShoulder.Motor.C0 = self.Joints.RightShoulder.C0 * CFrame.Angles(math.rad(-20), 0, math.rad(10))
+    end
+    
+    if self.Joints.LeftShoulder then
+        self.Joints.LeftShoulder.Motor.C0 = self.Joints.LeftShoulder.C0 * CFrame.Angles(math.rad(-20), 0, math.rad(-10))
+    end
+    
+    -- Legs slightly apart
+    if self.Joints.RightHip then
+        self.Joints.RightHip.Motor.C0 = self.Joints.RightHip.C0 * CFrame.Angles(math.rad(10), 0, math.rad(5))
+    end
+    
+    if self.Joints.LeftHip then
+        self.Joints.LeftHip.Motor.C0 = self.Joints.LeftHip.C0 * CFrame.Angles(math.rad(10), 0, math.rad(-5))
+    end
+end
+
+-- Initialize animation controller for the player
+local function setupPlayerAnimations()
+    if LocalPlayer.Character then
+        local animController = AnimationController.new(LocalPlayer.Character)
+        
+        -- Handle character respawns
+        LocalPlayer.CharacterAdded:Connect(function(character)
+            animController = AnimationController.new(character)
+        end)
+    end
+end
+
+setupPlayerAnimations()
+
+-- Animation for the planets
+local planetAnimation = RunService.Heartbeat:Connect(function(dt)
+    for _, planetData in pairs(planets) do
+        if planetData.planet then
+            planetData.planet.CFrame = planetData.planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
+        end
+        if planetData.ring then
+            planetData.ring.CFrame = planetData.ring.CFrame * CFrame.Angles(0, dt * 0.05, 0)
+        end
+    end
+    
+    for _, cloud in pairs(clouds) do
+        cloud.CFrame = cloud.CFrame + Vector3.new(math.sin(cloud.Position.X * 0.01) * 0.1, 0, math.cos(cloud.Position.Z * 0.01) * 0.1)
+    end
 end)
 
-if LocalPlayer.Character then
-    applyCustomWalkAnimation()
+-- Cleanup function
+local function cleanup()
+    applyNormalLighting()
+    if sky then sky:Destroy() end
+    if island then island:Destroy() end
+    if planetAnimation then planetAnimation:Disconnect() end
+end
+
+-- Connect cleanup to player leaving
+game:BindToClose(function()
+    cleanup()
+end)
+
+-- Teleport player to the platform
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0, 5, 0))
 end
