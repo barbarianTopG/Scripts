@@ -1,17 +1,30 @@
--- ========= Tag =========
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
-
 -- ========= Services =========
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
+
+-- ========= Configuration =========
+local CONFIG = {
+    PlatformSize = Vector3.new(1200, 25, 1200),
+    ObservatorySize = Vector3.new(80, 30, 80),
+    BubbleSize = Vector3.new(70, 30, 70),
+    TeleportPadSize = Vector3.new(15, 2, 15),
+    PlanetCount = 12,
+    PlanetSizeRange = {50, 100},
+    PlanetDistanceRange = {-1200, 1200},
+    PlanetHeightRange = {600, 1200},
+    AuraSize = Vector3.new(3000, 3000, 3000),
+    SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",
+    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",
+}
 
 -- ========= GUI =========
 local PlasmaMapUI = Instance.new("ScreenGui")
-PlasmaMapUI.Name = "PlasmaMapUI"
+PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false) -- Unique name to avoid conflicts
 PlasmaMapUI.ResetOnSpawn = false
 PlasmaMapUI.Parent = game:GetService("CoreGui")
 
@@ -56,8 +69,9 @@ local function update(input)
     local delta = input.Position - dragStart
     MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 end
+
 MainFrame.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
         dragStart = input.Position
         startPos = MainFrame.Position
@@ -68,11 +82,13 @@ MainFrame.InputBegan:Connect(function(input)
         end)
     end
 end)
+
 MainFrame.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
         dragInput = input
     end
 end)
+
 UserInputService.InputChanged:Connect(function(input)
     if input == dragInput and dragging then
         update(input)
@@ -93,32 +109,39 @@ ShadowToggle.MouseButton1Click:Connect(function()
 end)
 
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
-sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxDn = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxFt = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxLf = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxBk = CONFIG.SkyboxAsset
+sky.SkyboxDn = CONFIG.SkyboxAsset
+sky.SkyboxFt = CONFIG.SkyboxAsset
+sky.SkyboxLf = CONFIG.SkyboxAsset
+sky.SkyboxRt = CONFIG.SkyboxAsset
+sky.SkyboxUp = CONFIG.SkyboxAsset
 sky.StarCount = 5000
-if not sky.Parent then sky.Parent = Lighting end
+sky.Parent = Lighting
 
 -- ========= Map Setup =========
-local playerPos = Vector3.new(0,0,0)
-if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-    playerPos = LocalPlayer.Character.HumanoidRootPart.Position
+local function getPlayerPosition()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        return LocalPlayer.Character.HumanoidRootPart.Position
+    end
+    return Vector3.new(0, 0, 0)
 end
 
+-- Clean up existing map
 for _, obj in pairs(workspace:GetChildren()) do
-    if obj.Name == "PlasmaMapIsland" then obj:Destroy() end
+    if obj.Name == "PlasmaMapIsland" then
+        obj:Destroy()
+    end
 end
 
 local island = Instance.new("Model")
 island.Name = "PlasmaMapIsland"
 island.Parent = workspace
 
+local playerPos = getPlayerPosition()
+
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
-platform.Size = Vector3.new(1200, 25, 1200)
+platform.Size = CONFIG.PlatformSize
 platform.Position = Vector3.new(playerPos.X, playerPos.Y + 500, playerPos.Z)
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
@@ -129,12 +152,12 @@ platform.Parent = island
 
 local pattern = Instance.new("Decal")
 pattern.Face = Enum.NormalId.Top
-pattern.Texture = "http://www.roblox.com/asset/?id=5107151155"
+pattern.Texture = CONFIG.PlatformTexture
 pattern.Parent = platform
 
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
-observatory.Size = Vector3.new(80, 30, 80)
+observatory.Size = CONFIG.ObservatorySize
 observatory.Position = Vector3.new(playerPos.X, playerPos.Y + 515, playerPos.Z)
 observatory.Anchored = true
 observatory.Material = Enum.Material.Metal
@@ -145,7 +168,7 @@ observatory.Parent = island
 
 local bubble = Instance.new("Part")
 bubble.Shape = Enum.PartType.Ball
-bubble.Size = Vector3.new(70, 30, 70)
+bubble.Size = CONFIG.BubbleSize
 bubble.Position = Vector3.new(playerPos.X, playerPos.Y + 540, playerPos.Z)
 bubble.Anchored = true
 bubble.Material = Enum.Material.Glass
@@ -157,7 +180,7 @@ bubble.Parent = island
 
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
-teleportPad.Size = Vector3.new(15, 2, 15)
+teleportPad.Size = CONFIG.TeleportPadSize
 teleportPad.Position = observatory.Position + Vector3.new(0, 16, 0)
 teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
@@ -174,40 +197,58 @@ padLight.Parent = teleportPad
 local pulseTween = TweenService:Create(
     padLight,
     TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-    {Brightness = 12})
+    {Brightness = 12}
+)
 pulseTween:Play()
 
 -- ========= Spawn Point =========
-local respawnPart = Instance.new("Part")
-respawnPart.Name = "RespawnPoint"
-respawnPart.Size = Vector3.new(10, 1, 10)
-respawnPart.Position = teleportPad.Position + Vector3.new(0, 2, 0)
-respawnPart.Anchored = true
-respawnPart.Transparency = 1
-respawnPart.CanCollide = false
-respawnPart.Parent = island
-LocalPlayer:SetAttribute("SpawnLocation", respawnPart.Position)
+local spawnLocation = Instance.new("SpawnLocation")
+spawnLocation.Name = "RespawnPoint"
+spawnLocation.Size = Vector3.new(10, 1, 10)
+spawnLocation.Position = teleportPad.Position + Vector3.new(0, 2, 0)
+spawnLocation.Anchored = true
+spawnLocation.Transparency = 1
+spawnLocation.CanCollide = false
+spawnLocation.Parent = island
 
 if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0, 5, 0))
+    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
 end
 
--- ========= TP → Reanimate → KDV3 =========
-task.wait(1)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua"))()
-task.wait(5)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
+-- ========= Load External Scripts =========
+local function loadExternalScript(url)
+    local success, result = pcall(function()
+        return game:HttpGet(url)
+    end)
+    if success then
+        local success, errorMsg = pcall(loadstring(result))
+        if not success then
+            warn("Failed to execute script from " .. url .. ": " .. errorMsg)
+        end
+    else
+        warn("Failed to load script from " .. url .. ": " .. result)
+    end
+end
+
+loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
+task.spawn(function()
+    task.wait(1)
+    loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua")
+    task.wait(5)
+    loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
+end)
 
 -- ========= Planets =========
 local planets = {}
-for i = 1, 12 do
+for i = 1, CONFIG.PlanetCount do
     local planet = Instance.new("Part")
     planet.Shape = Enum.PartType.Ball
-    planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
+    local size = math.random(CONFIG.PlanetSizeRange[1], CONFIG.PlanetSizeRange[2])
+    planet.Size = Vector3.new(size, size, size)
     planet.Position = Vector3.new(
-        playerPos.X + math.random(-1200, 1200),
-        playerPos.Y + math.random(600, 1200),
-        playerPos.Z + math.random(-1200, 1200)
+        playerPos.X + math.random(CONFIG.PlanetDistanceRange[1], CONFIG.PlanetDistanceRange[2]),
+        playerPos.Y + math.random(CONFIG.PlanetHeightRange[1], CONFIG.PlanetHeightRange[2]),
+        playerPos.Z + math.random(CONFIG.PlanetDistanceRange[1], CONFIG.PlanetDistanceRange[2])
     )
     planet.Anchored = true
     planet.Material = Enum.Material.Neon
@@ -225,9 +266,16 @@ for i = 1, 12 do
     table.insert(planets, planet)
 end
 
-RunService.Heartbeat:Connect(function(dt)
+local planetConnection
+planetConnection = RunService.Heartbeat:Connect(function(dt)
+    if not island.Parent then
+        planetConnection:Disconnect()
+        return
+    end
     for _, planet in pairs(planets) do
-        planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
+        if planet.Parent then
+            planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
+        end
     end
 end)
 
@@ -235,7 +283,7 @@ end)
 local aura = Instance.new("Part")
 aura.Name = "CosmicAura"
 aura.Anchored = true
-aura.Size = Vector3.new(3000, 3000, 3000)
+aura.Size = CONFIG.AuraSize
 aura.Position = Vector3.new(playerPos.X, playerPos.Y + 500, playerPos.Z)
 aura.Transparency = 0.9
 aura.Material = Enum.Material.Neon
@@ -255,3 +303,14 @@ local auraTween = TweenService:Create(
     {Brightness = 12}
 )
 auraTween:Play()
+
+-- ========= Cleanup =========
+LocalPlayer.AncestryChanged:Connect(function()
+    if not LocalPlayer.Parent then
+        island:Destroy()
+        PlasmaMapUI:Destroy()
+        pulseTween:Cancel()
+        auraTween:Cancel()
+        planetConnection:Disconnect()
+    end
+end)
