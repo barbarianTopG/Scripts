@@ -3,15 +3,19 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+local PlasmaMapUI = Instance.new("ScreenGui")
+PlasmaMapUI.Name = "PlasmaMapUI"
+PlasmaMapUI.ResetOnSpawn = false
+PlasmaMapUI.Parent = game:GetService("CoreGui")
 
 local playerPosition = Vector3.new(0, 0, 0)
 if LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     playerPosition = LocalPlayer.Character.HumanoidRootPart.Position
 end
 
--- Original lighting
 local originalLighting = {
     Ambient = Lighting.Ambient,
     OutdoorAmbient = Lighting.OutdoorAmbient,
@@ -38,17 +42,16 @@ end
 
 applySpaceLighting()
 
--- Skybox
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
-sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxDn = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxFt = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxLf = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxRt = "http://www.roblox.com/asset/?id=159454299"
-sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
+sky.SkyboxBk = "rbxassetid://159454299"
+sky.SkyboxDn = "rbxassetid://159454299"
+sky.SkyboxFt = "rbxassetid://159454299"
+sky.SkyboxLf = "rbxassetid://159454299"
+sky.SkyboxRt = "rbxassetid://159454299"
+sky.SkyboxUp = "rbxassetid://159454299"
+sky.StarCount = 5000
 if not sky.Parent then sky.Parent = Lighting end
 
--- Clear old
 for _, obj in pairs(workspace:GetChildren()) do
     if obj.Name == "PlasmaMapIsland" then obj:Destroy() end
 end
@@ -57,7 +60,6 @@ local island = Instance.new("Model")
 island.Name = "PlasmaMapIsland"
 island.Parent = workspace
 
--- Main platform
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
 platform.Size = Vector3.new(1200, 25, 1200)
@@ -65,10 +67,15 @@ platform.Position = Vector3.new(playerPosition.X, playerPosition.Y + 500, player
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
 platform.Color = Color3.fromRGB(15, 3, 35)
+platform.Reflectance = 0.1
 platform.CanCollide = true
 platform.Parent = island
 
--- Observatory
+local pattern = Instance.new("Decal")
+pattern.Face = Enum.NormalId.Top
+pattern.Texture = "rbxassetid://5107151155"
+pattern.Parent = platform
+
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
 observatory.Size = Vector3.new(80, 30, 80)
@@ -76,10 +83,10 @@ observatory.Position = Vector3.new(playerPosition.X, playerPosition.Y + 515, pla
 observatory.Anchored = true
 observatory.Material = Enum.Material.Metal
 observatory.Color = Color3.fromRGB(45, 45, 65)
+observatory.Reflectance = 0.2
 observatory.CanCollide = true
 observatory.Parent = island
 
--- Dome (non-collidable)
 local dome = Instance.new("Part")
 dome.Shape = Enum.PartType.Ball
 dome.Size = Vector3.new(70, 30, 70)
@@ -87,11 +94,11 @@ dome.Position = Vector3.new(playerPosition.X, playerPosition.Y + 540, playerPosi
 dome.Anchored = true
 dome.Material = Enum.Material.Glass
 dome.Transparency = 0.4
+dome.Reflectance = 0.3
 dome.Color = Color3.fromRGB(70, 120, 255)
-dome.CanCollide = false -- <-- you can go through it
+dome.CanCollide = false
 dome.Parent = island
 
--- Teleport pad on observatory
 local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(15, 2, 15)
@@ -108,7 +115,24 @@ padLight.Range = 20
 padLight.Color = Color3.fromRGB(0, 170, 255)
 padLight.Parent = teleportPad
 
--- Floating crystals
+local pulseTween = TweenService:Create(
+    padLight,
+    TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+    {Brightness = 12}
+)
+pulseTween:Play()
+
+local respawnPart = Instance.new("Part")
+respawnPart.Name = "RespawnPoint"
+respawnPart.Size = Vector3.new(10, 1, 10)
+respawnPart.Position = teleportPad.Position + Vector3.new(0, -2, 0)
+respawnPart.Anchored = true
+respawnPart.Transparency = 1
+respawnPart.CanCollide = false
+respawnPart.Parent = island
+
+LocalPlayer:SetAttribute("SpawnLocation", respawnPart.Position)
+
 for i = 1, 80 do
     local crystal = Instance.new("Part")
     crystal.Shape = Enum.PartType.Ball
@@ -121,12 +145,20 @@ for i = 1, 80 do
     crystal.Anchored = true
     crystal.Material = Enum.Material.Glass
     crystal.Transparency = 0.2
+    crystal.Reflectance = 0.2
     crystal.Color = Color3.fromRGB(math.random(120, 220), math.random(70, 180), math.random(220, 255))
     crystal.CanCollide = true
     crystal.Parent = island
+    
+    if math.random(1, 3) == 1 then
+        local glow = Instance.new("PointLight")
+        glow.Brightness = math.random(3, 8)
+        glow.Range = math.random(10, 20)
+        glow.Color = crystal.Color
+        glow.Parent = crystal
+    end
 end
 
--- Planets
 local planets = {}
 for i = 1, 12 do
     local planet = Instance.new("Part")
@@ -140,12 +172,33 @@ for i = 1, 12 do
     planet.Anchored = true
     planet.Material = Enum.Material.Neon
     planet.Color = Color3.fromRGB(math.random(60, 220), math.random(60, 220), math.random(60, 220))
+    planet.Reflectance = 0.1
     planet.CanCollide = true
     planet.Parent = island
-    table.insert(planets, planet)
+    
+    local planetGlow = Instance.new("PointLight")
+    planetGlow.Brightness = math.random(5, 10)
+    planetGlow.Range = planet.Size.X * 2
+    planetGlow.Color = planet.Color
+    planetGlow.Parent = planet
+    
+    if math.random(1, 3) == 1 then
+        local ring = Instance.new("Part")
+        ring.Size = Vector3.new(planet.Size.X * 2.5, 2, planet.Size.X * 2.5)
+        ring.Position = planet.Position
+        ring.Anchored = true
+        ring.Material = Enum.Material.Neon
+        ring.Color = Color3.fromRGB(math.random(150, 255), math.random(150, 255), math.random(150, 255))
+        ring.Transparency = 0.3
+        ring.CanCollide = false
+        ring.Parent = island
+        
+        table.insert(planets, {planet = planet, ring = ring})
+    else
+        table.insert(planets, {planet = planet})
+    end
 end
 
--- Clouds
 local clouds = {}
 for i = 1, 20 do
     local cloud = Instance.new("Part")
@@ -161,13 +214,62 @@ for i = 1, 20 do
     cloud.Color = Color3.fromRGB(200, 200, 200)
     cloud.CanCollide = false
     cloud.Parent = island
+    
+    local cloudGlow = Instance.new("PointLight")
+    cloudGlow.Brightness = 0.5
+    cloudGlow.Range = cloud.Size.X / 2
+    cloudGlow.Color = Color3.fromRGB(200, 200, 255)
+    cloudGlow.Parent = cloud
+    
     table.insert(clouds, cloud)
 end
 
--- Animate planets & clouds
+local barrierRadius = 650
+local barrierHeight = 1000
+
+local function createBarrierSegment(position)
+    local barrier = Instance.new("Part")
+    barrier.Size = Vector3.new(10, barrierHeight, 10)
+    barrier.Position = position
+    barrier.Anchored = true
+    barrier.Transparency = 0.7
+    barrier.Material = Enum.Material.ForceField
+    barrier.Color = Color3.fromRGB(0, 100, 255)
+    barrier.CanCollide = true
+    barrier.Parent = island
+    return barrier
+end
+
+local barrierSegments = {}
+local segmentCount = 36
+for i = 1, segmentCount do
+    local angle = math.rad(i * (360 / segmentCount))
+    local x = playerPosition.X + math.cos(angle) * barrierRadius
+    local z = playerPosition.Z + math.sin(angle) * barrierRadius
+    local barrier = createBarrierSegment(Vector3.new(x, playerPosition.Y + 500 + barrierHeight/2, z))
+    table.insert(barrierSegments, barrier)
+end
+
+local killBoundary = Instance.new("Part")
+killBoundary.Size = Vector3.new(1500, 5, 1500)
+killBoundary.Position = Vector3.new(playerPosition.X, playerPosition.Y + 250, playerPosition.Z)
+killBoundary.Anchored = true
+killBoundary.Transparency = 1
+killBoundary.CanCollide = false
+killBoundary.Parent = island
+
+killBoundary.Touched:Connect(function(part)
+    if part.Parent and part.Parent:FindFirstChild("Humanoid") then
+        part.Parent.Humanoid.Health = 0
+    end
+end)
+
 RunService.Heartbeat:Connect(function(dt)
-    for _, planet in ipairs(planets) do
-        planet.CFrame = planet.CFrame * CFrame.Angles(0, math.rad(10) * dt, 0)
+    for _, planetData in ipairs(planets) do
+        planetData.planet.CFrame = planetData.planet.CFrame * CFrame.Angles(0, math.rad(10) * dt, 0)
+        if planetData.ring then
+            planetData.ring.CFrame = planetData.planet.CFrame * CFrame.Angles(0, math.rad(-5) * dt, 0)
+        end
     end
     for _, cloud in ipairs(clouds) do
         cloud.CFrame = cloud.CFrame + Vector3.new(0.5 * dt, 0, 0)
@@ -175,21 +277,22 @@ RunService.Heartbeat:Connect(function(dt)
             cloud.Position = Vector3.new(playerPosition.X - 1500, cloud.Position.Y, cloud.Position.Z)
         end
     end
+    
+    for i, barrier in ipairs(barrierSegments) do
+        local pulse = (math.sin(os.clock() * 2 + i * 0.2) + 1) / 2
+        barrier.Transparency = 0.3 + pulse * 0.4
+    end
 end)
-
--- UI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "PlasmaMapUI"
-screenGui.Parent = PlayerGui
 
 local frame = Instance.new("Frame")
 frame.Size = UDim2.new(0, 300, 0, 150)
-frame.Position = UDim2.new(0, 50, 1, -200) -- start bottom-left
+frame.Position = UDim2.new(0, 50, 1, -200)
 frame.BackgroundColor3 = Color3.fromRGB(25, 25, 50)
+frame.BackgroundTransparency = 0.2
 frame.BorderSizePixel = 2
-frame.Parent = screenGui
+frame.BorderColor3 = Color3.fromRGB(0, 150, 255)
+frame.Parent = PlasmaMapUI
 
--- Title
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, 0, 0, 40)
 title.Position = UDim2.new(0, 0, 0, 0)
@@ -197,9 +300,10 @@ title.Text = "PlasmaMap"
 title.TextScaled = true
 title.TextColor3 = Color3.fromRGB(170, 255, 255)
 title.BackgroundTransparency = 1
+title.TextStrokeTransparency = 0.8
+title.TextStrokeColor3 = Color3.fromRGB(0, 0, 50)
 title.Parent = frame
 
--- Info text
 local infoText = Instance.new("TextLabel")
 infoText.Size = UDim2.new(1, -20, 0, 40)
 infoText.Position = UDim2.new(0, 10, 0, 45)
@@ -209,7 +313,6 @@ infoText.TextColor3 = Color3.fromRGB(200, 200, 255)
 infoText.BackgroundTransparency = 1
 infoText.Parent = frame
 
--- TP Button
 local tpButton = Instance.new("TextButton")
 tpButton.Size = UDim2.new(0.45, 0, 0, 30)
 tpButton.Position = UDim2.new(0.05, 0, 0, 100)
@@ -219,7 +322,6 @@ tpButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
 tpButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 tpButton.Parent = frame
 
--- Shadows Button
 local shadowsButton = Instance.new("TextButton")
 shadowsButton.Size = UDim2.new(0.45, 0, 0, 30)
 shadowsButton.Position = UDim2.new(0.5, 0, 0, 100)
@@ -247,7 +349,6 @@ shadowsButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Minimizer (bottom-left)
 local minimizeButton = Instance.new("TextButton")
 minimizeButton.Size = UDim2.new(0, 30, 0, 30)
 minimizeButton.Position = UDim2.new(0, 10, 1, -40)
@@ -255,7 +356,7 @@ minimizeButton.Text = "+"
 minimizeButton.TextScaled = true
 minimizeButton.BackgroundColor3 = Color3.fromRGB(150, 150, 200)
 minimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-minimizeButton.Parent = screenGui -- outside frame for always-visible
+minimizeButton.Parent = PlasmaMapUI
 
 local uiExpanded = true
 minimizeButton.MouseButton1Click:Connect(function()
@@ -263,7 +364,6 @@ minimizeButton.MouseButton1Click:Connect(function()
     frame.Visible = uiExpanded
 end)
 
--- Draggable UI
 local dragging = false
 local dragInput, mousePos, framePos
 
@@ -292,3 +392,135 @@ RunService.RenderStepped:Connect(function()
         frame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
     end
 end)
+
+local function applyCustomWalkAnimation()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        local humanoid = LocalPlayer.Character.Humanoid
+        
+        if humanoid.RigType == Enum.HumanoidRigType.R6 then
+            local animateScript = LocalPlayer.Character:FindFirstChild("Animate")
+            if animateScript then
+                animateScript:Destroy()
+            end
+            
+            local newAnimate = Instance.new("LocalScript")
+            newAnimate.Name = "Animate"
+            newAnimate.Parent = LocalPlayer.Character
+            
+            local scriptContent = [[
+                local Figure = script.Parent
+                local Torso = Figure:WaitForChild("Torso")
+                local RightShoulder = Torso:WaitForChild("Right Shoulder")
+                local LeftShoulder = Torso:WaitForChild("Left Shoulder")
+                local RightHip = Torso:WaitForChild("Right Hip")
+                local LeftHip = Torso:WaitForChild("Left Hip")
+                local Neck = Torso:WaitForChild("Neck")
+                local Humanoid = Figure:WaitForChild("Humanoid")
+                local pose = "Standing"
+                
+                local currentAnim = ""
+                local currentAnimInstance = nil
+                local currentAnimTrack = nil
+                local currentAnimKeyframeHandler = nil
+                local currentAnimSpeed = 1.0
+                
+                local animTable = {}
+                local animNames = { 
+                    idle = 	{	
+                        { id = "http://www.roblox.com/asset/?id=180435571", weight = 9 },
+                        { id = "http://www.roblox.com/asset/?id=180435792", weight = 1 }
+                    },
+                    walk = 	{ 	
+                        { id = "http://www.roblox.com/asset/?id=180426354", weight = 10 } 
+                    }, 
+                    run = 	{
+                        { id = "run.xml", weight = 10 } 
+                    }, 
+                    jump = 	{
+                        { id = "http://www.roblox.com/asset/?id=125750702", weight = 10 } 
+                    }, 
+                    fall = 	{
+                        { id = "http://www.roblox.com/asset/?id=180436148", weight = 10 } 
+                    }, 
+                    climb = {
+                        { id = "http://www.roblox.com/asset/?id=180436334", weight = 10 } 
+                    }, 
+                    sit = 	{
+                        { id = "http://www.roblox.com/asset/?id=178130996", weight = 10 } 
+                    },	
+                    toolnone = {
+                        { id = "http://www.roblox.com/asset/?id=182393478", weight = 10 } 
+                    },
+                    toolslash = {
+                        { id = "http://www.roblox.com/asset/?id=129967390", weight = 10 } 
+                    },
+                    toollunge = {
+                        { id = "http://www.roblox.com/asset/?id=129967478", weight = 10 } 
+                    },
+                    toolwave = {
+                        { id = "http://www.roblox.com/asset/?id=128777973", weight = 10 } 
+                    },
+                    point = {
+                        { id = "http://www.roblox.com/asset/?id=128853357", weight = 10 } 
+                    },
+                    dance1 = {
+                        { id = "http://www.roblox.com/asset/?id=182435998", weight = 10 }, 
+                        { id = "http://www.roblox.com/asset/?id=182491037", weight = 10 }, 
+                        { id = "http://www.roblox.com/asset/?id=182491065", weight = 10 } 
+                    },
+                    dance2 = {
+                        { id = "http://www.roblox.com/asset/?id=182436842", weight = 10 }, 
+                        { id = "http://www.roblox.com/asset/?id=182491248", weight = 10 }, 
+                        { id = "http://www.roblox.com/asset/?id=182491277", weight = 10 } 
+                    },
+                    dance3 = {
+                        { id = "http://www.roblox.com/asset/?id=182436935", weight = 10 }, 
+                        { id = "http://www.roblox.com/asset/?id=182491453", weight = 10 }, 
+                        { id = "http://www.roblox.com/asset/?id=182491487", weight = 10 } 
+                    },
+                    laugh = {
+                        { id = "http://www.roblox.com/asset/?id=129423131", weight = 10 } 
+                    },
+                    cheer = {
+                        { id = "http://www.roblox.com/asset/?id=129423030", weight = 10 } 
+                    },
+                }
+                
+                local customWalkAnim = Instance.new("Animation")
+                customWalkAnim.AnimationId = "rbxassetid://9965516774"
+                customWalkAnim.Name = "CustomSpaceWalk"
+                
+                local walkTrack = Humanoid:LoadAnimation(customWalkAnim)
+                walkTrack:AdjustSpeed(1.2)
+                walkTrack.Priority = Enum.AnimationPriority.Movement
+                
+                local function onRunning(speed)
+                    if speed > 0 then
+                        pose = "Running"
+                        if walkTrack.IsPlaying ~= true then
+                            walkTrack:Play()
+                        end
+                    else
+                        if walkTrack.IsPlaying == true then
+                            walkTrack:Stop()
+                        end
+                        pose = "Standing"
+                    end
+                end
+                
+                Humanoid.Running:Connect(onRunning)
+            ]]
+            
+            newAnimate.Source = scriptContent
+        end
+    end
+end
+
+LocalPlayer.CharacterAdded:Connect(function(character)
+    character:WaitForChild("Humanoid")
+    applyCustomWalkAnimation()
+end)
+
+if LocalPlayer.Character then
+    applyCustomWalkAnimation()
+end
