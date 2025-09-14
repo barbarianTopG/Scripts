@@ -80,11 +80,11 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- ========= Lighting & Sky =========
-Lighting.Ambient = Color3.fromRGB(80, 40, 120)
-Lighting.OutdoorAmbient = Color3.fromRGB(80, 40, 120)
-Lighting.FogColor = Color3.fromRGB(30, 10, 60)
+Lighting.Ambient = Color3.fromRGB(120, 50, 180)
+Lighting.OutdoorAmbient = Color3.fromRGB(120, 50, 180)
+Lighting.FogColor = Color3.fromRGB(40, 20, 80)
 Lighting.FogEnd = 2500
-Lighting.Brightness = 0.2
+Lighting.Brightness = 0.3
 Lighting.GlobalShadows = true
 
 ShadowToggle.MouseButton1Click:Connect(function()
@@ -188,9 +188,15 @@ respawnPart.CanCollide = false
 respawnPart.Parent = island
 LocalPlayer:SetAttribute("SpawnLocation", respawnPart.Position)
 
+-- ========= Actions =========
 if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0, 5, 0))
 end
+
+task.wait(1)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua"))()
+task.wait(5)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))() -- This isnt a kdv3 script i used kdv3 bc i cant animate a walk animation :(
 
 -- ========= Planets =========
 local planets = {}
@@ -248,8 +254,10 @@ end
 
 -- Bottom
 createBarrier(Vector3.new(playerPos.X, playerPos.Y - 50, playerPos.Z), Vector3.new(2500, 10, 2500))
+
 -- Top
 createBarrier(Vector3.new(playerPos.X, playerPos.Y + 1500, playerPos.Z), Vector3.new(2500, 10, 2500))
+
 
 createBarrier(Vector3.new(playerPos.X + 650, playerPos.Y + 500, playerPos.Z), Vector3.new(10, 1000, 2500))
 createBarrier(Vector3.new(playerPos.X - 650, playerPos.Y + 500, playerPos.Z), Vector3.new(10, 1000, 2500))
