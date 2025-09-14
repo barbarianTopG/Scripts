@@ -1,5 +1,7 @@
+-- ========= Tag =========
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
 
+-- ========= Services =========
 local Players = game:GetService("Players")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
@@ -7,7 +9,7 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local LocalPlayer = Players.LocalPlayer
 
--- =================== GUI ===================
+-- ========= GUI =========
 local PlasmaMapUI = Instance.new("ScreenGui")
 PlasmaMapUI.Name = "PlasmaMapUI"
 PlasmaMapUI.ResetOnSpawn = false
@@ -28,7 +30,7 @@ UICorner.Parent = MainFrame
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, 0, 0, 30)
 Title.BackgroundTransparency = 1
-Title.Text = "NebulaSpace Controls"
+Title.Text = "Plasma Map Controls"
 Title.TextColor3 = Color3.fromRGB(200, 200, 255)
 Title.Font = Enum.Font.SciFi
 Title.TextSize = 18
@@ -38,7 +40,7 @@ local ShadowToggle = Instance.new("TextButton")
 ShadowToggle.Size = UDim2.new(0.8, 0, 0, 30)
 ShadowToggle.Position = UDim2.new(0.1, 0, 0, 40)
 ShadowToggle.BackgroundColor3 = Color3.fromRGB(60, 35, 100)
-ShadowToggle.Text = "Space Shadows: ON"
+ShadowToggle.Text = "Disable Shadows"
 ShadowToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
 ShadowToggle.Font = Enum.Font.SciFi
 ShadowToggle.TextSize = 14
@@ -48,7 +50,12 @@ local UICorner2 = Instance.new("UICorner")
 UICorner2.CornerRadius = UDim.new(0, 6)
 UICorner2.Parent = ShadowToggle
 
+-- ========= Draggable GUI =========
 local dragging, dragInput, dragStart, startPos
+local function update(input)
+    local delta = input.Position - dragStart
+    MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
 MainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 then
         dragging = true
@@ -66,40 +73,24 @@ MainFrame.InputChanged:Connect(function(input)
         dragInput = input
     end
 end)
-RunService.RenderStepped:Connect(function()
-    if dragging and dragInput then
-        local delta = dragInput.Position - dragStart
-        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
     end
 end)
 
--- =================== Lighting ===================
-local originalLighting = {
-    Ambient = Lighting.Ambient,
-    OutdoorAmbient = Lighting.OutdoorAmbient,
-    FogColor = Lighting.FogColor,
-    FogEnd = Lighting.FogEnd,
-    Brightness = Lighting.Brightness,
-    GlobalShadows = Lighting.GlobalShadows
-}
-
-local shadowsEnabled = true
-local function applySpaceLighting()
-    Lighting.Ambient = Color3.fromRGB(120, 80, 180)
-    Lighting.OutdoorAmbient = Color3.fromRGB(100, 60, 150)
-    Lighting.FogColor = Color3.fromRGB(80, 50, 130)
-    Lighting.FogEnd = 3000
-    Lighting.Brightness = 0.3
-    Lighting.GlobalShadows = shadowsEnabled
-end
+-- ========= Lighting & Sky =========
+Lighting.Ambient = Color3.fromRGB(80, 40, 120)
+Lighting.OutdoorAmbient = Color3.fromRGB(80, 40, 120)
+Lighting.FogColor = Color3.fromRGB(30, 10, 60)
+Lighting.FogEnd = 2500
+Lighting.Brightness = 0.2
+Lighting.GlobalShadows = true
 
 ShadowToggle.MouseButton1Click:Connect(function()
-    shadowsEnabled = not shadowsEnabled
-    Lighting.GlobalShadows = shadowsEnabled
-    ShadowToggle.Text = shadowsEnabled and "Space Shadows: ON" or "Space Shadows: OFF"
+    Lighting.GlobalShadows = not Lighting.GlobalShadows
+    ShadowToggle.Text = Lighting.GlobalShadows and "Disable Shadows" or "Enable Shadows"
 end)
-
-applySpaceLighting()
 
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
 sky.SkyboxBk = "http://www.roblox.com/asset/?id=159454299"
@@ -111,7 +102,12 @@ sky.SkyboxUp = "http://www.roblox.com/asset/?id=159454299"
 sky.StarCount = 5000
 if not sky.Parent then sky.Parent = Lighting end
 
--- =================== Map ===================
+-- ========= Map Setup =========
+local playerPos = Vector3.new(0,0,0)
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+    playerPos = LocalPlayer.Character.HumanoidRootPart.Position
+end
+
 for _, obj in pairs(workspace:GetChildren()) do
     if obj.Name == "PlasmaMapIsland" then obj:Destroy() end
 end
@@ -120,15 +116,10 @@ local island = Instance.new("Model")
 island.Name = "PlasmaMapIsland"
 island.Parent = workspace
 
-local playerPosition = Vector3.new(0, 0, 0)
-if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-    playerPosition = LocalPlayer.Character.HumanoidRootPart.Position
-end
-
 local platform = Instance.new("Part")
 platform.Name = "NebulaPlatform"
 platform.Size = Vector3.new(1200, 25, 1200)
-platform.Position = playerPosition + Vector3.new(0, 500, 0)
+platform.Position = Vector3.new(playerPos.X, playerPos.Y + 500, playerPos.Z)
 platform.Anchored = true
 platform.Material = Enum.Material.Neon
 platform.Color = Color3.fromRGB(15, 3, 35)
@@ -136,10 +127,15 @@ platform.Reflectance = 0.1
 platform.CanCollide = true
 platform.Parent = island
 
+local pattern = Instance.new("Decal")
+pattern.Face = Enum.NormalId.Top
+pattern.Texture = "http://www.roblox.com/asset/?id=5107151155"
+pattern.Parent = platform
+
 local observatory = Instance.new("Part")
 observatory.Name = "Observatory"
 observatory.Size = Vector3.new(80, 30, 80)
-observatory.Position = playerPosition + Vector3.new(0, 515, 0)
+observatory.Position = Vector3.new(playerPos.X, playerPos.Y + 515, playerPos.Z)
 observatory.Anchored = true
 observatory.Material = Enum.Material.Metal
 observatory.Color = Color3.fromRGB(45, 45, 65)
@@ -147,19 +143,19 @@ observatory.Reflectance = 0.2
 observatory.CanCollide = true
 observatory.Parent = island
 
-local bubble = Instance.new("Part")
-bubble.Shape = Enum.PartType.Ball
-bubble.Size = Vector3.new(70, 30, 70)
-bubble.Position = playerPosition + Vector3.new(0, 540, 0)
-bubble.Anchored = true
-bubble.Material = Enum.Material.Glass
-bubble.Transparency = 0.4
-bubble.Reflectance = 0.3
-bubble.Color = Color3.fromRGB(70, 120, 255)
-bubble.CanCollide = false
-bubble.Parent = island
+local dome = Instance.new("Part")
+dome.Shape = Enum.PartType.Ball
+dome.Size = Vector3.new(70, 30, 70)
+dome.Position = Vector3.new(playerPos.X, playerPos.Y + 540, playerPos.Z)
+dome.Anchored = true
+dome.Material = Enum.Material.Glass
+dome.Transparency = 0.4
+dome.Reflectance = 0.3
+dome.Color = Color3.fromRGB(70, 120, 255)
+dome.CanCollide = false
+dome.Parent = island
 
-local teleportPad = Instance.new("SpawnLocation")
+local teleportPad = Instance.new("Part")
 teleportPad.Name = "TeleportPad"
 teleportPad.Size = Vector3.new(15, 2, 15)
 teleportPad.Position = observatory.Position + Vector3.new(0, 16, 0)
@@ -167,7 +163,6 @@ teleportPad.Anchored = true
 teleportPad.Material = Enum.Material.Neon
 teleportPad.Color = Color3.fromRGB(0, 170, 255)
 teleportPad.CanCollide = true
-teleportPad.AllowTeamChangeOnTouch = false
 teleportPad.Parent = island
 
 local padLight = Instance.new("PointLight")
@@ -179,21 +174,34 @@ padLight.Parent = teleportPad
 local pulseTween = TweenService:Create(
     padLight,
     TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-    {Brightness = 12}
-)
+    {Brightness = 12})
 pulseTween:Play()
 
--- =================== Planets ===================
+-- ========= Spawn Point =========
+local respawnPart = Instance.new("Part")
+respawnPart.Name = "RespawnPoint"
+respawnPart.Size = Vector3.new(10, 1, 10)
+respawnPart.Position = teleportPad.Position + Vector3.new(0, 2, 0)
+respawnPart.Anchored = true
+respawnPart.Transparency = 1
+respawnPart.CanCollide = false
+respawnPart.Parent = island
+LocalPlayer:SetAttribute("SpawnLocation", respawnPart.Position)
+
+if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+    LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(respawnPart.Position + Vector3.new(0, 5, 0))
+end
+
+-- ========= Planets =========
 local planets = {}
-local minY = platform.Position.Y + 50 
 for i = 1, 12 do
     local planet = Instance.new("Part")
     planet.Shape = Enum.PartType.Ball
     planet.Size = Vector3.new(math.random(50, 100), math.random(50, 100), math.random(50, 100))
     planet.Position = Vector3.new(
-        playerPosition.X + math.random(-1200, 1200),
-        minY + math.random(200, 800), 
-        playerPosition.Z + math.random(-1200, 1200)
+        playerPos.X + math.random(-1200, 1200),
+        playerPos.Y + math.random(600, 1200),
+        playerPos.Z + math.random(-1200, 1200)
     )
     planet.Anchored = true
     planet.Material = Enum.Material.Neon
@@ -202,70 +210,48 @@ for i = 1, 12 do
     planet.CanCollide = true
     planet.Parent = island
 
-    local planetGlow = Instance.new("PointLight")
-    planetGlow.Brightness = math.random(5, 10)
-    planetGlow.Range = planet.Size.X * 2
-    planetGlow.Color = planet.Color
-    planetGlow.Parent = planet
+    local glow = Instance.new("PointLight")
+    glow.Brightness = math.random(5, 10)
+    glow.Range = planet.Size.X * 2
+    glow.Color = planet.Color
+    glow.Parent = planet
 
-    table.insert(planets, {planet = planet})
-end
-
--- =================== Void Barrier ===================
-local barrierHeight = 1000
-local barrierRadius = 800
-local segmentCount = 36
-for i = 1, segmentCount do
-    local angle = math.rad(i * (360 / segmentCount))
-    local x = playerPosition.X + math.cos(angle) * barrierRadius
-    local z = playerPosition.Z + math.sin(angle) * barrierRadius
-
-    local wall = Instance.new("Part")
-    wall.Size = Vector3.new(10, barrierHeight, 10)
-    wall.Position = Vector3.new(x, platform.Position.Y + barrierHeight/2, z)
-    wall.Anchored = true
-    wall.Transparency = 0.6
-    wall.Material = Enum.Material.ForceField
-    wall.Color = Color3.fromRGB(50, 20, 80)
-    wall.CanCollide = true
-    wall.Parent = island
-end
-
-local bottomBarrier = Instance.new("Part")
-bottomBarrier.Size = Vector3.new(barrierRadius*2 + 200, 5, barrierRadius*2 + 200)
-bottomBarrier.Position = Vector3.new(playerPosition.X, platform.Position.Y - 10, playerPosition.Z)
-bottomBarrier.Anchored = true
-bottomBarrier.Transparency = 0.6
-bottomBarrier.Material = Enum.Material.ForceField
-bottomBarrier.Color = Color3.fromRGB(50, 20, 80)
-bottomBarrier.CanCollide = true
-bottomBarrier.Parent = island
-
--- =================== Teleport / Reanimate ===================
-local function teleportToPad()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(teleportPad.Position + Vector3.new(0, 5, 0))
-        task.delay(3, function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua"))()
-            task.wait(5)
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
-        end)
-    end
+    table.insert(planets, planet)
 end
 
 RunService.Heartbeat:Connect(function(dt)
-    for _, planetData in pairs(planets) do
-        planetData.planet.CFrame = planetData.planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
+    for _, planet in pairs(planets) do
+        planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
     end
 end)
 
--- ==== Cleanup on leave (DONT TOUCH)
-local function cleanup()
-    for k, v in pairs(originalLighting) do
-        Lighting[k] = v
-    end
-    if sky then sky:Destroy() end
-    if island then island:Destroy() end
+-- ========= Barrier =========
+local barrierSize = Vector3.new(1200, 1000, 10)
+local barrierColor = Color3.fromRGB(40, 0, 80)
+
+local function createBarrier(pos, size)
+    local part = Instance.new("Part")
+    part.Size = size
+    part.Position = pos
+    part.Anchored = true
+    part.Material = Enum.Material.ForceField
+    part.Color = barrierColor
+    part.CanCollide = true
+    part.Parent = island
+    part.Touched:Connect(function(hit)
+        if hit.Parent and hit.Parent:FindFirstChild("Humanoid") then
+            hit.Parent.Humanoid.Health = 0
+        end
+    end)
+    return part
 end
 
-game:BindToClose(cleanup)
+-- Bottom
+createBarrier(Vector3.new(playerPos.X, playerPos.Y - 50, playerPos.Z), Vector3.new(2500, 10, 2500))
+-- Top
+createBarrier(Vector3.new(playerPos.X, playerPos.Y + 1500, playerPos.Z), Vector3.new(2500, 10, 2500))
+
+createBarrier(Vector3.new(playerPos.X + 650, playerPos.Y + 500, playerPos.Z), Vector3.new(10, 1000, 2500))
+createBarrier(Vector3.new(playerPos.X - 650, playerPos.Y + 500, playerPos.Z), Vector3.new(10, 1000, 2500))
+createBarrier(Vector3.new(playerPos.X, playerPos.Y + 500, playerPos.Z + 650), Vector3.new(2500, 1000, 10))
+createBarrier(Vector3.new(playerPos.X, playerPos.Y + 500, playerPos.Z - 650), Vector3.new(2500, 1000, 10))
