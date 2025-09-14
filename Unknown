@@ -196,7 +196,7 @@ end
 task.wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua"))()
 task.wait(5)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))() -- This isnt a kdv3 script i used kdv3 bc i cant animate a walk animation :(
+loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))() --[[ This isnt a kdv3 script i used kdv3 bc i cant animate a walk animation ]]
 
 -- ========= Planets =========
 local planets = {}
