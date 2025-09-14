@@ -19,30 +19,30 @@ local Window = Rayfield:CreateWindow({
     KeySystem = false
 })
 
-local mainTab = Window:CreateTab("Main")
-local Section = mainTab:CreateSection("FPS")
-mainTab:CreateButton({
+local MainTab = Window:CreateTab("Main")
+local Section = MainTab:CreateSection("FPS")
+MainTab:CreateButton({
     Name = "FPS Booster",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/MerebennieOfficial/ExoticJn/refs/heads/main/FpsBooster"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/MerebennieOfficial/ExoticJn/refs/heads/Main/FpsBooster"))()
     end
 })
-local Section = mainTab:CreateSection("Any hero")
-mainTab:CreateButton({
+local Section = MainTab:CreateSection("Any hero")
+MainTab:CreateButton({
     Name = "Trashcan Man (By Friedpotato)",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/main/Trashcan%20Man", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/Main/Trashcan%20Man", true))()
     end
 })
-mainTab:CreateButton({
+MainTab:CreateButton({
     Name = "Flight Tool (By Friedpotato)",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/main/Flight%20Tool%20Obfuscated.txt", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/Main/Flight%20Tool%20Obfuscated.txt", true))()
     end
 })
 
-local saiTab = Window:CreateTab("For Saitama")
-saiTab:CreateButton({
+local ForSaitamaTab = Window:CreateTab("For Saitama")
+ForSaitamaTab:CreateButton({
     Name = "Gojo Moveset",
     Callback = function()
         getgenv().FatalCombatSkillLayout = true
@@ -50,45 +50,45 @@ saiTab:CreateButton({
         loadstring(game:HttpGet("https://gist.githubusercontent.com/SonicexePort/d83f3eca5e8092468df1551df09db39a/raw/861f16fbae8fab8803cabfbc01295bb5b687f86a/Death%20Port%20Six%20Eyes%20Public%20Beta"))()
     end
 })
-saiTab:CreateButton({
+ForSaitamaTab:CreateButton({
     Name = "Golden head Moveset",
     Callback = function()
         getgenv().stand = false
         getgenv().ken = false
         getgenv().Spawn = false
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenjihin69/Kenjihin69/refs/heads/main/Saitama%20to%20golden%20sigma"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenjihin69/Kenjihin69/refs/heads/Main/ForSaitamatama%20to%20golden%20sigma"))()
     end
 })
-saiTab:CreateParagraph({
+ForSaitamaTab:CreateParagraph({
     Title = "Golden head explanation:",
     Content = "When ultimate is activated there is 60% to get it and 40% to lose and get death counter."
 })
-saiTab:CreateButton({
+ForSaitamaTab:CreateButton({
     Name = "Shinji Moveset",
     Callback = function()
         getgenv().speedtools = true
         getgenv().speedpunch = true
         getgenv().dance = false
         getgenv().night = false
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenjihin69/Kenjihin69/refs/heads/main/Shinji%20tp%20exploit"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Kenjihin69/Kenjihin69/refs/heads/Main/Shinji%20tp%20exploit"))()
     end
 })
 
-local sweatTab = Window:CreateTab("For Garou")
+local ForGarou = Window:CreateTab("For Garou")
 
-sweatTab:CreateButton({
+ForGarou:CreateButton({
     Name = "Teleport Guy (By Friedpotato)",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/main/Teleport%20Guy.txt", true))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/Main/Teleport%20Guy.txt", true))()
     end
 })
-sweatTab:CreateButton({
+ForGarou:CreateButton({
     Name = "Minos Prime",
     Callback = function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Minos-Prime-Custom-Moveset-24060"))()
     end
 })
-sweatTab:CreateButton({
+ForGarou:CreateButton({
     Name = "A-Train moveset",
     Callback = function()
         getgenv().settings = {
@@ -97,26 +97,26 @@ sweatTab:CreateButton({
             ult_walkspeed = 60,
             tp_duration = 0.15
         }
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/ATrainSounds/refs/heads/main/ATrain.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/skibiditoiletfan2007/ATrainSounds/refs/heads/Main/ATrain.lua"))()
     end
 })
-sweatTab:CreateButton({
+ForGarou:CreateButton({
     Name = "Goku Moveset",
     Callback = function()
         loadstring(game:HttpGet("https://rawscripts.net/raw/The-Strongest-Battlegrounds-Hero-hunter-moveset-into-OP-goku-moveset-17468"))()
     end
 })
-sweatTab:CreateButton({
+ForGarou:CreateButton({
     Name = "Void Reaper (By Friedpotato)",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/main/Void%20Reaper%20Obfuscated.txt"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/Main/Void%20Reaper%20Obfuscated.txt"))()
     end
 })
-sweatTab:CreateParagraph({
+ForGarou:CreateParagraph({
     Title = "Notice!:",
     Content = "Void reaper can't void anymore :("
 })
-sweatTab:CreateButton({
+ForGarou:CreateButton({
     Name = "Chainsaw Man (By Friedpotato)",
     Callback = function()
         getgenv().RunSpeed = 100
@@ -128,10 +128,10 @@ sweatTab:CreateButton({
         getgenv().Night = false
         getgenv().DashNoCooldown = true
         getgenv().ExtraSkills = true
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/main/CHAINSAW%20MAN/Chainsaw%20Man%20(Obfuscated).txt"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/yes1nt/yes/refs/heads/Main/CHAINSAW%20MAN/Chainsaw%20Man%20(Obfuscated).txt"))()
     end
 })
-sweatTab:CreateParagraph({
+ForGarou:CreateParagraph({
     Title = "NOTICE!",
     Content = "!! Chainsaw man will lag low-performing devices !!"
 })
