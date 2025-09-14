@@ -88,7 +88,7 @@ titleLabel.BackgroundTransparency = 1
 titleLabel.Font = Enum.Font.Arcade
 titleLabel.TextSize = 24
 titleLabel.TextColor3 = colorScheme.text
-titleLabel.Text = "Titan Dance"
+titleLabel.Text = "Giant Dance"
 titleLabel.Parent = popup
 
 local descLabel = Instance.new("TextLabel")
@@ -190,7 +190,7 @@ end
 stopBtn.MouseButton1Click:Connect(function()
     closePopup()
     Chat("-rj ")
-    notify("Titan Dance", "Rejooning :P", 3)
+    notify("Giant Dance", "Rejooning :P", 3)
 end)
 
 reanimateBtn.MouseButton1Click:Connect(function()
@@ -432,22 +432,22 @@ creditsBtn.MouseButton1Click:Connect(function()
     bruh(.1)
     print("------------------Changelog------------------")
     bruh(.1)
-    print("Renamed from Giant Krystal Dance to Titan Dance.")
+    print("Renamed from Giant Krystal Dance to Giant Dance.")
     bruh(.1)
     print("Love from PlasmaByte 💖")
     bruh(.1)
     print("------------------------------------------")
     bruh(.1)
-    notify("Titan Dance", "Check Console!")
+    notify("Giant Dance", "Check Console!")
 end)
 
 bruh(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Keyboards"))()
-notify("Titan Dance", "Please, choose a keyboard,")
+notify("Giant Dance", "Please, choose a keyboard,")
 bruh(.95)
-notify("Titan Dance", "bc without one you")
+notify("Giant Dance", "bc without one you")
 bruh(.95)
-notify("Titan Dance", "won't be able to use this")
+notify("Giant Dance", "won't be able to use this")
 bruh(.95)
 setclipboard("https://www.roblox.com/games/88308889239232/Green-baseplate")
-notify("Titan Dance", "Supported game link copied.")
+notify("Giant Dance", "Supported game link copied.")
