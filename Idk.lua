@@ -21,18 +21,18 @@ local CONFIG = {
     AuraSize = Vector3.new(3000, 3000, 3000),
     SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",
     PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",
-    AsteroidCount = 50,
+    AsteroidCount = 50,  
     AsteroidSizeRange = {10, 30},
     AsteroidDistanceRange = {-1000, 1000},
     AsteroidHeightRange = {100, 800},
-    CrystalCount = 20,
+    CrystalCount = 20,  
     CrystalSize = Vector3.new(5, 15, 5),
-    NebulaParticleRate = 50,
+    NebulaParticleRate = 50,  
 }
 
 -- ========= GUI =========
 local PlasmaMapUI = Instance.new("ScreenGui")
-PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false)
+PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false) 
 PlasmaMapUI.ResetOnSpawn = false
 PlasmaMapUI.Parent = game:GetService("CoreGui")
 
@@ -134,7 +134,6 @@ local function getPlayerPosition()
     return Vector3.new(0, 0, 0)
 end
 
--- Clean up existing map
 for _, obj in pairs(workspace:GetChildren()) do
     if obj.Name == "PlasmaMapIsland" then
         obj:Destroy()
@@ -219,7 +218,7 @@ spawnLocation.Transparency = 1
 spawnLocation.CanCollide = false
 spawnLocation.Parent = island
 
--- ========= Teleport Player and Load Scripts Sequentially =========
+-- ========= Teleport Player =========
 local function loadExternalScript(url)
     local success, result = pcall(function()
         return game:HttpGet(url)
@@ -238,12 +237,11 @@ loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main
 
 if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
-    
-    -- Spawn a task for delayed loading after TP
+
     task.spawn(function()
-        task.wait(2)
+        task.wait(2)  
         loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua")
-        task.wait(5) 
+        task.wait(5)  
         loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
     end)
 end
@@ -292,10 +290,9 @@ for i = 1, CONFIG.AsteroidCount do
     asteroid.Material = Enum.Material.Rock
     asteroid.Color = Color3.fromRGB(math.random(50, 100), math.random(50, 100), math.random(50, 100))
     asteroid.Reflectance = 0.05
-    asteroid.CanCollide = false  -- Floating, non-collidable for decoration
+    asteroid.CanCollide = false  
     asteroid.Parent = island
 
-    -- Slow random rotation
     task.spawn(function()
         while asteroid.Parent do
             asteroid.CFrame = asteroid.CFrame * CFrame.Angles(math.rad(math.random(1, 5)/10), math.rad(math.random(1, 5)/10), math.rad(math.random(1, 5)/10))
@@ -315,7 +312,7 @@ for i = 1, CONFIG.CrystalCount do
     crystal.Orientation = Vector3.new(0, 0, math.random(0, 360))
     crystal.Position = Vector3.new(
         playerPos.X + math.random(-600, 600),
-        playerPos.Y + 525 + math.random(-50, 50),  -- Around platform height
+        playerPos.Y + 525 + math.random(-50, 50), 
         playerPos.Z + math.random(-600, 600)
     )
     crystal.Anchored = true
@@ -332,7 +329,6 @@ for i = 1, CONFIG.CrystalCount do
     crystalLight.Color = crystal.Color
     crystalLight.Parent = crystal
 
-    -- Pulsing tween for crystals
     local crystalTween = TweenService:Create(
         crystalLight,
         TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
@@ -346,7 +342,7 @@ end
 -- ========= Nebula Particles =========
 local nebulaEmitter = Instance.new("ParticleEmitter")
 nebulaEmitter.Name = "NebulaParticles"
-nebulaEmitter.Texture = "rbxassetid://243660364"  -- Starry or cloudy texture (replace with a suitable asset ID if needed)
+nebulaEmitter.Texture = "rbxassetid://243660364"
 nebulaEmitter.Lifetime = NumberRange.new(10, 20)
 nebulaEmitter.Rate = CONFIG.NebulaParticleRate
 nebulaEmitter.Speed = NumberRange.new(5, 10)
@@ -364,10 +360,9 @@ nebulaEmitter.Size = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 5),
     NumberSequenceKeypoint.new(1, 20)
 })
-nebulaEmitter.Parent = platform  -- Emit from the platform
+nebulaEmitter.Parent = platform 
 nebulaEmitter.Enabled = true
 
--- Add a few more emitters around the map for density
 for i = 1, 5 do
     local extraEmitter = nebulaEmitter:Clone()
     extraEmitter.Position = Vector3.new(math.random(-600, 600), 0, math.random(-600, 600))
