@@ -8,7 +8,7 @@ local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 local Debris = game:GetService("Debris")
 
--- ========= Original Lighting Save =========
+-- ========= Original Lighting =========
 local originalLighting = {
     Ambient = Lighting.Ambient,
     OutdoorAmbient = Lighting.OutdoorAmbient,
@@ -261,7 +261,7 @@ spawnLocation.Transparency = 1
 spawnLocation.CanCollide = false
 spawnLocation.Parent = island
 
--- ========= loadstring (optional) =========
+-- ========= Optional stuff =========
 local function loadUrl(url)
     local success, result = pcall(function()
         return game:HttpGet(url)
@@ -276,16 +276,13 @@ local function loadUrl(url)
     end
 end
 
--- loadUrl Tag immediately
 loadUrl("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
 
--- Teleport and then loadUrl reanimate and Krystal with adjusted timing
 if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
     
-    -- Spawn a task for delayed loadUrling after TP
     task.spawn(function()
-        task.wait(2)  -- Wait 2 seconds after TP
+        task.wait(2)  
         loadUrl("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
         task.wait(5)
         loadUrl("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
@@ -314,7 +311,7 @@ for i, data in ipairs(CONFIG.PlanetData) do
     if data.Texture then
         local decal = Instance.new("Decal")
         decal.Texture = data.Texture
-        decal.Face = Enum.NormalId.Front  -- Basic decal; note: won't wrap around sphere perfectly
+        decal.Face = Enum.NormalId.Front  
         decal.Parent = planet
     end
 
@@ -324,7 +321,7 @@ for i, data in ipairs(CONFIG.PlanetData) do
     glow.Color = data.Color
     glow.Parent = planet
 
-    planet:SetAttribute("Spin", data.Spin)  -- Store spin flag
+    planet:SetAttribute("Spin", data.Spin)
 
     table.insert(planets, planet)
 end
@@ -397,7 +394,7 @@ end
 -- ========= Nebula Particles =========
 local nebulaEmitter = Instance.new("ParticleEmitter")
 nebulaEmitter.Name = "NebulaParticles"
-nebulaEmitter.Texture = "rbxassetid://243660364"  -- Starry/cloudy texture
+nebulaEmitter.Texture = "rbxassetid://243660364"  
 nebulaEmitter.Lifetime = NumberRange.new(10, 20)
 nebulaEmitter.Rate = CONFIG.NebulaParticleRate
 nebulaEmitter.Speed = NumberRange.new(5, 10)
