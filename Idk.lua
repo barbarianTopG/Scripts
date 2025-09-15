@@ -240,7 +240,7 @@ if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootP
 
     task.spawn(function()
         task.wait(2)  
-        loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate.lua")
+        loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
         task.wait(5)  
         loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
     end)
