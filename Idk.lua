@@ -18,7 +18,7 @@ local originalLighting = {
     GlobalShadows = Lighting.GlobalShadows,
 }
 
--- ========= Configuration =========
+-- ========= Config =========
 local CONFIG = {
     PlatformSize = Vector3.new(1200, 25, 1200),
     ObservatorySize = Vector3.new(80, 30, 80),
@@ -468,7 +468,6 @@ LocalPlayer.AncestryChanged:Connect(function()
         pulseTween:Cancel()
         auraTween:Cancel()
         planetConnection:Disconnect()
-        -- Restore lighting on cleanup
         for key, value in pairs(originalLighting) do
             Lighting[key] = value
         end
