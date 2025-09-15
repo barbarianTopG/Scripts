@@ -8,36 +8,58 @@ local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 local Debris = game:GetService("Debris")
 
+-- ========= Original Lighting Save =========
+local originalLighting = {
+    Ambient = Lighting.Ambient,
+    OutdoorAmbient = Lighting.OutdoorAmbient,
+    FogColor = Lighting.FogColor,
+    FogEnd = Lighting.FogEnd,
+    Brightness = Lighting.Brightness,
+    GlobalShadows = Lighting.GlobalShadows,
+}
+
 -- ========= Configuration =========
 local CONFIG = {
     PlatformSize = Vector3.new(1200, 25, 1200),
     ObservatorySize = Vector3.new(80, 30, 80),
     BubbleSize = Vector3.new(70, 30, 70),
     TeleportPadSize = Vector3.new(15, 2, 15),
-    PlanetCount = 12,
-    PlanetSizeRange = {50, 100},
-    PlanetDistanceRange = {-1200, 1200},
+    PlanetData = {
+        {Name = "Mercury", Size = 20, Color = Color3.fromRGB(150, 150, 150), Spin = true, Texture = nil},
+        {Name = "Venus", Size = 40, Color = Color3.fromRGB(200, 150, 50), Spin = true, Texture = nil},
+        {Name = "Earth", Size = 40, Color = Color3.fromRGB(0, 100, 200), Spin = true, Texture = "rbxassetid://453515908"},
+        {Name = "Moon", Size = 15, Color = Color3.fromRGB(200, 200, 200), Spin = false, Texture = nil},
+        {Name = "Mars", Size = 30, Color = Color3.fromRGB(200, 50, 0), Spin = true, Texture = nil},
+        {Name = "Jupiter", Size = 100, Color = Color3.fromRGB(200, 150, 100), Spin = true, Texture = nil},
+        {Name = "Saturn", Size = 90, Color = Color3.fromRGB(180, 140, 60), Spin = true, Texture = nil},
+        {Name = "Uranus", Size = 70, Color = Color3.fromRGB(100, 200, 200), Spin = true, Texture = nil},
+        {Name = "Neptune", Size = 70, Color = Color3.fromRGB(50, 50, 200), Spin = true, Texture = nil},
+        {Name = "Pluto", Size = 15, Color = Color3.fromRGB(200, 180, 150), Spin = true, Texture = nil},
+        {Name = "Sun", Size = 120, Color = Color3.fromRGB(255, 200, 0), Spin = true, Texture = nil},  
+        {Name = "Europa", Size = 20, Color = Color3.fromRGB(220, 220, 220), Spin = false, Texture = nil}, 
+    },
+    PlanetDistanceRange = {-1000, 1000},
     PlanetHeightRange = {600, 1200},
     AuraSize = Vector3.new(3000, 3000, 3000),
     SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",
-    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",
-    AsteroidCount = 50,  
+    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155", 
+    AsteroidCount = 50,
     AsteroidSizeRange = {10, 30},
     AsteroidDistanceRange = {-1000, 1000},
     AsteroidHeightRange = {100, 800},
-    CrystalCount = 20,  
+    CrystalCount = 20,
     CrystalSize = Vector3.new(5, 15, 5),
-    NebulaParticleRate = 50,  
+    NebulaParticleRate = 50,
 }
 
 -- ========= GUI =========
 local PlasmaMapUI = Instance.new("ScreenGui")
-PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false) 
+PlasmaMapUI.Name = "PlasmaMapUI_" .. HttpService:GenerateGUID(false)
 PlasmaMapUI.ResetOnSpawn = false
 PlasmaMapUI.Parent = game:GetService("CoreGui")
 
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 220, 0, 120)
+MainFrame.Size = UDim2.new(0, 220, 0, 160)
 MainFrame.Position = UDim2.new(0, 10, 0, 10)
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 15, 50)
 MainFrame.BackgroundTransparency = 0.3
@@ -70,6 +92,20 @@ ShadowToggle.Parent = MainFrame
 local UICorner2 = Instance.new("UICorner")
 UICorner2.CornerRadius = UDim.new(0, 6)
 UICorner2.Parent = ShadowToggle
+
+local RestoreLighting = Instance.new("TextButton")
+RestoreLighting.Size = UDim2.new(0.8, 0, 0, 30)
+RestoreLighting.Position = UDim2.new(0.1, 0, 0, 80)
+RestoreLighting.BackgroundColor3 = Color3.fromRGB(60, 35, 100)
+RestoreLighting.Text = "Restore Original Lighting"
+RestoreLighting.TextColor3 = Color3.fromRGB(255, 255, 255)
+RestoreLighting.Font = Enum.Font.SciFi
+RestoreLighting.TextSize = 14
+RestoreLighting.Parent = MainFrame
+
+local UICorner3 = Instance.new("UICorner")
+UICorner3.CornerRadius = UDim.new(0, 6)
+UICorner3.Parent = RestoreLighting
 
 -- ========= Draggable GUI =========
 local dragging, dragInput, dragStart, startPos
@@ -116,6 +152,12 @@ ShadowToggle.MouseButton1Click:Connect(function()
     ShadowToggle.Text = Lighting.GlobalShadows and "Disable Shadows" or "Enable Shadows"
 end)
 
+RestoreLighting.MouseButton1Click:Connect(function()
+    for key, value in pairs(originalLighting) do
+        Lighting[key] = value
+    end
+end)
+
 local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
 sky.SkyboxBk = CONFIG.SkyboxAsset
 sky.SkyboxDn = CONFIG.SkyboxAsset
@@ -134,6 +176,7 @@ local function getPlayerPosition()
     return Vector3.new(0, 0, 0)
 end
 
+-- Clean up existing map
 for _, obj in pairs(workspace:GetChildren()) do
     if obj.Name == "PlasmaMapIsland" then
         obj:Destroy()
@@ -159,7 +202,7 @@ platform.Parent = island
 
 local pattern = Instance.new("Decal")
 pattern.Face = Enum.NormalId.Top
-pattern.Texture = CONFIG.PlatformTexture
+pattern.Texture = CONFIG.PlatformTexture  
 pattern.Parent = platform
 
 local observatory = Instance.new("Part")
@@ -167,9 +210,9 @@ observatory.Name = "Observatory"
 observatory.Size = CONFIG.ObservatorySize
 observatory.Position = Vector3.new(playerPos.X, playerPos.Y + 515, playerPos.Z)
 observatory.Anchored = true
-observatory.Material = Enum.Material.Metal
-observatory.Color = Color3.fromRGB(45, 45, 65)
-observatory.Reflectance = 0.2
+observatory.Material = Enum.Material.Neon 
+observatory.Color = Color3.fromRGB(70, 30, 120)  -- Purple hue
+observatory.Reflectance = 0.3
 observatory.CanCollide = true
 observatory.Parent = island
 
@@ -218,58 +261,70 @@ spawnLocation.Transparency = 1
 spawnLocation.CanCollide = false
 spawnLocation.Parent = island
 
--- ========= Teleport Player =========
-local function loadExternalScript(url)
+-- ========= loadstring (optional) =========
+local function loadUrl(url)
     local success, result = pcall(function()
         return game:HttpGet(url)
     end)
     if success then
-        local success, errorMsg = pcall(loadstring(result))
+        local success, errorMsg = pcall(loadUrlstring(result))
         if not success then
             warn("Failed to execute script from " .. url .. ": " .. errorMsg)
         end
     else
-        warn("Failed to load script from " .. url .. ": " .. result)
+        warn("Failed to loadUrl script from " .. url .. ": " .. result)
     end
 end
 
-loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
+-- loadUrl Tag immediately
+loadUrl("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
 
+-- Teleport and then loadUrl reanimate and Krystal with adjusted timing
 if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
     LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
-
+    
+    -- Spawn a task for delayed loadUrling after TP
     task.spawn(function()
-        task.wait(2)  
-        loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
-        task.wait(5)  
-        loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
+        task.wait(2)  -- Wait 2 seconds after TP
+        loadUrl("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
+        task.wait(5)
+        loadUrl("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
     end)
 end
 
 -- ========= Planets =========
 local planets = {}
-for i = 1, CONFIG.PlanetCount do
+for i, data in ipairs(CONFIG.PlanetData) do
     local planet = Instance.new("Part")
+    planet.Name = data.Name
     planet.Shape = Enum.PartType.Ball
-    local size = math.random(CONFIG.PlanetSizeRange[1], CONFIG.PlanetSizeRange[2])
-    planet.Size = Vector3.new(size, size, size)
+    planet.Size = Vector3.new(data.Size, data.Size, data.Size)
     planet.Position = Vector3.new(
         playerPos.X + math.random(CONFIG.PlanetDistanceRange[1], CONFIG.PlanetDistanceRange[2]),
         playerPos.Y + math.random(CONFIG.PlanetHeightRange[1], CONFIG.PlanetHeightRange[2]),
         playerPos.Z + math.random(CONFIG.PlanetDistanceRange[1], CONFIG.PlanetDistanceRange[2])
     )
     planet.Anchored = true
-    planet.Material = Enum.Material.Neon
-    planet.Color = Color3.fromRGB(math.random(60, 220), math.random(60, 220), math.random(60, 220))
+    planet.Material = Enum.Material.SmoothPlastic 
+    planet.Color = data.Color
     planet.Reflectance = 0.1
     planet.CanCollide = true
     planet.Parent = island
 
+    if data.Texture then
+        local decal = Instance.new("Decal")
+        decal.Texture = data.Texture
+        decal.Face = Enum.NormalId.Front  -- Basic decal; note: won't wrap around sphere perfectly
+        decal.Parent = planet
+    end
+
     local glow = Instance.new("PointLight")
     glow.Brightness = math.random(5, 10)
     glow.Range = planet.Size.X * 2
-    glow.Color = planet.Color
+    glow.Color = data.Color
     glow.Parent = planet
+
+    planet:SetAttribute("Spin", data.Spin)  -- Store spin flag
 
     table.insert(planets, planet)
 end
@@ -290,7 +345,7 @@ for i = 1, CONFIG.AsteroidCount do
     asteroid.Material = Enum.Material.Rock
     asteroid.Color = Color3.fromRGB(math.random(50, 100), math.random(50, 100), math.random(50, 100))
     asteroid.Reflectance = 0.05
-    asteroid.CanCollide = false  
+    asteroid.CanCollide = false
     asteroid.Parent = island
 
     task.spawn(function()
@@ -312,7 +367,7 @@ for i = 1, CONFIG.CrystalCount do
     crystal.Orientation = Vector3.new(0, 0, math.random(0, 360))
     crystal.Position = Vector3.new(
         playerPos.X + math.random(-600, 600),
-        playerPos.Y + 525 + math.random(-50, 50), 
+        playerPos.Y + 525 + math.random(-50, 50),
         playerPos.Z + math.random(-600, 600)
     )
     crystal.Anchored = true
@@ -342,7 +397,7 @@ end
 -- ========= Nebula Particles =========
 local nebulaEmitter = Instance.new("ParticleEmitter")
 nebulaEmitter.Name = "NebulaParticles"
-nebulaEmitter.Texture = "rbxassetid://243660364"
+nebulaEmitter.Texture = "rbxassetid://243660364"  -- Starry/cloudy texture
 nebulaEmitter.Lifetime = NumberRange.new(10, 20)
 nebulaEmitter.Rate = CONFIG.NebulaParticleRate
 nebulaEmitter.Speed = NumberRange.new(5, 10)
@@ -360,7 +415,7 @@ nebulaEmitter.Size = NumberSequence.new({
     NumberSequenceKeypoint.new(0, 5),
     NumberSequenceKeypoint.new(1, 20)
 })
-nebulaEmitter.Parent = platform 
+nebulaEmitter.Parent = platform
 nebulaEmitter.Enabled = true
 
 for i = 1, 5 do
@@ -369,6 +424,7 @@ for i = 1, 5 do
     extraEmitter.Parent = platform
 end
 
+-- ========= Planet Rotation =========
 local planetConnection
 planetConnection = RunService.Heartbeat:Connect(function(dt)
     if not island.Parent then
@@ -376,7 +432,7 @@ planetConnection = RunService.Heartbeat:Connect(function(dt)
         return
     end
     for _, planet in pairs(planets) do
-        if planet.Parent then
+        if planet.Parent and planet:GetAttribute("Spin") then
             planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
         end
     end
@@ -415,5 +471,9 @@ LocalPlayer.AncestryChanged:Connect(function()
         pulseTween:Cancel()
         auraTween:Cancel()
         planetConnection:Disconnect()
+        -- Restore lighting on cleanup
+        for key, value in pairs(originalLighting) do
+            Lighting[key] = value
+        end
     end
 end)
