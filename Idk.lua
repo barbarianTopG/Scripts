@@ -40,8 +40,8 @@ local CONFIG = {
     PlanetDistanceRange = {-1000, 1000},
     PlanetHeightRange = {600, 1200},
     AuraSize = Vector3.new(3000, 3000, 3000),
-    SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",  -- Replace with better skybox if available
-    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",  -- Custom nebula texture; update with rbxassetid:// for better visuals
+    SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",
+    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",
     AsteroidCount = 50,
     AsteroidSizeRange = {10, 30},
     AsteroidDistanceRange = {-1000, 1000},
@@ -211,7 +211,7 @@ local function createMap()
 
     local pattern = Instance.new("Decal")
     pattern.Face = Enum.NormalId.Top
-    pattern.Texture = CONFIG.PlatformTexture  -- Custom nebula texture
+    pattern.Texture = CONFIG.PlatformTexture
     pattern.Transparency = 0.2
     pattern.Parent = platform
 
@@ -261,15 +261,6 @@ local function createMap()
     )
     pulseTween:Play()
 
-    local spawnLocation = Instance.new("SpawnLocation")
-    spawnLocation.Name = "RespawnPoint"
-    spawnLocation.Size = Vector3.new(10, 1, 10)
-    spawnLocation.Position = teleportPad.Position + Vector3.new(0, 2, 0)
-    spawnLocation.Anchored = true
-    spawnLocation.Transparency = 1
-    spawnLocation.CanCollide = false
-    spawnLocation.Parent = island
-
     -- ========= UFO (New) =========
     local ufo = Instance.new("Part")
     ufo.Name = "UFO"
@@ -302,7 +293,7 @@ local function createMap()
         end
     end)
 
-    -- ========= Rings =========
+    -- ========= Nebula Rings (New) =========
     for i = 1, CONFIG.NebulaRingCount do
         local ring = Instance.new("Part")
         ring.Name = "NebulaRing" .. i
@@ -323,7 +314,7 @@ local function createMap()
         end)
     end
 
-    -- ========= Holographic Displays =========
+    -- ========= Holographic Displays (New) =========
     for i = 1, CONFIG.HoloDisplayCount do
         local holo = Instance.new("BillboardGui")
         holo.Name = "HoloDisplay" .. i
@@ -335,7 +326,7 @@ local function createMap()
         local holoImage = Instance.new("ImageLabel")
         holoImage.Size = UDim2.new(1, 0, 1, 0)
         holoImage.BackgroundTransparency = 1
-        holoImage.Image = "rbxassetid://705351127"  
+        holoImage.Image = "rbxassetid://705351127"
         holoImage.ImageTransparency = 0.3
         holoImage.Parent = holo
 
@@ -347,7 +338,7 @@ local function createMap()
         holoTween:Play()
     end
 
-    -- ========= Debris Fields =========
+    -- ========= Cosmic Debris Fields (New) =========
     for i = 1, CONFIG.DebrisFieldCount do
         local debris = Instance.new("Part")
         debris.Name = "CosmicDebris" .. i
@@ -409,7 +400,7 @@ local function createMap()
         table.insert(planets, planet)
     end
 
-    -- ========= Asteroids =========
+    -- ========= Floating Asteroids =========
     local asteroids = {}
     for i = 1, CONFIG.AsteroidCount do
         local asteroid = Instance.new("Part")
@@ -437,7 +428,7 @@ local function createMap()
         table.insert(asteroids, asteroid)
     end
 
-    -- ========= Particles =========
+    -- ========= Nebula Particles =========
     local nebulaEmitter = Instance.new("ParticleEmitter")
     nebulaEmitter.Name = "NebulaParticles"
     nebulaEmitter.Texture = "rbxassetid://243660364"
@@ -461,13 +452,22 @@ local function createMap()
     nebulaEmitter.Parent = platform
     nebulaEmitter.Enabled = true
 
+    -- Create anchor parts for extra emitters
     for i = 1, 5 do
+        local anchor = Instance.new("Part")
+        anchor.Name = "NebulaAnchor" .. i
+        anchor.Size = Vector3.new(1, 1, 1)
+        anchor.Position = Vector3.new(playerPos.X + math.random(-600, 600), platform.Position.Y, playerPos.Z + math.random(-600, 600))
+        anchor.Anchored = true
+        anchor.Transparency = 1
+        anchor.CanCollide = false
+        anchor.Parent = island
+
         local extraEmitter = nebulaEmitter:Clone()
-        extraEmitter.Position = Vector3.new(math.random(-600, 600), 0, math.random(-600, 600))
-        extraEmitter.Parent = platform
+        extraEmitter.Parent = anchor
     end
 
-    -- ========= Aura =========
+    -- ========= Cosmic Aura =========
     local aura = Instance.new("Part")
     aura.Name = "CosmicAura"
     aura.Anchored = true
@@ -518,7 +518,7 @@ local function teleportToPad()
     end
 end
 
--- ========= Initialize Map =========
+-- ========= Initialize Map and Teleport =========
 task.spawn(function()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     character:WaitForChild("HumanoidRootPart")
@@ -526,16 +526,18 @@ task.spawn(function()
     island, teleportPad = createMap()
     teleportToPad()
 
+    -- Handle manual teleport button
     TeleportButton.MouseButton1Click:Connect(teleportToPad)
 
+    -- Handle character respawn
     LocalPlayer.CharacterAdded:Connect(function(newCharacter)
         newCharacter:WaitForChild("HumanoidRootPart")
         newCharacter:WaitForChild("Humanoid")
-        task.wait(0.1)  
+        task.wait(0.1)  -- Small delay to ensure map is ready
         teleportToPad()
     end)
 
-    -- ========= Load Scripts =========
+    -- ========= Load External Scripts =========
     local function loadExternalScript(url)
         local success, result = pcall(function()
             return game:HttpGet(url)
