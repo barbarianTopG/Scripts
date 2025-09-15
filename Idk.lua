@@ -24,7 +24,7 @@ local CONFIG = {
     ObservatorySize = Vector3.new(80, 30, 80),
     BubbleSize = Vector3.new(70, 30, 70),
     TeleportPadSize = Vector3.new(15, 2, 15),
-    PlanetData = {
+    PlanetData = {  -- Specific planets, no Sun
         {Name = "Mercury", Size = 20, Color = Color3.fromRGB(150, 150, 150), Spin = true, Texture = nil},
         {Name = "Venus", Size = 40, Color = Color3.fromRGB(200, 150, 50), Spin = true, Texture = nil},
         {Name = "Earth", Size = 40, Color = Color3.fromRGB(0, 100, 200), Spin = true, Texture = "rbxassetid://453515908"},
@@ -35,21 +35,22 @@ local CONFIG = {
         {Name = "Uranus", Size = 70, Color = Color3.fromRGB(100, 200, 200), Spin = true, Texture = nil},
         {Name = "Neptune", Size = 70, Color = Color3.fromRGB(50, 50, 200), Spin = true, Texture = nil},
         {Name = "Pluto", Size = 15, Color = Color3.fromRGB(200, 180, 150), Spin = true, Texture = nil},
-        {Name = "Sun", Size = 120, Color = Color3.fromRGB(255, 200, 0), Spin = true, Texture = nil},  
-        {Name = "Europa", Size = 20, Color = Color3.fromRGB(220, 220, 220), Spin = false, Texture = nil},  
+        {Name = "Europa", Size = 20, Color = Color3.fromRGB(220, 220, 220), Spin = false, Texture = nil},
     },
     PlanetDistanceRange = {-1000, 1000},
     PlanetHeightRange = {600, 1200},
     AuraSize = Vector3.new(3000, 3000, 3000),
-    SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",
-    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",  
+    SkyboxAsset = "http://www.roblox.com/asset/?id=159454299",  -- Replace with better skybox if available
+    PlatformTexture = "http://www.roblox.com/asset/?id=5107151155",  -- Custom nebula texture; update with rbxassetid:// for better visuals
     AsteroidCount = 50,
     AsteroidSizeRange = {10, 30},
     AsteroidDistanceRange = {-1000, 1000},
     AsteroidHeightRange = {100, 800},
-    CrystalCount = 20,
-    CrystalSize = Vector3.new(5, 15, 5),
     NebulaParticleRate = 50,
+    UFOSize = Vector3.new(40, 10, 40),
+    NebulaRingCount = 3,
+    HoloDisplayCount = 5,
+    DebrisFieldCount = 30,
 }
 
 -- ========= GUI =========
@@ -157,7 +158,7 @@ local function applyLighting(settings)
     end
 end
 
-applyLighting(customLighting)  
+applyLighting(customLighting)
 
 LightingToggle.MouseButton1Click:Connect(function()
     isCustomLighting = not isCustomLighting
@@ -180,12 +181,10 @@ sky.SkyboxUp = CONFIG.SkyboxAsset
 sky.StarCount = 5000
 sky.Parent = Lighting
 
--- ========= Build Map =========
-task.spawn(function()
-    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local root = character:WaitForChild("HumanoidRootPart")
-    local playerPos = root.Position
+-- ========= Map Creation and Teleport =========
+local island, teleportPad
 
+local function createMap()
     -- Clean up existing map
     for _, obj in pairs(workspace:GetChildren()) do
         if obj.Name == "PlasmaMapIsland" then
@@ -193,9 +192,11 @@ task.spawn(function()
         end
     end
 
-    local island = Instance.new("Model")
+    island = Instance.new("Model")
     island.Name = "PlasmaMapIsland"
     island.Parent = workspace
+
+    local playerPos = (LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")) and LocalPlayer.Character.HumanoidRootPart.Position or Vector3.new(0, 100, 0)
 
     local platform = Instance.new("Part")
     platform.Name = "NebulaPlatform"
@@ -210,7 +211,8 @@ task.spawn(function()
 
     local pattern = Instance.new("Decal")
     pattern.Face = Enum.NormalId.Top
-    pattern.Texture = CONFIG.PlatformTexture  
+    pattern.Texture = CONFIG.PlatformTexture  -- Custom nebula texture
+    pattern.Transparency = 0.2
     pattern.Parent = platform
 
     local observatory = Instance.new("Part")
@@ -218,8 +220,8 @@ task.spawn(function()
     observatory.Size = CONFIG.ObservatorySize
     observatory.Position = Vector3.new(playerPos.X, playerPos.Y + 515, playerPos.Z)
     observatory.Anchored = true
-    observatory.Material = Enum.Material.Neon  
-    observatory.Color = Color3.fromRGB(70, 30, 120) 
+    observatory.Material = Enum.Material.Neon
+    observatory.Color = Color3.fromRGB(70, 30, 120)
     observatory.Reflectance = 0.3
     observatory.CanCollide = true
     observatory.Parent = island
@@ -236,7 +238,7 @@ task.spawn(function()
     bubble.CanCollide = false
     bubble.Parent = island
 
-    local teleportPad = Instance.new("Part")
+    teleportPad = Instance.new("Part")
     teleportPad.Name = "TeleportPad"
     teleportPad.Size = CONFIG.TeleportPadSize
     teleportPad.Position = observatory.Position + Vector3.new(0, 16, 0)
@@ -259,7 +261,6 @@ task.spawn(function()
     )
     pulseTween:Play()
 
-    -- ========= Spawn Point =========
     local spawnLocation = Instance.new("SpawnLocation")
     spawnLocation.Name = "RespawnPoint"
     spawnLocation.Size = Vector3.new(10, 1, 10)
@@ -269,38 +270,108 @@ task.spawn(function()
     spawnLocation.CanCollide = false
     spawnLocation.Parent = island
 
-    root.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
+    -- ========= UFO (New) =========
+    local ufo = Instance.new("Part")
+    ufo.Name = "UFO"
+    ufo.Size = CONFIG.UFOSize
+    ufo.Position = Vector3.new(playerPos.X + 200, playerPos.Y + 600, playerPos.Z)
+    ufo.Anchored = true
+    ufo.Material = Enum.Material.Metal
+    ufo.Color = Color3.fromRGB(100, 100, 100)
+    ufo.Reflectance = 0.4
+    ufo.CanCollide = false
+    ufo.Parent = island
 
-    TeleportButton.MouseButton1Click:Connect(function()
-        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(spawnLocation.Position + Vector3.new(0, 5, 0))
+    local ufoLight = Instance.new("PointLight")
+    ufoLight.Brightness = 5
+    ufoLight.Range = 30
+    ufoLight.Color = Color3.fromRGB(0, 255, 100)
+    ufoLight.Parent = ufo
+
+    local ufoTween = TweenService:Create(
+        ufo,
+        TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+        { Position = ufo.Position + Vector3.new(0, 20, 0) }
+    )
+    ufoTween:Play()
+
+    task.spawn(function()
+        while ufo.Parent do
+            ufo.CFrame = ufo.CFrame * CFrame.Angles(0, math.rad(1), 0)
+            task.wait(0.05)
         end
     end)
 
-    -- ========= Scripts =========
-    local function loadScr(url)
-        local success, result = pcall(function()
-            return game:HttpGet(url)
-        end)
-        if success then
-            local success, errorMsg = pcall(loadstring(result))
-            if not success then
-                warn("Failed to execute script from " .. url .. ": " .. errorMsg)
+    -- ========= Rings =========
+    for i = 1, CONFIG.NebulaRingCount do
+        local ring = Instance.new("Part")
+        ring.Name = "NebulaRing" .. i
+        ring.Size = Vector3.new(200 + i * 100, 2, 200 + i * 100)
+        ring.Position = Vector3.new(playerPos.X, playerPos.Y + 510 + i * 10, playerPos.Z)
+        ring.Anchored = true
+        ring.Material = Enum.Material.Neon
+        ring.Color = Color3.fromRGB(120, 50, math.random(180, 255))
+        ring.Transparency = 0.5
+        ring.CanCollide = false
+        ring.Parent = island
+
+        task.spawn(function()
+            while ring.Parent do
+                ring.CFrame = ring.CFrame * CFrame.Angles(0, math.rad(0.5 * (i % 2 == 0 and 1 or -1)), 0)
+                task.wait(0.05)
             end
-        else
-            warn("Failed to load script from " .. url .. ": " .. result)
-        end
+        end)
     end
 
-    loadScr("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
+    -- ========= Holographic Displays =========
+    for i = 1, CONFIG.HoloDisplayCount do
+        local holo = Instance.new("BillboardGui")
+        holo.Name = "HoloDisplay" .. i
+        holo.Size = UDim2.new(0, 50, 0, 50)
+        holo.StudsOffset = Vector3.new(math.random(-300, 300), math.random(20, 50), math.random(-300, 300))
+        holo.AlwaysOnTop = true
+        holo.Parent = platform
 
-    -- Delayed loading after TP
-    task.spawn(function()
-        task.wait(2)  
-        loadScr("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate") 
-        task.wait(5)  
-        loadScr("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
-    end)
+        local holoImage = Instance.new("ImageLabel")
+        holoImage.Size = UDim2.new(1, 0, 1, 0)
+        holoImage.BackgroundTransparency = 1
+        holoImage.Image = "rbxassetid://705351127"  
+        holoImage.ImageTransparency = 0.3
+        holoImage.Parent = holo
+
+        local holoTween = TweenService:Create(
+            holoImage,
+            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+            { ImageTransparency = 0.7 }
+        )
+        holoTween:Play()
+    end
+
+    -- ========= Debris Fields =========
+    for i = 1, CONFIG.DebrisFieldCount do
+        local debris = Instance.new("Part")
+        debris.Name = "CosmicDebris" .. i
+        local size = math.random(5, 15)
+        debris.Size = Vector3.new(size, size, size)
+        debris.Position = Vector3.new(
+            playerPos.X + math.random(-800, 800),
+            playerPos.Y + math.random(300, 700),
+            playerPos.Z + math.random(-800, 800)
+        )
+        debris.Anchored = true
+        debris.Material = Enum.Material.Neon
+        debris.Color = Color3.fromRGB(math.random(100, 255), math.random(50, 150), math.random(150, 255))
+        debris.Transparency = 0.6
+        debris.CanCollide = false
+        debris.Parent = island
+
+        task.spawn(function()
+            while debris.Parent do
+                debris.CFrame = debris.CFrame * CFrame.Angles(math.rad(math.random(1, 3)/10), math.rad(math.random(1, 3)/10), math.rad(math.random(1, 3)/10))
+                task.wait(0.1)
+            end
+        end)
+    end
 
     -- ========= Planets =========
     local planets = {}
@@ -315,7 +386,7 @@ task.spawn(function()
             playerPos.Z + math.random(CONFIG.PlanetDistanceRange[1], CONFIG.PlanetDistanceRange[2])
         )
         planet.Anchored = true
-        planet.Material = Enum.Material.SmoothPlastic  
+        planet.Material = Enum.Material.SmoothPlastic
         planet.Color = data.Color
         planet.Reflectance = 0.1
         planet.CanCollide = true
@@ -335,7 +406,6 @@ task.spawn(function()
         glow.Parent = planet
 
         planet:SetAttribute("Spin", data.Spin)
-
         table.insert(planets, planet)
     end
 
@@ -364,50 +434,13 @@ task.spawn(function()
                 task.wait(0.1)
             end
         end)
-
         table.insert(asteroids, asteroid)
-    end
-
-    -- ========= Crystals =========
-    local crystals = {}
-    for i = 1, CONFIG.CrystalCount do
-        local crystal = Instance.new("Part")
-        crystal.Shape = Enum.PartType.Cylinder
-        crystal.Size = CONFIG.CrystalSize
-        crystal.Orientation = Vector3.new(0, 0, math.random(0, 360))
-        crystal.Position = Vector3.new(
-            playerPos.X + math.random(-600, 600),
-            playerPos.Y + 525 + math.random(-50, 50),
-            playerPos.Z + math.random(-600, 600)
-        )
-        crystal.Anchored = true
-        crystal.Material = Enum.Material.DiamondPlate
-        crystal.Color = Color3.fromRGB(math.random(100, 255), math.random(100, 255), math.random(100, 255))
-        crystal.Transparency = 0.2
-        crystal.Reflectance = 0.5
-        crystal.CanCollide = true
-        crystal.Parent = island
-
-        local crystalLight = Instance.new("PointLight")
-        crystalLight.Brightness = 3
-        crystalLight.Range = 15
-        crystalLight.Color = crystal.Color
-        crystalLight.Parent = crystal
-
-        local crystalTween = TweenService:Create(
-            crystalLight,
-            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-            { Brightness = 8 }
-        )
-        crystalTween:Play()
-
-        table.insert(crystals, crystal)
     end
 
     -- ========= Particles =========
     local nebulaEmitter = Instance.new("ParticleEmitter")
     nebulaEmitter.Name = "NebulaParticles"
-    nebulaEmitter.Texture = "rbxassetid://243660364" 
+    nebulaEmitter.Texture = "rbxassetid://243660364"
     nebulaEmitter.Lifetime = NumberRange.new(10, 20)
     nebulaEmitter.Rate = CONFIG.NebulaParticleRate
     nebulaEmitter.Speed = NumberRange.new(5, 10)
@@ -434,20 +467,6 @@ task.spawn(function()
         extraEmitter.Parent = platform
     end
 
-    -- ========= Planet Rotation =========
-    local planetConnection
-    planetConnection = RunService.Heartbeat:Connect(function(dt)
-        if not island.Parent then
-            planetConnection:Disconnect()
-            return
-        end
-        for _, planet in pairs(planets) do
-            if planet.Parent and planet:GetAttribute("Spin") then
-                planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
-            end
-        end
-    end)
-
     -- ========= Aura =========
     local aura = Instance.new("Part")
     aura.Name = "CosmicAura"
@@ -473,16 +492,78 @@ task.spawn(function()
     )
     auraTween:Play()
 
-    -- ========= Cleanup =========
-    LocalPlayer.AncestryChanged:Connect(function()
-        if not LocalPlayer.Parent then
-            island:Destroy()
-            PlasmaMapUI:Destroy()
-            pulseTween:Cancel()
-            auraTween:Cancel()
+    -- ========= Planet Rotation =========
+    local planetConnection
+    planetConnection = RunService.Heartbeat:Connect(function(dt)
+        if not island.Parent then
             planetConnection:Disconnect()
-            -- Restore lighting on cleanup
-            applyLighting(originalLighting)
+            return
+        end
+        for _, planet in pairs(planets) do
+            if planet.Parent and planet:GetAttribute("Spin") then
+                planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
+            end
         end
     end)
+
+    return island, teleportPad
+end
+
+-- ========= Teleport Function =========
+local function teleportToPad()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") and teleportPad and teleportPad.Parent then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(teleportPad.Position + Vector3.new(0, 5, 0))
+    else
+        warn("Cannot teleport: Character or teleport pad not found")
+    end
+end
+
+-- ========= Initialize Map =========
+task.spawn(function()
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    character:WaitForChild("HumanoidRootPart")
+    character:WaitForChild("Humanoid")
+    island, teleportPad = createMap()
+    teleportToPad()
+
+    TeleportButton.MouseButton1Click:Connect(teleportToPad)
+
+    LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+        newCharacter:WaitForChild("HumanoidRootPart")
+        newCharacter:WaitForChild("Humanoid")
+        task.wait(0.1)  
+        teleportToPad()
+    end)
+
+    -- ========= Load Scripts =========
+    local function loadExternalScript(url)
+        local success, result = pcall(function()
+            return game:HttpGet(url)
+        end)
+        if success then
+            local success, errorMsg = pcall(loadstring(result))
+            if not success then
+                warn("Failed to execute script from " .. url .. ": " .. errorMsg)
+            end
+        else
+            warn("Failed to load script from " .. url .. ": " .. result)
+        end
+    end
+
+    loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
+    task.spawn(function()
+        task.wait(2)
+        loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
+        task.wait(5)
+        loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
+    end)
+end)
+
+-- ========= Cleanup =========
+LocalPlayer.AncestryChanged:Connect(function()
+    if not LocalPlayer.Parent then
+        if island then island:Destroy() end
+        PlasmaMapUI:Destroy()
+        applyLighting(originalLighting)
+    end
 end)
