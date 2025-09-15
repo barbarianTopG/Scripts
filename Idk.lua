@@ -25,17 +25,17 @@ local CONFIG = {
     BubbleSize = Vector3.new(70, 30, 70),
     TeleportPadSize = Vector3.new(15, 2, 15),
     PlanetData = {  -- Specific planets, no Sun
-        {Name = "Mercury", Size = 20, Color = Color3.fromRGB(150, 150, 150), Spin = true, Texture = nil},
-        {Name = "Venus", Size = 40, Color = Color3.fromRGB(200, 150, 50), Spin = true, Texture = nil},
-        {Name = "Earth", Size = 40, Color = Color3.fromRGB(0, 100, 200), Spin = true, Texture = "rbxassetid://453515908"},
-        {Name = "Moon", Size = 15, Color = Color3.fromRGB(200, 200, 200), Spin = false, Texture = nil},
-        {Name = "Mars", Size = 30, Color = Color3.fromRGB(200, 50, 0), Spin = true, Texture = nil},
-        {Name = "Jupiter", Size = 100, Color = Color3.fromRGB(200, 150, 100), Spin = true, Texture = nil},
-        {Name = "Saturn", Size = 90, Color = Color3.fromRGB(180, 140, 60), Spin = true, Texture = nil},
-        {Name = "Uranus", Size = 70, Color = Color3.fromRGB(100, 200, 200), Spin = true, Texture = nil},
-        {Name = "Neptune", Size = 70, Color = Color3.fromRGB(50, 50, 200), Spin = true, Texture = nil},
-        {Name = "Pluto", Size = 15, Color = Color3.fromRGB(200, 180, 150), Spin = true, Texture = nil},
-        {Name = "Europa", Size = 20, Color = Color3.fromRGB(220, 220, 220), Spin = false, Texture = nil},
+        {Name = "Mercury", Size = 20, Color = Color3.fromRGB(150, 150, 150), Spin = true, Texture = nil, Ring = false},
+        {Name = "Venus", Size = 40, Color = Color3.fromRGB(200, 150, 50), Spin = true, Texture = nil, Ring = false},
+        {Name = "Earth", Size = 40, Color = Color3.fromRGB(0, 100, 200), Spin = true, Texture = "rbxassetid://453515908", Ring = false},
+        {Name = "Moon", Size = 15, Color = Color3.fromRGB(200, 200, 200), Spin = false, Texture = nil, Ring = false},
+        {Name = "Mars", Size = 30, Color = Color3.fromRGB(200, 50, 0), Spin = true, Texture = nil, Ring = false},
+        {Name = "Jupiter", Size = 100, Color = Color3.fromRGB(200, 150, 100), Spin = true, Texture = nil, Ring = false},
+        {Name = "Saturn", Size = 90, Color = Color3.fromRGB(180, 140, 60), Spin = true, Texture = nil, Ring = true, RingColor = Color3.fromRGB(210, 180, 140), RingSize = 1.5},
+        {Name = "Uranus", Size = 70, Color = Color3.fromRGB(100, 200, 200), Spin = true, Texture = nil, Ring = false},
+        {Name = "Neptune", Size = 70, Color = Color3.fromRGB(50, 50, 200), Spin = true, Texture = nil, Ring = false},
+        {Name = "Pluto", Size = 15, Color = Color3.fromRGB(200, 180, 150), Spin = true, Texture = nil, Ring = false},
+        {Name = "Europa", Size = 20, Color = Color3.fromRGB(220, 220, 220), Spin = false, Texture = nil, Ring = false},
     },
     PlanetDistanceRange = {-1000, 1000},
     PlanetHeightRange = {600, 1200},
@@ -51,6 +51,10 @@ local CONFIG = {
     NebulaRingCount = 3,
     HoloDisplayCount = 5,
     DebrisFieldCount = 30,
+    UFOCount = 3, -- Number of UFOs to spawn
+    UFOPathRadius = 300, -- Radius of UFO flight path
+    UFOPathHeight = 100, -- Height variation for UFOs
+    CometCount = 5, -- Number of comets
 }
 
 -- ========= GUI =========
@@ -261,39 +265,126 @@ local function createMap()
     )
     pulseTween:Play()
 
-    -- ========= UFO (New) =========
-    local ufo = Instance.new("Part")
-    ufo.Name = "UFO"
-    ufo.Size = CONFIG.UFOSize
-    ufo.Position = Vector3.new(playerPos.X + 200, playerPos.Y + 600, playerPos.Z)
-    ufo.Anchored = true
-    ufo.Material = Enum.Material.Metal
-    ufo.Color = Color3.fromRGB(100, 100, 100)
-    ufo.Reflectance = 0.4
-    ufo.CanCollide = false
-    ufo.Parent = island
+    -- ========= UFO Fleet =========
+    for i = 1, CONFIG.UFOCount do
+        local ufo = Instance.new("Part")
+        ufo.Name = "UFO_" .. i
+        ufo.Size = CONFIG.UFOSize
+        ufo.Position = Vector3.new(
+            playerPos.X + math.random(-CONFIG.UFOPathRadius, CONFIG.UFOPathRadius),
+            playerPos.Y + 600 + math.random(-CONFIG.UFOPathHeight, CONFIG.UFOPathHeight),
+            playerPos.Z + math.random(-CONFIG.UFOPathRadius, CONFIG.UFOPathRadius)
+        )
+        ufo.Anchored = true
+        ufo.Material = Enum.Material.Neon
+        ufo.Color = Color3.fromRGB(math.random(100, 200), math.random(100, 200), math.random(100, 200))
+        ufo.Reflectance = 0.4
+        ufo.CanCollide = false
+        ufo.Parent = island
 
-    local ufoLight = Instance.new("PointLight")
-    ufoLight.Brightness = 5
-    ufoLight.Range = 30
-    ufoLight.Color = Color3.fromRGB(0, 255, 100)
-    ufoLight.Parent = ufo
+        -- Create a more detailed UFO shape
+        local ufoDome = Instance.new("Part")
+        ufoDome.Shape = Enum.PartType.Ball
+        ufoDome.Size = Vector3.new(ufo.Size.X * 0.6, ufo.Size.Y * 0.8, ufo.Size.Z * 0.6)
+        ufoDome.Position = ufo.Position + Vector3.new(0, ufo.Size.Y/2 + ufoDome.Size.Y/2, 0)
+        ufoDome.Anchored = true
+        ufoDome.Material = Enum.Material.Glass
+        ufoDome.Transparency = 0.3
+        ufoDome.Color = Color3.fromRGB(100, 200, 255)
+        ufoDome.CanCollide = false
+        ufoDome.Parent = island
 
-    local ufoTween = TweenService:Create(
-        ufo,
-        TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-        { Position = ufo.Position + Vector3.new(0, 20, 0) }
-    )
-    ufoTween:Play()
+        local ufoLight = Instance.new("PointLight")
+        ufoLight.Brightness = 8
+        ufoLight.Range = 30
+        ufoLight.Color = Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+        ufoLight.Parent = ufoDome
 
-    task.spawn(function()
-        while ufo.Parent do
-            ufo.CFrame = ufo.CFrame * CFrame.Angles(0, math.rad(1), 0)
-            task.wait(0.05)
-        end
-    end)
+        -- UFO movement pattern
+        local startAngle = math.random(0, 360)
+        local orbitRadius = math.random(200, CONFIG.UFOPathRadius)
+        local orbitSpeed = math.random(5, 15) / 100
+        local heightVariation = math.random(20, CONFIG.UFOPathHeight)
+        
+        task.spawn(function()
+            local angle = startAngle
+            while ufo.Parent and ufoDome.Parent do
+                angle = (angle + orbitSpeed) % 360
+                local rad = math.rad(angle)
+                local x = math.cos(rad) * orbitRadius
+                local z = math.sin(rad) * orbitRadius
+                local y = math.sin(rad * 2) * heightVariation
+                
+                ufo.CFrame = CFrame.new(playerPos.X + x, playerPos.Y + 600 + y, playerPos.Z + z) * 
+                             CFrame.Angles(0, rad, 0)
+                ufoDome.CFrame = ufo.CFrame * CFrame.new(0, ufo.Size.Y/2 + ufoDome.Size.Y/2, 0)
+                
+                -- Rotate the UFO slowly
+                ufo.CFrame = ufo.CFrame * CFrame.Angles(0, math.rad(0.5), 0)
+                ufoDome.CFrame = ufoDome.CFrame * CFrame.Angles(0, math.rad(0.5), 0)
+                
+                task.wait(0.03)
+            end
+        end)
+    end
 
-    -- ========= Nebula Rings (New) =========
+    -- ========= Comets =========
+    for i = 1, CONFIG.CometCount do
+        local comet = Instance.new("Part")
+        comet.Name = "Comet_" .. i
+        comet.Shape = Enum.PartType.Ball
+        comet.Size = Vector3.new(15, 15, 15)
+        comet.Position = Vector3.new(
+            playerPos.X + math.random(-1500, 1500),
+            playerPos.Y + math.random(800, 1200),
+            playerPos.Z + math.random(-1500, 1500)
+        )
+        comet.Anchored = true
+        comet.Material = Enum.Material.Neon
+        comet.Color = Color3.fromRGB(200, 200, 255)
+        comet.Reflectance = 0.3
+        comet.CanCollide = false
+        comet.Parent = island
+
+        local cometTail = Instance.new("ParticleEmitter")
+        cometTail.Texture = "rbxassetid://243660373"
+        cometTail.Lifetime = NumberRange.new(1, 2)
+        cometTail.Rate = 100
+        cometTail.Speed = NumberRange.new(5, 10)
+        cometTail.Size = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 5),
+            NumberSequenceKeypoint.new(1, 2)
+        })
+        cometTail.Transparency = NumberSequence.new({
+            NumberSequenceKeypoint.new(0, 0),
+            NumberSequenceKeypoint.new(1, 1)
+        })
+        cometTail.Color = ColorSequence.new(Color3.fromRGB(150, 200, 255))
+        cometTail.Acceleration = Vector3.new(0, 0, -10)
+        cometTail.Parent = comet
+
+        -- Comet movement
+        local direction = Vector3.new(math.random(-1, 1), math.random(-0.5, -0.2), math.random(-1, 1)).Unit
+        local speed = math.random(5, 15)
+        
+        task.spawn(function()
+            while comet.Parent do
+                comet.Position = comet.Position + (direction * speed)
+                -- Reset comet if it goes too far
+                if (comet.Position - playerPos).Magnitude > 2000 then
+                    comet.Position = Vector3.new(
+                        playerPos.X + math.random(-1500, 1500),
+                        playerPos.Y + math.random(800, 1200),
+                        playerPos.Z + math.random(-1500, 1500)
+                    )
+                    direction = Vector3.new(math.random(-1, 1), math.random(-0.5, -0.2), math.random(-1, 1)).Unit
+                end
+                task.wait(0.03)
+            end
+        end)
+    end
+
+    -- ========= Nebula Rings =========
     for i = 1, CONFIG.NebulaRingCount do
         local ring = Instance.new("Part")
         ring.Name = "NebulaRing" .. i
@@ -314,7 +405,7 @@ local function createMap()
         end)
     end
 
-    -- ========= Holographic Displays (New) =========
+    -- ========= Holographic Displays =========
     for i = 1, CONFIG.HoloDisplayCount do
         local holo = Instance.new("BillboardGui")
         holo.Name = "HoloDisplay" .. i
@@ -338,7 +429,7 @@ local function createMap()
         holoTween:Play()
     end
 
-    -- ========= Cosmic Debris Fields (New) =========
+    -- ========= Cosmic Debris Fields =========
     for i = 1, CONFIG.DebrisFieldCount do
         local debris = Instance.new("Part")
         debris.Name = "CosmicDebris" .. i
@@ -396,7 +487,29 @@ local function createMap()
         glow.Color = data.Color
         glow.Parent = planet
 
+        -- Add rings to planets that have them
+        if data.Ring then
+            local ring = Instance.new("Part")
+            ring.Name = data.Name .. "Ring"
+            ring.Size = Vector3.new(data.Size * data.RingSize, 1, data.Size * data.RingSize)
+            ring.Position = planet.Position
+            ring.Anchored = true
+            ring.Material = Enum.Material.Neon
+            ring.Color = data.RingColor or Color3.fromRGB(210, 180, 140)
+            ring.Transparency = 0.3
+            ring.CanCollide = false
+            ring.Parent = island
+            
+            -- Tilt the ring slightly
+            ring.Orientation = Vector3.new(15, 0, 0)
+            
+            -- Make the ring rotate with the planet
+            planet:SetAttribute("HasRing", true)
+            planet:SetAttribute("RingPart", ring)
+        end
+
         planet:SetAttribute("Spin", data.Spin)
+        planet:SetAttribute("SpinSpeed", math.random(5, 15) / 100) -- Custom spin speed for each planet
         table.insert(planets, planet)
     end
 
@@ -428,7 +541,7 @@ local function createMap()
         table.insert(asteroids, asteroid)
     end
 
-    -- ========= Nebula Particles =========
+    -- ========= Particles =========
     local nebulaEmitter = Instance.new("ParticleEmitter")
     nebulaEmitter.Name = "NebulaParticles"
     nebulaEmitter.Texture = "rbxassetid://243660364"
@@ -452,7 +565,6 @@ local function createMap()
     nebulaEmitter.Parent = platform
     nebulaEmitter.Enabled = true
 
-    -- Create anchor parts for extra emitters
     for i = 1, 5 do
         local anchor = Instance.new("Part")
         anchor.Name = "NebulaAnchor" .. i
@@ -501,7 +613,16 @@ local function createMap()
         end
         for _, planet in pairs(planets) do
             if planet.Parent and planet:GetAttribute("Spin") then
-                planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * 0.1, 0)
+                local spinSpeed = planet:GetAttribute("SpinSpeed") or 0.1
+                planet.CFrame = planet.CFrame * CFrame.Angles(0, dt * spinSpeed, 0)
+  
+                if planet:GetAttribute("HasRing") then
+                    local ring = planet:GetAttribute("RingPart")
+                    if ring and ring.Parent then
+                        ring.CFrame = CFrame.new(planet.Position) * CFrame.Angles(0, dt * spinSpeed, 0) * 
+                                     CFrame.Angles(math.rad(15), 0, 0)
+                    end
+                end
             end
         end
     end)
@@ -518,7 +639,7 @@ local function teleportToPad()
     end
 end
 
--- ========= Initialize Map and Teleport =========
+-- ========= Initialize =========
 task.spawn(function()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     character:WaitForChild("HumanoidRootPart")
@@ -526,19 +647,16 @@ task.spawn(function()
     island, teleportPad = createMap()
     teleportToPad()
 
-    -- Handle manual teleport button
     TeleportButton.MouseButton1Click:Connect(teleportToPad)
 
-    -- Handle character respawn
     LocalPlayer.CharacterAdded:Connect(function(newCharacter)
         newCharacter:WaitForChild("HumanoidRootPart")
         newCharacter:WaitForChild("Humanoid")
-        task.wait(0.1)  -- Small delay to ensure map is ready
+        task.wait(0.1)  
         teleportToPad()
     end)
 
-    -- ========= Load External Scripts =========
-    local function loadExternalScript(url)
+    local function LoadThing(url)
         local success, result = pcall(function()
             return game:HttpGet(url)
         end)
@@ -552,12 +670,12 @@ task.spawn(function()
         end
     end
 
-    loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
+    LoadThing("https://raw.githubusercontent.com/Something478/DevTools/main/Tag")
     task.spawn(function()
         task.wait(2)
-        loadExternalScript("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
+        LoadThing("https://raw.githubusercontent.com/Something478/DevTools/main/Reanimate")
         task.wait(5)
-        loadExternalScript("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
+        LoadThing("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3")
     end)
 end)
 
