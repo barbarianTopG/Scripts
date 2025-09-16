@@ -2,7 +2,7 @@ local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local TextChatService = game:GetService("TextChatService")
 
-local webhookURL = "https://discord.com/api/webhooks/1417546012347600956/acofRyUB7ZSTG8seQrrPZRuofEtFp0abT2kq2A67n-t9n7IKaq_MCi9jff7yVS5dMRN-"
+local webhookURL = "https://discord.com/api/webhooks/1417559562331885751/H1wpAzX-4igb3IB59XE_T2A8w_mW8F08A77sCnpkmlF0AebjiQVxzNnDPYK8-HAtX8bE"
 
 local function getAvatarUrl(userId)
 	return "https://www.roblox.com/headshot-thumbnail/image?userId=" .. userId .. "&width=100&height=100&format=png"
