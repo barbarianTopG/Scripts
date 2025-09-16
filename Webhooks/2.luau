@@ -1,5 +1,3 @@
---[[ Ts is just a chat logger i use for myself ]]
-
 local HttpService = game:GetService("HttpService")
 local Players = game:GetService("Players")
 local TextChatService = game:GetService("TextChatService")
@@ -7,8 +5,10 @@ local TextChatService = game:GetService("TextChatService")
 local webhookURL = "https://discord.com/api/webhooks/1417546012347600956/acofRyUB7ZSTG8seQrrPZRuofEtFp0abT2kq2A67n-t9n7IKaq_MCi9jff7yVS5dMRN-"
 
 local function sendMessageToDiscord(player, msg)
+	local thumb = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
 	local payload = {
 		username = player.DisplayName .. " (@" .. player.Name .. ")",
+		avatar_url = thumb,
 		content = msg
 	}
 	local jsonData = HttpService:JSONEncode(payload)
