@@ -117,10 +117,8 @@ local function scanForRemotes()
             local nameLower = string.lower(instance.Name)
             local pathLower = string.lower(instance:GetFullName())
             
-            -- Check if this looks like a major backdoor
             local isMajorBackdoor = false
             
-            -- Check name patterns
             for _, pattern in ipairs(backdoorPatterns) do
                 if string.find(nameLower, pattern) or string.find(pathLower, pattern) then
                     isMajorBackdoor = true
@@ -216,7 +214,6 @@ function createMainUI(foundRemotes, scanTime)
     G2L["title"].Position = UDim2.new(0, 10, 0, 0)
     G2L["title"].TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Close button
     G2L["closeBtn"] = Instance.new("TextButton", G2L["titleBar"])
     G2L["closeBtn"].Text = "X"
     G2L["closeBtn"].TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -226,11 +223,9 @@ function createMainUI(foundRemotes, scanTime)
     G2L["closeBtn"].Size = UDim2.new(0, 30, 0, 20)
     G2L["closeBtn"].Position = UDim2.new(1, -35, 0.5, -10)
     
-    -- Close button corner
     G2L["closeBtnCorner"] = Instance.new("UICorner", G2L["closeBtn"])
     G2L["closeBtnCorner"].CornerRadius = UDim.new(0, 6)
     
-    -- Close button functionality
     G2L["closeBtn"].MouseButton1Click:Connect(function()
         G2L["1"]:Destroy()
     end)
