@@ -1,4 +1,4 @@
-return function(config)
+local function CreateCrosshair(config)
     config = config or {}
     
     local Players = game:GetService("Players")
@@ -114,3 +114,7 @@ return function(config)
         crosshairContainer.AnchorPoint = Vector2.new(0.5, 0.5)
     end)
 end
+
+CreateCrosshair()
+
+return CreateCrosshair
