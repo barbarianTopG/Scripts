@@ -22,6 +22,7 @@ end
 
 TextChatService.OnIncomingMessage = function(message)
 	if message.TextSource and message.Text and message.TextChannel then
+
 		if message.TextChannel.Name ~= "Whisper" then
 			local plr = Players:GetPlayerByUserId(message.TextSource.UserId)
 			if plr then
