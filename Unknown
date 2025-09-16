@@ -18,7 +18,6 @@ G2L["preloaderStroke"].Thickness = 2
 G2L["preloaderCorner"] = Instance.new("UICorner", G2L["preloaderFrame"])
 G2L["preloaderCorner"].CornerRadius = UDim.new(0, 12)
 
--- Scan button 
 G2L["scanBtn"] = Instance.new("TextButton", G2L["preloaderFrame"])
 G2L["scanBtn"].BackgroundColor3 = Color3.fromRGB(25, 25, 150)
 G2L["scanBtn"].Text = "SCAN FOR BACKDOORS"
@@ -29,11 +28,9 @@ G2L["scanBtn"].Size = UDim2.new(0, 200, 0, 50)
 G2L["scanBtn"].Position = UDim2.new(0.5, -100, 0.5, -25)
 G2L["scanBtn"].AutoButtonColor = false
 
--- Scan button corner 
 G2L["scanBtnCorner"] = Instance.new("UICorner", G2L["scanBtn"])
 G2L["scanBtnCorner"].CornerRadius = UDim.new(0, 8)
 
--- Scan button gradient 
 G2L["scanBtnGradient"] = Instance.new("UIGradient", G2L["scanBtn"])
 G2L["scanBtnGradient"].Rotation = 90
 G2L["scanBtnGradient"].Color = ColorSequence.new{
@@ -41,9 +38,8 @@ G2L["scanBtnGradient"].Color = ColorSequence.new{
     ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 200))
 }
 
--- Title 
 G2L["preloaderTitle"] = Instance.new("TextLabel", G2L["preloaderFrame"])
-G2L["preloaderTitle"].Text = "BLOX BACKDOOR SCANNER"
+G2L["preloaderTitle"].Text = "BloxHub - Backdoor"
 G2L["preloaderTitle"].TextColor3 = Color3.fromRGB(200, 200, 200)
 G2L["preloaderTitle"].BackgroundTransparency = 1
 G2L["preloaderTitle"].Font = Enum.Font.GothamBlack
@@ -51,8 +47,7 @@ G2L["preloaderTitle"].TextSize = 20
 G2L["preloaderTitle"].Size = UDim2.new(1, 0, 0, 40)
 G2L["preloaderTitle"].Position = UDim2.new(0, 0, 0, 20)
 G2L["preloaderTitle"].TextXAlignment = Enum.TextXAlignment.Center
-
--- Status text 
+ 
 G2L["statusText"] = Instance.new("TextLabel", G2L["preloaderFrame"])
 G2L["statusText"].Text = "Ready to scan"
 G2L["statusText"].TextColor3 = Color3.fromRGB(150, 150, 150)
@@ -63,28 +58,23 @@ G2L["statusText"].Size = UDim2.new(1, -40, 0, 30)
 G2L["statusText"].Position = UDim2.new(0, 20, 1, -40)
 G2L["statusText"].TextXAlignment = Enum.TextXAlignment.Left
 
--- Progress bar background 
 G2L["progressBg"] = Instance.new("Frame", G2L["preloaderFrame"])
 G2L["progressBg"].BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 G2L["progressBg"].Size = UDim2.new(1, -40, 0, 10)
 G2L["progressBg"].Position = UDim2.new(0, 20, 1, -60)
 G2L["progressBg"].Visible = false
 
--- Progress bar corner 
 G2L["progressBgCorner"] = Instance.new("UICorner", G2L["progressBg"])
 G2L["progressBgCorner"].CornerRadius = UDim.new(1, 0)
 
--- Progress bar fill 
 G2L["progressFill"] = Instance.new("Frame", G2L["progressBg"])
 G2L["progressFill"].BackgroundColor3 = Color3.fromRGB(0, 120, 255)
 G2L["progressFill"].Size = UDim2.new(0, 0, 1, 0)
 G2L["progressFill"].Position = UDim2.new(0, 0, 0, 0)
 
--- Progress bar fill corner 
 G2L["progressFillCorner"] = Instance.new("UICorner", G2L["progressFill"])
 G2L["progressFillCorner"].CornerRadius = UDim.new(1, 0)
 
--- Progress bar gradient 
 G2L["progressGradient"] = Instance.new("UIGradient", G2L["progressFill"])
 G2L["progressGradient"].Rotation = 0
 G2L["progressGradient"].Color = ColorSequence.new{
@@ -92,7 +82,6 @@ G2L["progressGradient"].Color = ColorSequence.new{
     ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
 }
 
--- Scanning animation 
 local scanningDots = 0
 local scanningAnimation
 local function updateScanningText()
@@ -100,7 +89,7 @@ local function updateScanningText()
     G2L["statusText"].Text = "Scanning" .. string.rep(".", scanningDots)
 end
 
--- UPDATED: Remote scanning function - now only looks for major backdoors
+
 local function scanForRemotes()
     local startTime = tick()
     G2L["scanBtn"].Visible = false
@@ -139,7 +128,6 @@ local function scanForRemotes()
                 end
             end
             
-            -- Check if it's in a suspicious location (like directly in Workspace or Lighting)
             local parent = instance.Parent
             if parent and (parent.Name == "Workspace" or parent.Name == "Lighting" or parent.Name == "ReplicatedStorage") then
                 isMajorBackdoor = true
