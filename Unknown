@@ -383,29 +383,28 @@ function createMainUI(foundRemotes, scanTime)
         remoteCorner.CornerRadius = UDim.new(0, 6)
         
         local remoteLabel = Instance.new("TextLabel", remoteFrame)
-        remoteLabel.Text = remote.Name .. " (" .. remote.ClassName .. ")"  -- Shorter text
+        remoteLabel.Text = remote.Name .. " (" .. remote.ClassName .. ")" 
         remoteLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
         remoteLabel.BackgroundTransparency = 1
         remoteLabel.Font = Enum.Font.Gotham
-        remoteLabel.TextSize = 10  -- Smaller text
+        remoteLabel.TextSize = 10  
         remoteLabel.Size = UDim2.new(0.7, 0, 1, 0)
         remoteLabel.Position = UDim2.new(0, 5, 0, 0)
         remoteLabel.TextXAlignment = Enum.TextXAlignment.Left
-        remoteLabel.TextTruncate = Enum.TextTruncate.AtEnd  -- Truncate long names
+        remoteLabel.TextTruncate = Enum.TextTruncate.AtEnd  
         
         local fireBtn = Instance.new("TextButton", remoteFrame)
         fireBtn.Text = "Fire"
         fireBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         fireBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
         fireBtn.Font = Enum.Font.GothamBold
-        fireBtn.TextSize = 10  -- Smaller text
+        fireBtn.TextSize = 10  
         fireBtn.Size = UDim2.new(0.25, -5, 0.6, 0)
         fireBtn.Position = UDim2.new(0.75, 5, 0.2, 0)
         
         local fireCorner = Instance.new("UICorner", fireBtn)
         fireCorner.CornerRadius = UDim.new(0, 4)
         
-        -- Fire button functionality
         fireBtn.MouseButton1Click:Connect(function()
             if remote:IsA("RemoteEvent") then
                 remote:FireServer()
@@ -415,16 +414,14 @@ function createMainUI(foundRemotes, scanTime)
         end)
     end
 
-    -- Settings tab content
     G2L["settingsTab"] = Instance.new("ScrollingFrame", G2L["contentFrame"])
     G2L["settingsTab"].BackgroundTransparency = 1
     G2L["settingsTab"].Size = UDim2.new(1, 0, 1, 0)
     G2L["settingsTab"].Position = UDim2.new(0, 0, 0, 0)
     G2L["settingsTab"].ScrollBarThickness = 6
     G2L["settingsTab"].Visible = false
-    G2L["settingsTab"].CanvasSize = UDim2.new(0, 0, 0, 150)  -- Smaller canvas
+    G2L["settingsTab"].CanvasSize = UDim2.new(0, 0, 0, 150)  
     
-    -- Add settings options
     local settings = {
         {Name = "Destroy GUI", Color = Color3.fromRGB(200, 50, 50)},
         {Name = "Rejoin Server", Color = Color3.fromRGB(0, 100, 200)},
@@ -438,15 +435,15 @@ function createMainUI(foundRemotes, scanTime)
         settingBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         settingBtn.BackgroundColor3 = setting.Color
         settingBtn.Font = Enum.Font.GothamBold
-        settingBtn.TextSize = 12  -- Smaller text
-        settingBtn.Size = UDim2.new(1, -20, 0, 30)  -- Smaller buttons
+        settingBtn.TextSize = 12 
+        settingBtn.Size = UDim2.new(1, -20, 0, 30) 
         settingBtn.Position = UDim2.new(0, 10, 0, (i-1)*35 + 10)
         settingBtn.AutoButtonColor = false
         
         local settingCorner = Instance.new("UICorner", settingBtn)
         settingCorner.CornerRadius = UDim.new(0, 6)
         
-        -- Button func
+        -- button func
         if setting.Name == "Destroy GUI" then
             settingBtn.MouseButton1Click:Connect(function()
                 G2L["1"]:Destroy()
@@ -478,7 +475,7 @@ function createMainUI(foundRemotes, scanTime)
             end)
         end
         
-        -- Hover effects
+        -- hover effects
         settingBtn.MouseEnter:Connect(function()
             game:GetService("TweenService"):Create(settingBtn, TweenInfo.new(0.2), {BackgroundColor3 = setting.Color + Color3.fromRGB(30, 30, 30)}):Play()
         end)
@@ -488,7 +485,7 @@ function createMainUI(foundRemotes, scanTime)
         end)
     end
 
-    -- Tab switch stuff
+    -- tab switch stuff
     local function switchTab(tabName)
         G2L["executorTab"].Visible = (tabName == "Executor")
         G2L["remotesTab"].Visible = (tabName == "Remotes")
@@ -505,7 +502,6 @@ function createMainUI(foundRemotes, scanTime)
         end
     end
 
-    -- Connect tab buttons
     for tabName, tab in pairs(G2L["tabs"]) do
         tab.MouseButton1Click:Connect(function()
             switchTab(tabName)
