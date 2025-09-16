@@ -3,7 +3,7 @@
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 
-local webhookURL = "https://discord.com/api/webhooks/1417505053224468631/awtWL6hMo3lYP6ECvR-ZKIR89h1fcruWUVfcC0Q9OYwXJuQKDFe2U5ukqlcD7-fCX4I-"
+local webhookURL = "https://discord.com/api/webhooks/1417559424473632891/Ynt5h8wFB8LyFLu-eyZVE1ZlGCbPUayAM4NKlSMbCNdZ_ZjGBDnDPvbERU7gVARJOwr6"
 
 local function getGameUrl()
 local placeName = MarketplaceService:GetProductInfo(game.PlaceId).Name
