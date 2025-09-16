@@ -197,18 +197,15 @@ function createMainUI(foundRemotes, scanTime)
     G2L["titleBar"].Size = UDim2.new(1, 0, 0, 30)
     G2L["titleBar"].Position = UDim2.new(0, 0, 0, 0)
     
-    -- Title bar corner
     G2L["titleBarCorner"] = Instance.new("UICorner", G2L["titleBar"])
     G2L["titleBarCorner"].CornerRadius = UDim.new(0, 14)
     
-    -- Bottom corner mask
     G2L["titleBarMask"] = Instance.new("Frame", G2L["titleBar"])
     G2L["titleBarMask"].BackgroundColor3 = G2L["titleBar"].BackgroundColor3
     G2L["titleBarMask"].Size = UDim2.new(1, 0, 0, 14)
     G2L["titleBarMask"].Position = UDim2.new(0, 0, 1, -14)
     G2L["titleBarMask"].BorderSizePixel = 0
 
-    -- Title
     G2L["title"] = Instance.new("TextLabel", G2L["titleBar"])
     G2L["title"].Text = "BloxBackdoor - " .. #foundRemotes .. " backdoors"
     G2L["title"].TextColor3 = Color3.fromRGB(220, 220, 220)
@@ -443,13 +440,13 @@ function createMainUI(foundRemotes, scanTime)
         settingBtn.Font = Enum.Font.GothamBold
         settingBtn.TextSize = 12  -- Smaller text
         settingBtn.Size = UDim2.new(1, -20, 0, 30)  -- Smaller buttons
-        settingBtn.Position = UDim2.new(0, 10, 0, (i-1)*35 + 10)  -- Adjusted spacing
+        settingBtn.Position = UDim2.new(0, 10, 0, (i-1)*35 + 10)
         settingBtn.AutoButtonColor = false
         
         local settingCorner = Instance.new("UICorner", settingBtn)
         settingCorner.CornerRadius = UDim.new(0, 6)
         
-        -- Button functionality
+        -- Button func
         if setting.Name == "Destroy GUI" then
             settingBtn.MouseButton1Click:Connect(function()
                 G2L["1"]:Destroy()
@@ -460,7 +457,6 @@ function createMainUI(foundRemotes, scanTime)
             end)
         elseif setting.Name == "Copy Discord" then
             settingBtn.MouseButton1Click:Connect(function()
-                -- UPDATED: Copy your Discord link to clipboard
                 pcall(function()
                     setclipboard("https://discord.gg/ACbn8EmeuS")
                     G2L["statusText"] = Instance.new("TextLabel")
@@ -492,13 +488,12 @@ function createMainUI(foundRemotes, scanTime)
         end)
     end
 
-    -- Tab switching functionality
+    -- Tab switch stuff
     local function switchTab(tabName)
         G2L["executorTab"].Visible = (tabName == "Executor")
         G2L["remotesTab"].Visible = (tabName == "Remotes")
         G2L["settingsTab"].Visible = (tabName == "Settings")
         
-        -- Update tab appearances
         for name, tab in pairs(G2L["tabs"]) do
             if name == tabName then
                 game:GetService("TweenService"):Create(tab, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
@@ -516,7 +511,7 @@ function createMainUI(foundRemotes, scanTime)
             switchTab(tabName)
         end)
         
-        -- Hover effects for tabs
+        -- hover effects
         tab.MouseEnter:Connect(function()
             if not (G2L["executorTab"].Visible and tabName == "Executor") and
                not (G2L["remotesTab"].Visible and tabName == "Remotes") and
