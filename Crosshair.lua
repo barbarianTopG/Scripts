@@ -17,7 +17,7 @@ local function CreateCrosshair(config)
         size = 12,
         thickness = 2,
         gap = 4,
-        dot = true,
+        dot = false,
         rainbowSpeed = 5
     }
     
