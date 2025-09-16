@@ -36,3 +36,89 @@ G2L["title"].TextSize = 32
 G2L["title"].Size = UDim2.new(1, -20, 0, 40)
 G2L["title"].Position = UDim2.new(0, 10, 0, 10)
 G2L["title"].TextXAlignment = Enum.TextXAlignment.Left
+
+-- Executor Frame
+G2L["executorFrame"] = Instance.new("Frame", G2L["2"])
+G2L["executorFrame"].BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+G2L["executorFrame"].Size = UDim2.new(1, -20, 0, 180)
+G2L["executorFrame"].Position = UDim2.new(0, 10, 0, 60)
+
+-- Rounded corners for executor
+G2L["executorCorner"] = Instance.new("UICorner", G2L["executorFrame"])
+G2L["executorCorner"].CornerRadius = UDim.new(0, 10)
+
+-- Executor TextBox
+G2L["executorBox"] = Instance.new("TextBox", G2L["executorFrame"])
+G2L["executorBox"].BackgroundTransparency = 1
+G2L["executorBox"].TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L["executorBox"].Font = Enum.Font.Gotham
+G2L["executorBox"].TextSize = 18
+G2L["executorBox"].Size = UDim2.new(1, -10, 1, -10)
+G2L["executorBox"].Position = UDim2.new(0, 5, 0, 5)
+G2L["executorBox"].ClearTextOnFocus = false
+G2L["executorBox"].Text = ""
+G2L["executorBox"].TextWrapped = true
+G2L["executorBox"].MultiLine = true
+G2L["executorBox"].PlaceholderText = "Your script here..."
+
+-- Buttons Frame
+G2L["buttonsFrame"] = Instance.new("Frame", G2L["2"])
+G2L["buttonsFrame"].BackgroundTransparency = 1
+G2L["buttonsFrame"].Size = UDim2.new(1, -20, 0, 40)
+G2L["buttonsFrame"].Position = UDim2.new(0, 10, 0, 250)
+
+-- Execute Button
+G2L["executeBtn"] = Instance.new("TextButton", G2L["buttonsFrame"])
+G2L["executeBtn"].BackgroundColor3 = Color3.fromRGB(2, 30, 214)
+G2L["executeBtn"].Text = "Execute"
+G2L["executeBtn"].TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L["executeBtn"].Font = Enum.Font.GothamBold
+G2L["executeBtn"].TextSize = 18
+G2L["executeBtn"].Size = UDim2.new(0.3, 0, 1, 0)
+G2L["executeBtn"].Position = UDim2.new(0, 0, 0, 0)
+
+-- Clear Button
+G2L["clearBtn"] = Instance.new("TextButton", G2L["buttonsFrame"])
+G2L["clearBtn"].BackgroundColor3 = Color3.fromRGB(214, 2, 2)
+G2L["clearBtn"].Text = "Clear"
+G2L["clearBtn"].TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L["clearBtn"].Font = Enum.Font.GothamBold
+G2L["clearBtn"].TextSize = 18
+G2L["clearBtn"].Size = UDim2.new(0.3, 0, 1, 0)
+G2L["clearBtn"].Position = UDim2.new(0.35, 5, 0, 0)
+
+-- Save Button
+G2L["saveBtn"] = Instance.new("TextButton", G2L["buttonsFrame"])
+G2L["saveBtn"].BackgroundColor3 = Color3.fromRGB(2, 214, 2)
+G2L["saveBtn"].Text = "Save"
+G2L["saveBtn"].TextColor3 = Color3.fromRGB(255, 255, 255)
+G2L["saveBtn"].Font = Enum.Font.GothamBold
+G2L["saveBtn"].TextSize = 18
+G2L["saveBtn"].Size = UDim2.new(0.3, 0, 1, 0)
+G2L["saveBtn"].Position = UDim2.new(0.7, 5, 0, 0)
+
+-- Button corner rounding
+for _, btn in pairs({G2L["executeBtn"], G2L["clearBtn"], G2L["saveBtn"]}) do
+    local corner = Instance.new("UICorner", btn)
+    corner.CornerRadius = UDim.new(0, 8)
+end
+
+-- Button functionality
+G2L["executeBtn"].MouseButton1Click:Connect(function()
+    local scriptText = G2L["executorBox"].Text
+    if scriptText ~= "" then
+        loadstring(scriptText)()
+    end
+end)
+
+G2L["clearBtn"].MouseButton1Click:Connect(function()
+    G2L["executorBox"].Text = ""
+end)
+
+G2L["saveBtn"].MouseButton1Click:Connect(function()
+    local content = G2L["executorBox"].Text
+    if content ~= "" then
+        -- implement saving logic (Favorites or local file)
+        print("Script saved!")
+    end
+end)
