@@ -1,3 +1,5 @@
+--[[ Dont worry it just sends stuff you can get publicly this isnt a IP Grabber ]]
+
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 
