@@ -225,3 +225,72 @@ for i = 1, 3 do
     local fav = createFavoriteEntry("Script "..i)
     fav.Parent = scroll
 end
+
+-- Executor Tab Content
+local executorFrame = G2L["tabs"]["Executor"]
+
+-- Background frame
+local execBg = Instance.new("Frame", executorFrame)
+execBg.Size = UDim2.new(1, -20, 1, -80)
+execBg.Position = UDim2.new(0, 10, 0, 10)
+execBg.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+execBg.BorderSizePixel = 0
+
+local execCorner = Instance.new("UICorner", execBg)
+execCorner.CornerRadius = UDim.new(0, 8)
+
+-- Textbox for script input
+local execBox = Instance.new("TextBox", execBg)
+execBox.Size = UDim2.new(1, -20, 1, -60)
+execBox.Position = UDim2.new(0, 10, 0, 10)
+execBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+execBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+execBox.Text = ""
+execBox.PlaceholderText = "Your script here..."
+execBox.Font = Enum.Font.Gotham
+execBox.TextSize = 16
+execBox.ClearTextOnFocus = false
+execBox.TextWrapped = true
+execBox.TextXAlignment = Enum.TextXAlignment.Left
+execBox.TextYAlignment = Enum.TextYAlignment.Top
+
+local boxCorner = Instance.new("UICorner", execBox)
+boxCorner.CornerRadius = UDim.new(0, 6)
+
+-- Buttons container
+local btnContainer = Instance.new("Frame", executorFrame)
+btnContainer.Size = UDim2.new(1, -20, 0, 50)
+btnContainer.Position = UDim2.new(0, 10, 1, -60)
+btnContainer.BackgroundTransparency = 1
+
+local executeBtn = Instance.new("TextButton", btnContainer)
+executeBtn.Size = UDim2.new(0.3, -5, 1, 0)
+executeBtn.Position = UDim2.new(0, 0, 0, 0)
+executeBtn.Text = "Execute"
+executeBtn.BackgroundColor3 = Color3.fromRGB(2, 30, 214)
+executeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local execBtnCorner = Instance.new("UICorner", executeBtn)
+execBtnCorner.CornerRadius = UDim.new(0, 6)
+
+local clearBtn = Instance.new("TextButton", btnContainer)
+clearBtn.Size = UDim2.new(0.3, -5, 1, 0)
+clearBtn.Position = UDim2.new(0.35, 5, 0, 0)
+clearBtn.Text = "Clear"
+clearBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+clearBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local clearBtnCorner = Instance.new("UICorner", clearBtn)
+clearBtnCorner.CornerRadius = UDim.new(0, 6)
+
+local saveBtn = Instance.new("TextButton", btnContainer)
+saveBtn.Size = UDim2.new(0.3, -5, 1, 0)
+saveBtn.Position = UDim2.new(0.7, 10, 0, 0)
+saveBtn.Text = "Save"
+saveBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+saveBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+local saveBtnCorner = Instance.new("UICorner", saveBtn)
+saveBtnCorner.CornerRadius = UDim.new(0, 6)
+
+G2L["executorBox"] = execBox
+G2L["executeBtn"] = executeBtn
+G2L["clearBtn"] = clearBtn
+G2L["saveBtn"] = saveBtn
