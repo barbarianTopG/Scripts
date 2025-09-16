@@ -162,3 +162,66 @@ end
 
 -- Show Executor tab by default
 G2L["tabs"]["Executor"].Visible = true
+
+-- Favorites Tab Content
+local favoritesFrame = G2L["tabs"]["Favorites"]
+
+-- Scroll frame for saved scripts
+local scroll = Instance.new("ScrollingFrame", favoritesFrame)
+scroll.Size = UDim2.new(1, -20, 1, -20)
+scroll.Position = UDim2.new(0, 10, 0, 10)
+scroll.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+scroll.BorderSizePixel = 0
+scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+scroll.ScrollBarThickness = 8
+
+local uiList = Instance.new("UIListLayout", scroll)
+uiList.Padding = UDim.new(0, 8)
+uiList.SortOrder = Enum.SortOrder.LayoutOrder
+
+G2L["favoritesList"] = scroll
+
+-- Placeholder Favorite Entry Template
+local function createFavoriteEntry(name)
+    local entry = Instance.new("Frame")
+    entry.Size = UDim2.new(1, 0, 0, 50)
+    entry.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+    local corner = Instance.new("UICorner", entry)
+    corner.CornerRadius = UDim.new(0, 6)
+
+    local txt = Instance.new("TextLabel", entry)
+    txt.Size = UDim2.new(0.6, -10, 1, 0)
+    txt.Position = UDim2.new(0, 10, 0, 0)
+    txt.Text = name
+    txt.TextColor3 = Color3.fromRGB(255, 255, 255)
+    txt.Font = Enum.Font.GothamBold
+    txt.TextSize = 16
+    txt.TextXAlignment = Enum.TextXAlignment.Left
+
+    local loadBtn = Instance.new("TextButton", entry)
+    loadBtn.Size = UDim2.new(0.18, -5, 0.6, 0)
+    loadBtn.Position = UDim2.new(0.62, 5, 0.2, 0)
+    loadBtn.Text = "Load"
+    loadBtn.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+    loadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    local loadCorner = Instance.new("UICorner", loadBtn)
+    loadCorner.CornerRadius = UDim.new(0, 4)
+
+    local delBtn = Instance.new("TextButton", entry)
+    delBtn.Size = UDim2.new(0.18, -5, 0.6, 0)
+    delBtn.Position = UDim2.new(0.82, 5, 0.2, 0)
+    delBtn.Text = "Delete"
+    delBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+    delBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    local delCorner = Instance.new("UICorner", delBtn)
+    delCorner.CornerRadius = UDim.new(0, 4)
+
+    return entry
+end
+
+-- Example placeholder favorites
+for i = 1, 3 do
+    local fav = createFavoriteEntry("Script "..i)
+    fav.Parent = scroll
+end
