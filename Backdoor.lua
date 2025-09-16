@@ -294,3 +294,49 @@ G2L["executorBox"] = execBox
 G2L["executeBtn"] = executeBtn
 G2L["clearBtn"] = clearBtn
 G2L["saveBtn"] = saveBtn
+
+-- Settings Tab Content
+local settingsFrame = G2L["tabs"]["Settings"]
+
+-- Background
+local settingsBg = Instance.new("Frame", settingsFrame)
+settingsBg.Size = UDim2.new(1, -20, 1, -20)
+settingsBg.Position = UDim2.new(0, 10, 0, 10)
+settingsBg.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+settingsBg.BorderSizePixel = 0
+
+local settingsCorner = Instance.new("UICorner", settingsBg)
+settingsCorner.CornerRadius = UDim.new(0, 8)
+
+-- Buttons container
+local settingsBtnContainer = Instance.new("Frame", settingsBg)
+settingsBtnContainer.Size = UDim2.new(1, -20, 0, 200)
+settingsBtnContainer.Position = UDim2.new(0, 10, 0, 10)
+settingsBtnContainer.BackgroundTransparency = 1
+
+-- buttons: Destroy, Reset, Rejoin, ServerHop
+local function createSettingBtn(name, posY)
+    local btn = Instance.new("TextButton", settingsBtnContainer)
+    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Position = UDim2.new(0, 0, 0, posY)
+    btn.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Text = name
+    btn.Font = Enum.Font.Gotham
+    btn.TextSize = 16
+    local corner = Instance.new("UICorner", btn)
+    corner.CornerRadius = UDim.new(0, 6)
+    return btn
+end
+
+local destroyBtn = createSettingBtn("Destroy", 0)
+local resetBtn = createSettingBtn("Reset", 50)
+local rejoinBtn = createSettingBtn("Rejoin", 100)
+local serverHopBtn = createSettingBtn("ServerHop", 150)
+
+G2L["settingsButtons"] = {
+    Destroy = destroyBtn,
+    Reset = resetBtn,
+    Rejoin = rejoinBtn,
+    ServerHop = serverHopBtn
+}
