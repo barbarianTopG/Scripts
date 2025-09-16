@@ -1,20 +1,20 @@
 local G2L = {}
- 
+
 G2L["preloader"] = Instance.new("ScreenGui", game:GetService("CoreGui"):WaitForChild("RobloxGui"))
 G2L["preloader"].Name = "BloxBackdoorPreloader"
 G2L["preloader"].ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 G2L["preloader"].ResetOnSpawn = false
- 
+
 G2L["preloaderFrame"] = Instance.new("Frame", G2L["preloader"])
 G2L["preloaderFrame"].BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 G2L["preloaderFrame"].Size = UDim2.new(0, 400, 0, 200)
 G2L["preloaderFrame"].Position = UDim2.new(0.5, -200, 0.5, -100)
 G2L["preloaderFrame"].ClipsDescendants = true
- 
+
 G2L["preloaderStroke"] = Instance.new("UIStroke", G2L["preloaderFrame"])
 G2L["preloaderStroke"].Color = Color3.fromRGB(60, 60, 60)
 G2L["preloaderStroke"].Thickness = 2
- 
+
 G2L["preloaderCorner"] = Instance.new("UICorner", G2L["preloaderFrame"])
 G2L["preloaderCorner"].CornerRadius = UDim.new(0, 12)
 
@@ -39,7 +39,7 @@ G2L["scanBtnGradient"].Color = ColorSequence.new{
 }
 
 G2L["preloaderTitle"] = Instance.new("TextLabel", G2L["preloaderFrame"])
-G2L["preloaderTitle"].Text = "BloxHub - Backdoor"
+G2L["preloaderTitle"].Text = "BLOX BACKDOOR SCANNER"
 G2L["preloaderTitle"].TextColor3 = Color3.fromRGB(200, 200, 200)
 G2L["preloaderTitle"].BackgroundTransparency = 1
 G2L["preloaderTitle"].Font = Enum.Font.GothamBlack
@@ -47,7 +47,7 @@ G2L["preloaderTitle"].TextSize = 20
 G2L["preloaderTitle"].Size = UDim2.new(1, 0, 0, 40)
 G2L["preloaderTitle"].Position = UDim2.new(0, 0, 0, 20)
 G2L["preloaderTitle"].TextXAlignment = Enum.TextXAlignment.Center
- 
+
 G2L["statusText"] = Instance.new("TextLabel", G2L["preloaderFrame"])
 G2L["statusText"].Text = "Ready to scan"
 G2L["statusText"].TextColor3 = Color3.fromRGB(150, 150, 150)
@@ -88,7 +88,6 @@ local function updateScanningText()
     scanningDots = (scanningDots % 3) + 1
     G2L["statusText"].Text = "Scanning" .. string.rep(".", scanningDots)
 end
-
 
 local function scanForRemotes()
     local startTime = tick()
@@ -143,20 +142,22 @@ local function scanForRemotes()
     
     if #foundRemotes > 0 then
         G2L["statusText"].Text = "Found " .. #foundRemotes .. " potential backdoors in " .. scanTime .. "s!"
-
+        
         wait(1.5)
         G2L["preloader"]:Destroy()
         createMainUI(foundRemotes, scanTime)
     else
-        G2L["statusText"].Text = "No major backdoors found in " .. scanTime .. "s"
-        G2L["scanBtn"].Visible = true
+        G2L["statusText"].Text = "No Backdoor :("
         G2L["progressBg"].Visible = false
         G2L["progressFill"].Size = UDim2.new(0, 0, 1, 0)
+        
+        wait(2)
+        G2L["preloader"]:Destroy()
     end
 end
- 
+
 G2L["scanBtn"].MouseButton1Click:Connect(scanForRemotes)
- 
+
 G2L["scanBtn"].MouseEnter:Connect(function()
     game:GetService("TweenService"):Create(G2L["scanBtn"], TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(40, 40, 180)}):Play()
 end)
@@ -241,13 +242,12 @@ function createMainUI(foundRemotes, scanTime)
         tab.Font = Enum.Font.Gotham
         tab.TextSize = 12
         tab.Size = UDim2.new(0, 80, 0, 25)
-        tab.Position = UDim2.new(0, 10 + (i-1)*90, 0, 40)  
+        tab.Position = UDim2.new(0, 10 + (i-1)*90, 0, 40)
         tab.AutoButtonColor = false
         
         local tabCorner = Instance.new("UICorner", tab)
         tabCorner.CornerRadius = UDim.new(0, 6)
         
-        -- Tab stroke
         local tabStroke = Instance.new("UIStroke", tab)
         tabStroke.Color = Color3.fromRGB(60, 60, 60)
         tabStroke.Thickness = 1
@@ -257,8 +257,8 @@ function createMainUI(foundRemotes, scanTime)
 
     G2L["contentFrame"] = Instance.new("Frame", G2L["2"])
     G2L["contentFrame"].BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    G2L["contentFrame"].Size = UDim2.new(1, -20, 0, 220)  
-    G2L["contentFrame"].Position = UDim2.new(0, 10, 0, 75)  
+    G2L["contentFrame"].Size = UDim2.new(1, -20, 0, 220)
+    G2L["contentFrame"].Position = UDim2.new(0, 10, 0, 75)
     
     G2L["contentCorner"] = Instance.new("UICorner", G2L["contentFrame"])
     G2L["contentCorner"].CornerRadius = UDim.new(0, 10)
@@ -279,8 +279,8 @@ function createMainUI(foundRemotes, scanTime)
     G2L["executorBox"].BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     G2L["executorBox"].TextColor3 = Color3.fromRGB(220, 220, 220)
     G2L["executorBox"].Font = Enum.Font.RobotoMono
-    G2L["executorBox"].TextSize = 12  -- Smaller text
-    G2L["executorBox"].Size = UDim2.new(1, -20, 0, 150)  
+    G2L["executorBox"].TextSize = 12
+    G2L["executorBox"].Size = UDim2.new(1, -20, 0, 150)
     G2L["executorBox"].Position = UDim2.new(0, 10, 0, 10)
     G2L["executorBox"].ClearTextOnFocus = false
     G2L["executorBox"].Text = ""
@@ -332,11 +332,9 @@ function createMainUI(foundRemotes, scanTime)
             end)
         elseif btnInfo.Name == "Save" then
             btn.MouseButton1Click:Connect(function()
-                
             end)
         end
         
-        -- hover effects (1)
         btn.MouseEnter:Connect(function()
             game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = btnInfo.Color + Color3.fromRGB(30, 30, 30)}):Play()
         end)
@@ -352,34 +350,34 @@ function createMainUI(foundRemotes, scanTime)
     G2L["remotesTab"].Position = UDim2.new(0, 0, 0, 0)
     G2L["remotesTab"].ScrollBarThickness = 6
     G2L["remotesTab"].Visible = false
-    G2L["remotesTab"].CanvasSize = UDim2.new(0, 0, 0, #foundRemotes * 30)  
-
+    G2L["remotesTab"].CanvasSize = UDim2.new(0, 0, 0, #foundRemotes * 30)
+    
     for i, remote in ipairs(foundRemotes) do
         local remoteFrame = Instance.new("Frame", G2L["remotesTab"])
         remoteFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        remoteFrame.Size = UDim2.new(1, -20, 0, 25) 
-        remoteFrame.Position = UDim2.new(0, 10, 0, (i-1)*30 + 10)  
+        remoteFrame.Size = UDim2.new(1, -20, 0, 25)
+        remoteFrame.Position = UDim2.new(0, 10, 0, (i-1)*30 + 10)
         
         local remoteCorner = Instance.new("UICorner", remoteFrame)
         remoteCorner.CornerRadius = UDim.new(0, 6)
         
         local remoteLabel = Instance.new("TextLabel", remoteFrame)
-        remoteLabel.Text = remote.Name .. " (" .. remote.ClassName .. ")" 
+        remoteLabel.Text = remote.Name .. " (" .. remote.ClassName .. ")"
         remoteLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
         remoteLabel.BackgroundTransparency = 1
         remoteLabel.Font = Enum.Font.Gotham
-        remoteLabel.TextSize = 10  
+        remoteLabel.TextSize = 10
         remoteLabel.Size = UDim2.new(0.7, 0, 1, 0)
         remoteLabel.Position = UDim2.new(0, 5, 0, 0)
         remoteLabel.TextXAlignment = Enum.TextXAlignment.Left
-        remoteLabel.TextTruncate = Enum.TextTruncate.AtEnd  
+        remoteLabel.TextTruncate = Enum.TextTruncate.AtEnd
         
         local fireBtn = Instance.new("TextButton", remoteFrame)
         fireBtn.Text = "Fire"
         fireBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         fireBtn.BackgroundColor3 = Color3.fromRGB(0, 100, 200)
         fireBtn.Font = Enum.Font.GothamBold
-        fireBtn.TextSize = 10  
+        fireBtn.TextSize = 10
         fireBtn.Size = UDim2.new(0.25, -5, 0.6, 0)
         fireBtn.Position = UDim2.new(0.75, 5, 0.2, 0)
         
@@ -401,7 +399,7 @@ function createMainUI(foundRemotes, scanTime)
     G2L["settingsTab"].Position = UDim2.new(0, 0, 0, 0)
     G2L["settingsTab"].ScrollBarThickness = 6
     G2L["settingsTab"].Visible = false
-    G2L["settingsTab"].CanvasSize = UDim2.new(0, 0, 0, 150)  
+    G2L["settingsTab"].CanvasSize = UDim2.new(0, 0, 0, 150)
     
     local settings = {
         {Name = "Destroy GUI", Color = Color3.fromRGB(200, 50, 50)},
@@ -416,15 +414,14 @@ function createMainUI(foundRemotes, scanTime)
         settingBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         settingBtn.BackgroundColor3 = setting.Color
         settingBtn.Font = Enum.Font.GothamBold
-        settingBtn.TextSize = 12 
-        settingBtn.Size = UDim2.new(1, -20, 0, 30) 
+        settingBtn.TextSize = 12
+        settingBtn.Size = UDim2.new(1, -20, 0, 30)
         settingBtn.Position = UDim2.new(0, 10, 0, (i-1)*35 + 10)
         settingBtn.AutoButtonColor = false
         
         local settingCorner = Instance.new("UICorner", settingBtn)
         settingCorner.CornerRadius = UDim.new(0, 6)
         
-        -- button func
         if setting.Name == "Destroy GUI" then
             settingBtn.MouseButton1Click:Connect(function()
                 G2L["1"]:Destroy()
@@ -437,26 +434,10 @@ function createMainUI(foundRemotes, scanTime)
             settingBtn.MouseButton1Click:Connect(function()
                 pcall(function()
                     setclipboard("https://discord.gg/ACbn8EmeuS")
-                    G2L["statusText"] = Instance.new("TextLabel")
-                    G2L["statusText"].Text = "Discord link copied to clipboard!"
-                    G2L["statusText"].TextColor3 = Color3.fromRGB(0, 255, 0)
-                    G2L["statusText"].BackgroundTransparency = 1
-                    G2L["statusText"].Font = Enum.Font.Gotham
-                    G2L["statusText"].TextSize = 12
-                    G2L["statusText"].Size = UDim2.new(1, -40, 0, 20)
-                    G2L["statusText"].Position = UDim2.new(0, 20, 1, -25)
-                    G2L["statusText"].TextXAlignment = Enum.TextXAlignment.Left
-                    G2L["statusText"].Parent = G2L["preloaderFrame"]
-                    
-                    wait(2)
-                    if G2L["statusText"] then
-                        G2L["statusText"]:Destroy()
-                    end
                 end)
             end)
         end
         
-        -- hover effects (2)
         settingBtn.MouseEnter:Connect(function()
             game:GetService("TweenService"):Create(settingBtn, TweenInfo.new(0.2), {BackgroundColor3 = setting.Color + Color3.fromRGB(30, 30, 30)}):Play()
         end)
@@ -466,7 +447,6 @@ function createMainUI(foundRemotes, scanTime)
         end)
     end
 
-    -- tab switch stuff
     local function switchTab(tabName)
         G2L["executorTab"].Visible = (tabName == "Executor")
         G2L["remotesTab"].Visible = (tabName == "Remotes")
@@ -488,7 +468,6 @@ function createMainUI(foundRemotes, scanTime)
             switchTab(tabName)
         end)
         
-        -- hover effects (3)
         tab.MouseEnter:Connect(function()
             if not (G2L["executorTab"].Visible and tabName == "Executor") and
                not (G2L["remotesTab"].Visible and tabName == "Remotes") and
