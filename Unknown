@@ -230,7 +230,6 @@ function createMainUI(foundRemotes, scanTime)
         G2L["1"]:Destroy()
     end)
 
-    -- Tab buttons
     local tabs = {"Executor", "Remotes", "Settings"}
     G2L["tabs"] = {}
     
@@ -241,11 +240,10 @@ function createMainUI(foundRemotes, scanTime)
         tab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         tab.Font = Enum.Font.Gotham
         tab.TextSize = 12
-        tab.Size = UDim2.new(0, 80, 0, 25)  -- Smaller tabs
-        tab.Position = UDim2.new(0, 10 + (i-1)*90, 0, 40)  -- Adjusted spacing
+        tab.Size = UDim2.new(0, 80, 0, 25)
+        tab.Position = UDim2.new(0, 10 + (i-1)*90, 0, 40)  
         tab.AutoButtonColor = false
         
-        -- Tab corner
         local tabCorner = Instance.new("UICorner", tab)
         tabCorner.CornerRadius = UDim.new(0, 6)
         
@@ -257,22 +255,18 @@ function createMainUI(foundRemotes, scanTime)
         G2L["tabs"][tabName] = tab
     end
 
-    -- Tab content frame
     G2L["contentFrame"] = Instance.new("Frame", G2L["2"])
     G2L["contentFrame"].BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    G2L["contentFrame"].Size = UDim2.new(1, -20, 0, 220)  -- Smaller height
-    G2L["contentFrame"].Position = UDim2.new(0, 10, 0, 75)  -- Adjusted position
+    G2L["contentFrame"].Size = UDim2.new(1, -20, 0, 220)  
+    G2L["contentFrame"].Position = UDim2.new(0, 10, 0, 75)  
     
-    -- Content frame corner
     G2L["contentCorner"] = Instance.new("UICorner", G2L["contentFrame"])
     G2L["contentCorner"].CornerRadius = UDim.new(0, 10)
     
-    -- Content frame stroke
     G2L["contentStroke"] = Instance.new("UIStroke", G2L["contentFrame"])
     G2L["contentStroke"].Color = Color3.fromRGB(50, 50, 50)
     G2L["contentStroke"].Thickness = 1
 
-    -- Executor tab content
     G2L["executorTab"] = Instance.new("ScrollingFrame", G2L["contentFrame"])
     G2L["executorTab"].BackgroundTransparency = 1
     G2L["executorTab"].Size = UDim2.new(1, 0, 1, 0)
@@ -281,13 +275,12 @@ function createMainUI(foundRemotes, scanTime)
     G2L["executorTab"].Visible = true
     G2L["executorTab"].CanvasSize = UDim2.new(0, 0, 2, 0)
     
-    -- Executor box
     G2L["executorBox"] = Instance.new("TextBox", G2L["executorTab"])
     G2L["executorBox"].BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     G2L["executorBox"].TextColor3 = Color3.fromRGB(220, 220, 220)
     G2L["executorBox"].Font = Enum.Font.RobotoMono
     G2L["executorBox"].TextSize = 12  -- Smaller text
-    G2L["executorBox"].Size = UDim2.new(1, -20, 0, 150)  -- Smaller height
+    G2L["executorBox"].Size = UDim2.new(1, -20, 0, 150)  
     G2L["executorBox"].Position = UDim2.new(0, 10, 0, 10)
     G2L["executorBox"].ClearTextOnFocus = false
     G2L["executorBox"].Text = ""
@@ -297,16 +290,13 @@ function createMainUI(foundRemotes, scanTime)
     G2L["executorBox"].TextYAlignment = Enum.TextYAlignment.Top
     G2L["executorBox"].PlaceholderText = "-- Serverside script executor\n-- Found " .. #foundRemotes .. " potential backdoors\n\nprint('Hello from serverside!')"
     
-    -- Executor box corner
     G2L["executorBoxCorner"] = Instance.new("UICorner", G2L["executorBox"])
     G2L["executorBoxCorner"].CornerRadius = UDim.new(0, 6)
     
-    -- Executor box stroke
     G2L["executorBoxStroke"] = Instance.new("UIStroke", G2L["executorBox"])
     G2L["executorBoxStroke"].Color = Color3.fromRGB(60, 60, 60)
     G2L["executorBoxStroke"].Thickness = 1
 
-    -- Executor buttons
     local execButtons = {
         {Name = "Execute", Color = Color3.fromRGB(0, 100, 200), Position = UDim2.new(0, 10, 0, 170)},
         {Name = "Clear", Color = Color3.fromRGB(200, 50, 50), Position = UDim2.new(0, 90, 0, 170)},
@@ -319,16 +309,14 @@ function createMainUI(foundRemotes, scanTime)
         btn.TextColor3 = Color3.fromRGB(255, 255, 255)
         btn.BackgroundColor3 = btnInfo.Color
         btn.Font = Enum.Font.GothamBold
-        btn.TextSize = 12  -- Smaller text
-        btn.Size = UDim2.new(0, 70, 0, 25)  -- Smaller buttons
+        btn.TextSize = 12
+        btn.Size = UDim2.new(0, 70, 0, 25)
         btn.Position = btnInfo.Position
         btn.AutoButtonColor = false
         
-        -- Button corner
         local btnCorner = Instance.new("UICorner", btn)
         btnCorner.CornerRadius = UDim.new(0, 6)
         
-        -- Button functionality
         if btnInfo.Name == "Execute" then
             btn.MouseButton1Click:Connect(function()
                 local scriptText = G2L["executorBox"].Text
@@ -344,11 +332,11 @@ function createMainUI(foundRemotes, scanTime)
             end)
         elseif btnInfo.Name == "Save" then
             btn.MouseButton1Click:Connect(function()
-                -- Save functionality would go here
+                
             end)
         end
         
-        -- Hover effects
+        -- hover effects (1)
         btn.MouseEnter:Connect(function()
             game:GetService("TweenService"):Create(btn, TweenInfo.new(0.2), {BackgroundColor3 = btnInfo.Color + Color3.fromRGB(30, 30, 30)}):Play()
         end)
@@ -358,21 +346,19 @@ function createMainUI(foundRemotes, scanTime)
         end)
     end
 
-    -- Remotes tab content (would show the found remotes)
     G2L["remotesTab"] = Instance.new("ScrollingFrame", G2L["contentFrame"])
     G2L["remotesTab"].BackgroundTransparency = 1
     G2L["remotesTab"].Size = UDim2.new(1, 0, 1, 0)
     G2L["remotesTab"].Position = UDim2.new(0, 0, 0, 0)
     G2L["remotesTab"].ScrollBarThickness = 6
     G2L["remotesTab"].Visible = false
-    G2L["remotesTab"].CanvasSize = UDim2.new(0, 0, 0, #foundRemotes * 30)  -- Smaller item height
-    
-    -- Add found remotes to the list
+    G2L["remotesTab"].CanvasSize = UDim2.new(0, 0, 0, #foundRemotes * 30)  
+
     for i, remote in ipairs(foundRemotes) do
         local remoteFrame = Instance.new("Frame", G2L["remotesTab"])
         remoteFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        remoteFrame.Size = UDim2.new(1, -20, 0, 25)  -- Smaller frames
-        remoteFrame.Position = UDim2.new(0, 10, 0, (i-1)*30 + 10)  -- Adjusted spacing
+        remoteFrame.Size = UDim2.new(1, -20, 0, 25) 
+        remoteFrame.Position = UDim2.new(0, 10, 0, (i-1)*30 + 10)  
         
         local remoteCorner = Instance.new("UICorner", remoteFrame)
         remoteCorner.CornerRadius = UDim.new(0, 6)
@@ -470,7 +456,7 @@ function createMainUI(foundRemotes, scanTime)
             end)
         end
         
-        -- hover effects
+        -- hover effects (2)
         settingBtn.MouseEnter:Connect(function()
             game:GetService("TweenService"):Create(settingBtn, TweenInfo.new(0.2), {BackgroundColor3 = setting.Color + Color3.fromRGB(30, 30, 30)}):Play()
         end)
@@ -502,7 +488,7 @@ function createMainUI(foundRemotes, scanTime)
             switchTab(tabName)
         end)
         
-        -- hover effects
+        -- hover effects (3)
         tab.MouseEnter:Connect(function()
             if not (G2L["executorTab"].Visible and tabName == "Executor") and
                not (G2L["remotesTab"].Visible and tabName == "Remotes") and
