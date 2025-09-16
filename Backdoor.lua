@@ -122,3 +122,43 @@ G2L["saveBtn"].MouseButton1Click:Connect(function()
         print("Script saved!")
     end
 end)
+
+-- Sidebar Frame
+G2L["sidebar"] = Instance.new("Frame", G2L["main"])
+G2L["sidebar"].BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+G2L["sidebar"].Size = UDim2.new(0, 120, 1, 0)
+G2L["sidebar"].Position = UDim2.new(0, 0, 0, 0)
+
+-- Sidebar Buttons
+local tabNames = {"Executor", "Favorites", "Settings"}
+G2L["sidebarButtons"] = {}
+
+for i, name in ipairs(tabNames) do
+    local btn = Instance.new("TextButton", G2L["sidebar"])
+    btn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    btn.Size = UDim2.new(1, -10, 0, 50)
+    btn.Position = UDim2.new(0, 5, 0, 10 + (i - 1) * 60)
+    btn.Text = name
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 18
+
+    local corner = Instance.new("UICorner", btn)
+    corner.CornerRadius = UDim.new(0, 8)
+
+    G2L["sidebarButtons"][name] = btn
+end
+
+-- Tabs Frames (matching sidebar names)
+G2L["tabs"] = {}
+for _, name in ipairs(tabNames) do
+    local frame = Instance.new("Frame", G2L["main"])
+    frame.BackgroundTransparency = 1
+    frame.Size = UDim2.new(1, -130, 1, -20)
+    frame.Position = UDim2.new(0, 130, 0, 10)
+    frame.Visible = false
+    G2L["tabs"][name] = frame
+end
+
+-- Show Executor tab by default
+G2L["tabs"]["Executor"].Visible = true
