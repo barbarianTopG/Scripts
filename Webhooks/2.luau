@@ -1,67 +1,24 @@
---// This is just my personal chat logger
-
-local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
-local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
 
-local webhookURL = "YOUR_WEBHOOK_HERE"
+local webhookURL = "https://discord.com/api/webhooks/1417559562331885751/H1wpAzX-4igb3IB59XE_T2A8w_mW8F08A77sCnpkmlF0AebjiQVxzNnDPYK8-HAtX8bE"
 
-local function getPlayerThumbnail(player)
-    local success, thumb = pcall(function()
-        return Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
-    end)
-    if success and thumb then
-        return thumb
-    else
-        return "" 
-    end
-end
-
-local function getPlaceName()
-    local success, name = pcall(function()
-        return MarketplaceService:GetProductInfo(game.PlaceId).Name
-    end)
-    return success and name or tostring(game.PlaceId)
-end
-
-local function sendToWebhook(player, message)
-    local avatarURL = getPlayerThumbnail(player)
-    local placeName = getPlaceName()
-
-    local payload = {
-        username = tostring(player.Name),
-        avatar_url = tostring(avatarURL),
-        embeds = {{
-            title = "💬 Roblox Chat",
-            color = 3447003, -- blue
-            fields = {
-                {name = "Player", value = tostring(player.Name), inline = true},
-                {name = "Message", value = tostring(message), inline = false},
-                {name = "Place", value = tostring(placeName), inline = true}
-            },
-            timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
-        }}
-    }
-
-    pcall(function()
-        HttpService:PostAsync(webhookURL, HttpService:JSONEncode(payload), Enum.HttpContentType.ApplicationJson)
-    end)
-end
-
-local function onPlayerChatted(player, message, recipient)
-    if recipient == nil then
-        sendToWebhook(player, message)
-    end
-end
-
-for _, player in pairs(Players:GetPlayers()) do
-    player.Chatted:Connect(function(msg, recipient)
-        onPlayerChatted(player, msg, recipient)
-    end)
+local function sendMessage(player, message)
+ local data = {
+  ["username"] = player.Name,
+  ["embeds"] = {{
+   ["title"] = "New Message",
+   ["description"] = message,
+   ["color"] = 10494192,
+   ["footer"] = {["text"] = os.date("%Y-%m-%d %H:%M:%S")}
+  }}
+ }
+ local jsonData = HttpService:JSONEncode(data)
+ HttpService:PostAsync(webhookURL, jsonData, Enum.HttpContentType.ApplicationJson, false)
 end
 
 Players.PlayerAdded:Connect(function(player)
-    player.Chatted:Connect(function(msg, recipient)
-        onPlayerChatted(player, msg, recipient)
-    end)
+ player.Chatted:Connect(function(msg)
+  sendMessage(player, msg)
+ end)
 end)
