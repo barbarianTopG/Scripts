@@ -3,7 +3,7 @@
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
---// Your webhook URL
+--// Url
 local WebhookURL = "https://discord.com/api/webhooks/1417559424473632891/Ynt5h8wFB8LyFLu-eyZVE1ZlGCbPUayAM4NKlSMbCNdZ_ZjGBDnDPvbERU7gVARJOwr6"
 
 local function SendUsageLog(player)
