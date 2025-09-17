@@ -1,18 +1,16 @@
---[[ Dont worry it just sends stuff you can get publicly this isnt a IP Grabber ]]
-
 --// Services
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
---// Url
 local WebhookURL = "https://discord.com/api/webhooks/1417559424473632891/Ynt5h8wFB8LyFLu-eyZVE1ZlGCbPUayAM4NKlSMbCNdZ_ZjGBDnDPvbERU7gVARJOwr6"
+
+local OwnerDiscordID = "1348952066189430857"
 
 local function SendUsageLog(player)
     local userId = player.UserId
     local username = player.Name
     local displayName = player.DisplayName
 
-    -- Roblox headshot
     local thumbType = Enum.ThumbnailType.HeadShot
     local thumbSize = Enum.ThumbnailSize.Size420x420
     local pfpUrl, _ = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
@@ -22,6 +20,7 @@ local function SendUsageLog(player)
     local gameUrl = "https://www.roblox.com/games/"..gameId
 
     local data = {
+        content = "<@"..OwnerDiscordID..">",
         username = displayName,
         avatar_url = pfpUrl,
         embeds = {{
