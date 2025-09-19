@@ -669,28 +669,28 @@ HatsTab:CreateParagraph({
 HatsTab:CreateButton({
     Name = "PermaDeath",
     Callback = function()
-            Chat("-pd")
+            Chat("-pd ")
     end
 })
 
 HatsTab:CreateButton({
     Name = "Remove Hats",
     Callback = function()
-            Chat("-ch")
+            Chat("-ch ")
     end
 })
 
 HatsTab:CreateButton({
    Name = "Respawn",
    Callback = function()
-            Chat("-re")
+            Chat("-re ")
     end
 })
 
 HatsTab:CreateButton({
    Name = "Save hats",
    Callback = function()
-            Chat("-sh")
+            Chat("-sh ")
     end
 })
 
