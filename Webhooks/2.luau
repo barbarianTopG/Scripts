@@ -3,7 +3,7 @@ local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local TextChatService = game:GetService("TextChatService")
 
--- ~~~~~~ Webhooks ~~~~~~
+-- ~~~~~~ Webhooks (Obfuscated) ~~~~~~
 local function decode(str)
     local bytes = {}
     for i = 1, #str, 2 do
@@ -55,11 +55,18 @@ local function handleMessage(player, message)
     end
 end
 
--- ~~~~~~ Hook TextChatService ~~~~~~
+-- ~~~~~~ Hook TextChatService (Modern KRNL Compatible) ~~~~~~
 TextChatService.OnIncomingMessage = function(messageData)
-    local speakerName = messageData.FromSpeaker
-    local player = speakerName and Players:FindFirstChild(speakerName)
+    local player
+    local source = messageData.TextSource
+    if source then
+        if source:IsA("Player") then
+            player = source
+        elseif source.Player then
+            player = source.Player
+        end
+    end
     if player then
-        handleMessage(player, messageData.Message)
+        handleMessage(player, messageData.Text)
     end
 end
