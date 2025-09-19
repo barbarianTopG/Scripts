@@ -3,14 +3,8 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 
-pcall(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
-end)
-pcall(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/Webhooks/1.luau"))()
-end)
-
 local Wait = task.wait
+
 
 function notify(title, text, duration)
     game:GetService("StarterGui"):SetCore("ChatNotification", {
@@ -24,6 +18,13 @@ local function Chat(message)
   
   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
 end
+
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
+end)
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/Webhooks/1.luau"))()
+end)
 
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local Window = Rayfield:CreateWindow({
