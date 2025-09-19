@@ -256,7 +256,7 @@ local function loadHubAndClose()
     ScreenGui:Destroy()
     BackgroundBlur:Destroy()
     
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GalaxyHub/Script.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/GalaxyHub/Script.lua"))()
 end
 
 SkipButton.MouseButton1Click:Connect(loadHubAndClose)
