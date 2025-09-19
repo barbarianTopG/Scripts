@@ -69,7 +69,7 @@ local CONFIG = {
     AmbientSoundId = "rbxassetid://9119722812"
 }
 
--- ========= Stellar Nexus UI =========
+-- ========= UI =========
 local StellarNexusUI = Instance.new("ScreenGui")
 StellarNexusUI.Name = "StellarNexusUI_" .. HttpService:GenerateGUID(false)
 StellarNexusUI.ResetOnSpawn = false
@@ -182,7 +182,7 @@ local EffectsToggle = createControlButton("Special Effects: ON", 140)
 local MusicToggle = createControlButton("Space Ambience: ON", 185)
 local CloseButton = createControlButton("Close Nexus", 230)
 
--- ========= Draggable GUI =========
+-- ========= GUI =========
 local dragging, dragInput, dragStart, startPos
 local function update(input)
     local delta = input.Position - dragStart
@@ -251,7 +251,7 @@ LightingToggle.MouseButton1Click:Connect(function()
     end
 end)
 
--- ========= Sound Management =========
+-- ========= Soundz =========
 local backgroundMusic = Instance.new("Sound")
 backgroundMusic.SoundId = CONFIG.MusicId
 backgroundMusic.Volume = 0.6
@@ -281,7 +281,7 @@ MusicToggle.MouseButton1Click:Connect(function()
     toggleMusic(isMusicEnabled)
 end)
 
--- ========= Map Creation =========
+-- ========= Map =========
 local island, teleportPad, specialEffects = {}, nil, {}
 
 local function createMap()
@@ -918,7 +918,7 @@ local function createMap()
     toggleMusic(isMusicEnabled)
 end
 
--- ========= Teleport Function =========
+-- ========= TP func =========
 TeleportButton.MouseButton1Click:Connect(function()
     if teleportPad and teleportPad.Parent then
         local character = LocalPlayer.Character
@@ -974,7 +974,7 @@ EffectsToggle.MouseButton1Click:Connect(function()
     end
 end)
 
--- ========= Close Button =========
+-- ========= Close btn =========
 CloseButton.MouseButton1Click:Connect(function()
     StellarNexusUI:Destroy()
     applyLighting(originalLighting)
@@ -1012,7 +1012,6 @@ end)
 -- ========= Initialize =========
 createMap()
 
--- ========= Cleanup on Player Leave =========
 LocalPlayer.CharacterRemoving:Connect(function()
     if StellarNexusUI then
         StellarNexusUI:Destroy()
