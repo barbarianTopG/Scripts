@@ -25,7 +25,7 @@ end
 local welcomeMessages = {
     "Hi, ", "Hello, ", "Hey, ", "Welcome, ", "Greetings, ", "Howdy, ", "Sup, ", 
     "What's up, ", "Nice to see you, ", "Good to see you, ", "Ciao, ", "Bonjour, ", 
-    "Hola, ", "こんにちは, ", "안녕하세요, ", "你好, ", "Wsp, ", "Oi, ", "Hallo, ", "Hej, "
+    "Hola, ", "こんにちは, ", "안녕하세요, ", "你好, ", "Wsp, ", "Oi, ", "Hallo, ", "Hej, ", "Konichiwa, "
 }
 
 local randomWelcome = welcomeMessages[math.random(1, #welcomeMessages)] .. Player.Name .. "!"
