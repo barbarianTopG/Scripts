@@ -9,19 +9,19 @@ local PlayerGui = Player:WaitForChild("PlayerGui")
 
 -- Its basic stuff, cuh
 local function loadHub()
-    if _G.LocalHub and _G.LocalHub.HubLoaded then return end
-    if not _G.LocalHub then _G.LocalHub = {} end
-    _G.LocalHub.HubLoaded = true
+    if _G.GalaxyHub and _G.GalaxyHub.HubLoaded then return end
+    if not _G.GalaxyHub then _G.GalaxyHub = {} end
+    _G.GalaxyHub.HubLoaded = true
     
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/LocalHub/Main.lua"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GalaxyHub/Script.lua"))()
 end
 
-if not _G.LocalHub then
-    _G.LocalHub = {}
+if not _G.GalaxyHub then
+    _G.GalaxyHub = {}
 end
 
-if _G.LocalHub.WelcomeGUILoaded then return end
-_G.LocalHub.WelcomeGUILoaded = true
+if _G.GalaxyHub.WelcomeGUILoaded then return end
+_G.GalaxyHub.WelcomeGUILoaded = true
 
 if PlayerGui:FindFirstChild("WelcomeGUI") then
     PlayerGui:FindFirstChild("WelcomeGUI"):Destroy()
@@ -160,9 +160,9 @@ end)
 
 local function loadHubAndClose()
     -- Prevent multiple executions
-    if _G.LocalHub and _G.LocalHub.HubLoading then return end
-    if not _G.LocalHub then _G.LocalHub = {} end
-    _G.LocalHub.HubLoading = true
+    if _G.GalaxyHub and _G.GalaxyHub.HubLoading then return end
+    if not _G.GalaxyHub then _G.GalaxyHub = {} end
+    _G.GalaxyHub.HubLoading = true
     
     TweenService:Create(Frame, TweenInfo.new(0.7, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
         Position = UDim2.new(0.5, 0, -0.5, 0),
@@ -191,7 +191,7 @@ local function updateTimer()
     local progress = 1 - (timeLeft / timerDuration)
     TimerLine.Size = UDim2.new(progress, 0, 1, 0)
     
-    TimerText.Text = "Loading hub in " .. math.ceil(timeLeft) .. " seconds..."
+    TimerText.Text = "Loading in " .. math.ceil(timeLeft) .. " seconds..."
 end
 
 local timerConnection
