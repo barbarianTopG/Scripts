@@ -1009,7 +1009,6 @@ CloseButton.MouseButton1Click:Connect(function()
     ambientSound:Stop()
 end)
 
--- ========= Initialize =========
 createMap()
 
 LocalPlayer.CharacterRemoving:Connect(function()
