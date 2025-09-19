@@ -478,13 +478,6 @@ MyTab:CreateButton({
     end
 })
 
-MyTab:CreateButton({
-    Name = "Inventory",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/Inventory.lua"))()
-    end
-})
-
 local KeyTab = Window:CreateTab("(🔗) Keyboards")
 
 KeyTab:CreateButton({
