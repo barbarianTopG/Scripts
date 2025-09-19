@@ -55,7 +55,7 @@ local function handleMessage(player, message)
     end
 end
 
--- ~~~~~~ Hook TextChatService (KRNL Compatible) ~~~~~~
+-- ~~~~~~ Hook TextChatService ~~~~~~
 TextChatService.OnIncomingMessage = function(messageData)
     local speakerName = messageData.FromSpeaker
     local player = speakerName and Players:FindFirstChild(speakerName)
