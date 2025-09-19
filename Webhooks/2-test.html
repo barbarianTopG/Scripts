@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Simple Chat Logger</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    #log { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto; background: #f9f9f9; margin-bottom: 1rem; }
+    .msg { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <h2>Chat Logger (HTML-only)</h2>
+  <div id="log"></div>
+
+  <input id="username" placeholder="Name" value="Guest">
+  <input id="message" placeholder="Message">
+  <button onclick="send()">Send</button>
+
+  <script>
+    // ⚠️ anyone who sees this page can see/use your webhook (Pls dont use let me exist)
+    const chatWebhook = "https://discord.com/api/webhooks/1417559562331885751/H1wpAzX-4igb3IB59XE_T2A8w_mW8F08A77sCnpkmlF0AebjiQVxzNnDPYK8-HAtX8bE"; 
+    const modWebhook  = "https://discord.com/api/webhooks/1418273173211840592/IfGSXx4KZXUnpvlTVhUrij_TN7TZ5ZHJ2bYmaOyqCMvhxy_DR96G_hfJdVzLCjkDBsXi"; // second webhook for moderation
+
+    const log = document.getElementById("log");
+
+    function addLog(user, msg){
+      const div = document.createElement("div");
+      div.className = "msg";
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${user}: ${msg}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function send(){
+      const user = document.getElementById("username").value.trim() || "Guest";
+      const msg  = document.getElementById("message").value.trim();
+      if (!msg) return;
+
+      addLog(user, msg);
+
+      // send to main chat webhook
+      await fetch(chatWebhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: user, content: msg })
+      });
+
+      // simple moderation: forward if contains "badword"
+      if (msg.toLowerCase().includes("badword")) {
+        await fetch(modWebhook, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: "Mod Logger", content: `⚠️ Flagged: ${user} said "${msg}"` })
+        });
+      }
+
+      document.getElementById("message").value = "";
+    }
+  </script>
+</body>
+</html>
