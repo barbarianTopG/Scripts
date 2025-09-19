@@ -143,8 +143,8 @@ ReadTab:CreateParagraph({
 end
 
 ReadTab:CreateParagraph({
-    Title = "🌌︱Default Theme",
-    Content = "Theme = Outer Space [Blue]\nTheme made by Theo."
+    Title = "🌌︱Theme credits",
+    Content = "Theme made by Theo."
 })
 
 local HomeTab = Window:CreateTab("(🔗) Home")
@@ -153,37 +153,37 @@ if Place == 17574618959 or Place == 88308889239232 then
     HomeTab:CreateButton({
         Name = "Sit",
         Callback = function()
-            Chat("/e -sit")
+            Chat("-sit ")
         end
     })
     HomeTab:CreateButton({
         Name = "Spawn Dummy",
         Callback = function()
-            Chat("/e -dummy")
+            Chat("-dummy ")
         end
     })
     HomeTab:CreateButton({
         Name = "Respawn",
         Callback = function()
-            Chat("/e -re")
+            Chat("-re ")
         end
     })
     HomeTab:CreateButton({
         Name = "Remove Hats",
         Callback = function()
-            Chat("/e -ch")
+            Chat("-ch ")
         end
     })
     HomeTab:CreateButton({
         Name = "Save hats",
         Callback = function()
-            Chat("/e -sh")
+            Chat("-sh ")
         end
     })
     HomeTab:CreateButton({
         Name = "PermaDeath",
         Callback = function()
-            Chat("/e -pd")
+            Chat("-pd ")
         end
     })
 end
@@ -669,28 +669,28 @@ HatsTab:CreateParagraph({
 HatsTab:CreateButton({
     Name = "PermaDeath",
     Callback = function()
-            Chat("/e -pd")
+            Chat("-pd")
     end
 })
 
 HatsTab:CreateButton({
     Name = "Remove Hats",
     Callback = function()
-            Chat("/e -ch")
+            Chat("-ch")
     end
 })
 
 HatsTab:CreateButton({
    Name = "Respawn",
    Callback = function()
-            Chat("/e -re")
+            Chat("-re")
     end
 })
 
 HatsTab:CreateButton({
    Name = "Save hats",
    Callback = function()
-            Chat("/e -sh")
+            Chat("-sh")
     end
 })
 
