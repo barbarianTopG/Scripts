@@ -1,10 +1,8 @@
 -- ========= Services =========
 local Players = game:GetService("Players")
-local TextChatService = game:GetService("TextChatService")
 local HttpService = game:GetService("HttpService")
-local Player = Players.LocalPlayer
 
--- ========= Webhooks (obfuscated) =========
+-- ========= Webhooks =========
 local function decode(str)
     local bytes = {}
     for i=1,#str,2 do
@@ -17,71 +15,63 @@ local chatWebhook = decode("68747470733a2f2f646973636f72642e636f6d2f6170692f7765
 local modWebhook  = decode("68747470733a2f2f646973636f72642e636f6d2f6170692f776562686f6f6b732f313431383237333137333231313834303539322f496647535878344b5a58556e70766c5456685572696a5f544e37545a355a484a3262596d614f7971434d766878795f44523936475f68664a64567a4c436a6b4442735869")
 
 -- ========= Helper: Send to Discord =========
-local function sendToDiscord(userId, username, message)
-    local thumbUrl
-    local success, result = pcall(function()
-        return Players:GetUserThumbnailAsync(userId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
-    end)
-    if success then
-        thumbUrl = result
-    else
-        thumbUrl = ""
-    end
-
-    -- send main webhook
-    local ok, err = pcall(function()
-        local http = syn and syn.request or http_request or request
-        http({
-            Url = chatWebhook,
+local function sendToWebhook(webhookUrl, username, avatar, content)
+    local body = HttpService:JSONEncode({
+        username = username,
+        avatar_url = avatar,
+        content = content
+    })
+    local requestFunction = syn and syn.request or http_request or request
+    pcall(function()
+        requestFunction({
+            Url = webhookUrl,
             Method = "POST",
             Headers = {["Content-Type"]="application/json"},
-            Body = HttpService:JSONEncode({
-                username = username,
-                avatar_url = thumbUrl,
-                content = message
-            })
+            Body = body
         })
     end)
+end
 
-    -- notify in-game
-    if ok then
-        Player:SendNotification({
-            Title = "Discord Logger",
-            Text = "Message sent!",
-            Duration = 3
-        })
-    else
-        Player:SendNotification({
-            Title = "Discord Logger",
-            Text = "Failed to send message!",
-            Duration = 3
-        })
-    end
+-- ========= Helper: Get Headshot =========
+local function getPlayerAvatar(userId)
+    local thumbType = Enum.ThumbnailType.HeadShot
+    local thumbSize = Enum.ThumbnailSize.Size420x420
+    local success, url = pcall(function()
+        return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+    end)
+    return success and url or ""
+end
 
-    -- moderation: badword check
+-- ========= Message Handler =========
+local function handleMessage(player, message)
+    if not message or message:match("^%s*$") then return end
+
+    local displayName = player.DisplayName
+    local username = player.Name
+    local timestamp = os.date("%H:%M:%S")
+    local avatarUrl = getPlayerAvatar(player.UserId)
+
+    -- send main message
+    local content = string.format("[%s] %s: %s", timestamp, message, "")
+    sendToWebhook(chatWebhook, ("%s (%s)"):format(displayName, username), avatarUrl, message)
+
+    -- moderation
     if message:lower():find("badword") then
-        pcall(function()
-            local http = syn and syn.request or http_request or request
-            http({
-                Url = modWebhook,
-                Method = "POST",
-                Headers = {["Content-Type"]="application/json"},
-                Body = HttpService:JSONEncode({
-                    username = "Mod Logger",
-                    content = ("⚠️ Flagged: %s said \"%s\""):format(username,message)
-                })
-            })
-        end)
+        sendToWebhook(modWebhook, "Mod Logger", "", ("⚠️ Flagged: %s (%s) said \"%s\""):format(displayName, username, message))
     end
 end
 
--- ========= Listen to new chat messages =========
-TextChatService.OnIncomingMessage = TextChatService.OnIncomingMessage or Instance.new("BindableEvent")
-TextChatService.OnIncomingMessage:Connect(function(message)
-    if message and message.Text and message.Text ~= "" then
-        local user = message.TextSource and message.TextSource.UserId and Players:GetPlayerByUserId(message.TextSource.UserId)
-        if user then
-            sendToDiscord(user.UserId, user.Name, message.Text)
-        end
-    end
-end)
+-- ========= Connect Chatted Events =========
+local function connectPlayer(player)
+    player.Chatted:Connect(function(msg)
+        handleMessage(player, msg)
+    end)
+end
+
+-- connect existing players
+for _,p in ipairs(Players:GetPlayers()) do
+    connectPlayer(p)
+end
+
+-- connect new players
+Players.PlayerAdded:Connect(connectPlayer)
