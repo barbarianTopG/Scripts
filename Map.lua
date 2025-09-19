@@ -708,4 +708,314 @@ local function createMap()
         texture.StudsPerTileV = 5
         texture.Parent = planet
 
-        local planetLight = Instance.new
+                local planetLight = Instance.new("PointLight")
+        planetLight.Brightness = 2
+        planetLight.Range = data.Size * 3
+        planetLight.Color = data.Color
+        planetLight.Parent = planet
+
+        if data.Ring then
+            local ring = Instance.new("Part")
+            ring.Name = data.Name .. "Ring"
+            ring.Size = Vector3.new(data.Size * data.RingSize, 1, data.Size * data.RingSize)
+            ring.Position = planet.Position
+            ring.Anchored = true
+            ring.Material = Enum.Material.Neon
+            ring.Color = data.RingColor
+            ring.Transparency = 0.3
+            ring.CanCollide = false
+            ring.Parent = island
+            
+            local ringWeld = Instance.new("Weld")
+            ringWeld.Part0 = planet
+            ringWeld.Part1 = ring
+            ringWeld.C0 = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(45), 0, 0)
+            ringWeld.Parent = ring
+        end
+
+        planets[i] = {Part = planet, Data = data, OriginalPosition = planet.Position}
+    end
+
+    for i = 1, CONFIG.AsteroidCount do
+        local asteroid = Instance.new("Part")
+        asteroid.Name = "Asteroid" .. i
+        local size = math.random(CONFIG.AsteroidSizeRange[1], CONFIG.AsteroidSizeRange[2])
+        asteroid.Size = Vector3.new(size, size, size)
+        asteroid.Position = Vector3.new(
+            playerPos.X + math.random(CONFIG.AsteroidDistanceRange[1], CONFIG.AsteroidDistanceRange[2]),
+            playerPos.Y + math.random(CONFIG.AsteroidHeightRange[1], CONFIG.AsteroidHeightRange[2]),
+            playerPos.Z + math.random(CONFIG.AsteroidDistanceRange[1], CONFIG.AsteroidDistanceRange[2])
+        )
+        asteroid.Anchored = true
+        asteroid.Material = Enum.Material.Neon
+        asteroid.Color = Color3.fromRGB(math.random(100, 150), math.random(80, 120), math.random(60, 100))
+        asteroid.Reflectance = 0.1
+        asteroid.CanCollide = false
+        asteroid.Parent = island
+
+        task.spawn(function()
+            while asteroid.Parent do
+                asteroid.CFrame = asteroid.CFrame * CFrame.Angles(
+                    math.rad(math.random(1, 3)/10),
+                    math.rad(math.random(1, 3)/10),
+                    math.rad(math.random(1, 3)/10)
+                )
+                task.wait(0.1)
+            end
+        end)
+    end
+
+    for i = 1, CONFIG.StarCount do
+        local star = Instance.new("Part")
+        star.Name = "Star" .. i
+        star.Size = Vector3.new(2, 2, 2)
+        star.Position = Vector3.new(
+            playerPos.X + math.random(-2000, 2000),
+            playerPos.Y + math.random(800, 1500),
+            playerPos.Z + math.random(-2000, 2000)
+        )
+        star.Anchored = true
+        star.Material = Enum.Material.Neon
+        star.Color = Color3.fromRGB(math.random(200, 255), math.random(200, 255), math.random(150, 255))
+        star.CanCollide = false
+        star.Parent = island
+
+        local starLight = Instance.new("PointLight")
+        starLight.Brightness = math.random(5, 15)
+        starLight.Range = math.random(20, 50)
+        starLight.Color = star.Color
+        starLight.Parent = star
+
+        local twinkleTween = TweenService:Create(
+            starLight,
+            TweenInfo.new(math.random(1, 3), Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
+            {Brightness = starLight.Brightness / 2}
+        )
+        twinkleTween:Play()
+    end
+
+    for i = 1, CONFIG.ConstellationCount do
+        local startPoint = Vector3.new(
+            playerPos.X + math.random(-1500, 1500),
+            playerPos.Y + math.random(900, 1300),
+            playerPos.Z + math.random(-1500, 1500)
+        )
+        
+        for j = 1, math.random(3, 8) do
+            local star = Instance.new("Part")
+            star.Name = "ConstellationStar_" .. i .. "_" .. j
+            star.Size = Vector3.new(3, 3, 3)
+            star.Position = startPoint + Vector3.new(
+                math.random(-300, 300),
+                math.random(-100, 100),
+                math.random(-300, 300)
+            )
+            star.Anchored = true
+            star.Material = Enum.Material.Neon
+            star.Color = Color3.fromRGB(255, 255, 200)
+            star.CanCollide = false
+            star.Parent = island
+
+            local starLight = Instance.new("PointLight")
+            starLight.Brightness = 10
+            starLight.Range = 50
+            starLight.Color = star.Color
+            starLight.Parent = star
+
+            if j > 1 then
+                local connection = Instance.new("Part")
+                connection.Name = "ConstellationLine_" .. i .. "_" .. (j-1) .. "_" .. j
+                connection.Size = Vector3.new(1, 1, (star.Position - startPoint).Magnitude)
+                connection.Position = (startPoint + star.Position) / 2
+                connection.Anchored = true
+                connection.Material = Enum.Material.Neon
+                connection.Color = Color3.fromRGB(200, 200, 255)
+                connection.Transparency = 0.5
+                connection.CanCollide = false
+                connection.Parent = island
+                
+                connection.CFrame = CFrame.new(connection.Position, star.Position) * 
+                                   CFrame.Angles(math.pi/2, 0, 0)
+            end
+            
+            startPoint = star.Position
+        end
+    end
+
+    local aura = Instance.new("Part")
+    aura.Name = "CosmicAura"
+    aura.Size = CONFIG.AuraSize
+    aura.Position = playerPos + Vector3.new(0, 500, 0)
+    aura.Anchored = true
+    aura.Material = Enum.Material.Neon
+    aura.Color = Color3.fromRGB(30, 10, 60)
+    aura.Transparency = 0.95
+    aura.CanCollide = false
+    aura.Parent = island
+
+    local auraParticles = Instance.new("ParticleEmitter")
+    auraParticles.Texture = "rbxassetid://243660373"
+    auraParticles.Lifetime = NumberRange.new(3, 7)
+    auraParticles.Rate = CONFIG.NebulaParticleRate
+    auraParticles.Speed = NumberRange.new(2, 5)
+    auraParticles.Size = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 10),
+        NumberSequenceKeypoint.new(1, 20)
+    })
+    auraParticles.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0.5),
+        NumberSequenceKeypoint.new(1, 1)
+    })
+    auraParticles.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 50, 180)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(80, 30, 120)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 10, 80))
+    })
+    auraParticles.Parent = aura
+
+    local skybox = Instance.new("Sky")
+    for _, child in pairs(Lighting:GetChildren()) do
+        if child:IsA("Sky") then
+            child:Destroy()
+        end
+    end
+    skybox.SkyboxBk = CONFIG.SkyboxAsset
+    skybox.SkyboxDn = CONFIG.SkyboxAsset
+    skybox.SkyboxFt = CONFIG.SkyboxAsset
+    skybox.SkyboxLf = CONFIG.SkyboxAsset
+    skybox.SkyboxRt = CONFIG.SkyboxAsset
+    skybox.SkyboxUp = CONFIG.SkyboxAsset
+    skybox.Parent = Lighting
+
+    local planetOrbitConnections = {}
+    for _, planetData in pairs(planets) do
+        local connection = RunService.Heartbeat:Connect(function(deltaTime)
+            if planetData.Part and planetData.Part.Parent then
+                if planetData.Data.Spin then
+                    planetData.Part.CFrame = planetData.Part.CFrame * CFrame.Angles(0, math.rad(0.2), 0)
+                end
+                
+                local orbitRadius = (planetData.Part.Position - playerPos).Magnitude
+                local orbitSpeed = 100 / orbitRadius
+                
+                planetData.Part.CFrame = planetData.OriginalPosition * CFrame.Angles(0, math.rad(orbitSpeed * deltaTime * 10), 0)
+                planetData.OriginalPosition = planetData.Part.Position
+            end
+        end)
+        table.insert(planetOrbitConnections, connection)
+    end
+    table.insert(specialEffects, planetOrbitConnections)
+
+    local ufoSound = Instance.new("Sound")
+    ufoSound.SoundId = "rbxassetid://9119731302"
+    ufoSound.Volume = 0.3
+    ufoSound.Looped = true
+    ufoSound.Parent = workspace
+    ufoSound:Play()
+
+    table.insert(specialEffects, ufoSound)
+
+    toggleMusic(isMusicEnabled)
+end
+
+-- ========= Teleport Function =========
+TeleportButton.MouseButton1Click:Connect(function()
+    if teleportPad and teleportPad.Parent then
+        local character = LocalPlayer.Character
+        if character then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                humanoidRootPart.CFrame = teleportPad.CFrame + Vector3.new(0, 5, 0)
+            end
+        end
+    else
+        createMap()
+    end
+end)
+
+-- ========= Effects Toggle =========
+EffectsToggle.MouseButton1Click:Connect(function()
+    isEffectsEnabled = not isEffectsEnabled
+    
+    if isEffectsEnabled then
+        for _, effect in pairs(specialEffects) do
+            if effect then
+                if typeof(effect) == "Instance" and effect:IsA("Sound") then
+                    effect:Play()
+                elseif typeof(effect) == "RBXScriptConnection" then
+                    effect.Connected = true
+                elseif type(effect) == "table" then
+                    for _, subEffect in pairs(effect) do
+                        if subEffect and typeof(subEffect) == "RBXScriptConnection" then
+                            subEffect.Connected = true
+                        end
+                    end
+                end
+            end
+        end
+        EffectsToggle.Text = "Special Effects: ON"
+    else
+        for _, effect in pairs(specialEffects) do
+            if effect then
+                if typeof(effect) == "Instance" and effect:IsA("Sound") then
+                    effect:Pause()
+                elseif typeof(effect) == "RBXScriptConnection" then
+                    effect.Connected = false
+                elseif type(effect) == "table" then
+                    for _, subEffect in pairs(effect) do
+                        if subEffect and typeof(subEffect) == "RBXScriptConnection" then
+                            subEffect.Connected = false
+                        end
+                    end
+                end
+            end
+        end
+        EffectsToggle.Text = "Special Effects: OFF"
+    end
+end)
+
+-- ========= Close Button =========
+CloseButton.MouseButton1Click:Connect(function()
+    StellarNexusUI:Destroy()
+    applyLighting(originalLighting)
+    
+    for _, effect in pairs(specialEffects) do
+        if effect then
+            if typeof(effect) == "Instance" then
+                effect:Destroy()
+            elseif typeof(effect) == "RBXScriptConnection" then
+                effect:Disconnect()
+            elseif type(effect) == "table" then
+                for _, subEffect in pairs(effect) do
+                    if subEffect and typeof(subEffect) == "RBXScriptConnection" then
+                        subEffect:Disconnect()
+                    end
+                end
+            end
+        end
+    end
+    
+    if island and island.Parent then
+        island:Destroy()
+    end
+    
+    for _, child in pairs(Lighting:GetChildren()) do
+        if child:IsA("Sky") then
+            child:Destroy()
+        end
+    end
+    
+    backgroundMusic:Stop()
+    ambientSound:Stop()
+end)
+
+-- ========= Initialize =========
+createMap()
+
+-- ========= Cleanup on Player Leave =========
+LocalPlayer.CharacterRemoving:Connect(function()
+    if StellarNexusUI then
+        StellarNexusUI:Destroy()
+    end
+    applyLighting(originalLighting)
+end)
