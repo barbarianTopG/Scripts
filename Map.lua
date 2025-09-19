@@ -10,7 +10,7 @@ local Debris = game:GetService("Debris")
 local SoundService = game:GetService("SoundService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- ========= Original Lighting Save =========
+-- ========= Original Light =========
 local originalLighting = {
     Ambient = Lighting.Ambient,
     OutdoorAmbient = Lighting.OutdoorAmbient,
@@ -24,7 +24,7 @@ local originalLighting = {
     EnvironmentSpecularScale = Lighting.EnvironmentSpecularScale or 0
 }
 
--- ========= Configuration =========
+-- ========= Config =========
 local CONFIG = {
     PlatformSize = Vector3.new(1200, 25, 1200),
     ObservatorySize = Vector3.new(80, 30, 80),
@@ -214,7 +214,7 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- ========= Custom and Original Lighting =========
+-- ========= Custom Light =========
 local customLighting = {
     Ambient = Color3.fromRGB(120, 50, 180),
     OutdoorAmbient = Color3.fromRGB(120, 50, 180),
@@ -281,7 +281,7 @@ MusicToggle.MouseButton1Click:Connect(function()
     toggleMusic(isMusicEnabled)
 end)
 
--- ========= Map Creation and Teleport =========
+-- ========= Map Creation =========
 local island, teleportPad, specialEffects = {}, nil, {}
 
 local function createMap()
