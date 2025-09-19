@@ -481,30 +481,30 @@ MyTab:CreateButton({
 local KeyTab = Window:CreateTab("(🔗) Keyboards")
 
 KeyTab:CreateButton({
-    Name = "Byte Keyboard",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/ByteKeyboard.lua"))()
-    end
-})
-
-KeyTab:CreateButton({
-    Name = "Kilobyte Keyboard",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/KilobyteKeyboard.lua"))()
-    end
-})
-
-KeyTab:CreateButton({
     Name = "Delta Keyboard",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/DeltaKeyboard.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Delta.lua"))()
     end
 })
 
 KeyTab:CreateButton({
     Name = "Virtual Keyboard",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/uuuuuuu/refs/heads/main/VirtualKeyboard.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Virtual.lua"))()
+    end
+})
+
+KeyTab:CreateButton({
+    Name = "Byte Keyboard",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Byte.lua"))()
+    end
+})
+
+KeyTab:CreateButton({
+    Name = "Kilobyte Keyboard",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/KiloByte.lua"))()
     end
 })
 
