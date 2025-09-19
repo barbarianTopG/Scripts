@@ -469,7 +469,7 @@ MyTab:CreateButton({
     end
 })
 
-MyTab:CreateSection("Visual")
+MyTab:CreateSection("Visuals")
 
 MyTab:CreateButton({
     Name = "Realistic Mode (1st Person)",
