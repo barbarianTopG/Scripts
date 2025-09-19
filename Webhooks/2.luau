@@ -2,7 +2,7 @@
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 
--- ========= Webhooks =========
+-- ========= Obfuscated Webhooks =========
 local function decode(str)
     local bytes = {}
     for i=1,#str,2 do
@@ -32,17 +32,34 @@ local function sendToWebhook(webhookUrl, username, avatar, content)
     end)
 end
 
--- ========= Helper: Get Headshot =========
+-- ========= Helper: Get Player Headshot =========
 local function getPlayerAvatar(userId)
     local thumbType = Enum.ThumbnailType.HeadShot
     local thumbSize = Enum.ThumbnailSize.Size420x420
-    local success, url = pcall(function()
+    local url = "https://www.roblox.com/Thumbs/Avatar.ashx?x=420&y=420&Format=Png" -- fallback avatar
+
+    -- try to get the real headshot
+    local success, result = pcall(function()
         return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
     end)
-    return success and url or ""
+
+    if success and result and result ~= "" then
+        url = result
+    else
+        -- optional: retry once after a short wait
+        wait(0.5)
+        local ok, retry = pcall(function()
+            return Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+        end)
+        if ok and retry and retry ~= "" then
+            url = retry
+        end
+    end
+
+    return url
 end
 
--- ========= Message Handler =========
+-- ========= Handle Messages =========
 local function handleMessage(player, message)
     if not message or message:match("^%s*$") then return end
 
@@ -52,8 +69,7 @@ local function handleMessage(player, message)
     local avatarUrl = getPlayerAvatar(player.UserId)
 
     -- send main message
-    local content = string.format("[%s] %s: %s", timestamp, message, "")
-    sendToWebhook(chatWebhook, ("%s (%s)"):format(displayName, username), avatarUrl, message)
+    sendToWebhook(chatWebhook, ("%s (%s)"):format(displayName, username), avatarUrl, ("[%s] %s"):format(timestamp, message))
 
     -- moderation
     if message:lower():find("badword") then
