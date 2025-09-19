@@ -5,13 +5,11 @@
 ]]--
 local NovaLibrary = {}
 
--- Services
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local StarterGui = game:GetService("StarterGui")
 
--- Default Theme
 NovaLibrary.Theme = {
 	Base = Color3.fromRGB(15, 15, 30),
 	Accent = Color3.fromRGB(0, 170, 255),
@@ -19,13 +17,11 @@ NovaLibrary.Theme = {
 	Hover = Color3.fromRGB(35, 35, 55)
 }
 
--- Utility: Tween function
 local function Tween(obj, props, time)
 	local tween = TweenService:Create(obj, TweenInfo.new(time or 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), props)
 	tween:Play()
 end
 
--- Core
 function NovaLibrary:CreateWindow(options)
 	local Window = {}
 	Window.Name = options.Name or "NovaLibrary"
@@ -38,7 +34,6 @@ function NovaLibrary:CreateWindow(options)
 	ScreenGui.Parent = game:GetService("CoreGui")
 	Window.Frame = ScreenGui
 
-	-- Main container
 	local Main = Instance.new("Frame")
 	Main.Size = UDim2.new(0, 550, 0, 400)
 	Main.Position = UDim2.new(0.5, -275, 0.5, -200)
@@ -48,7 +43,6 @@ function NovaLibrary:CreateWindow(options)
 	Main.Name = "Main"
 	Window.Main = Main
 
-	-- Top Bar
 	local TopBar = Instance.new("Frame")
 	TopBar.Size = UDim2.new(1, 0, 0, 30)
 	TopBar.BackgroundColor3 = NovaLibrary.Theme.Accent
@@ -67,7 +61,6 @@ function NovaLibrary:CreateWindow(options)
 	Title.TextXAlignment = Enum.TextXAlignment.Left
 	Title.Parent = TopBar
 
-	-- Drag support
 	local dragging, dragInput, dragStart, startPos
 	local function update(input)
 		local delta = input.Position - dragStart
@@ -97,7 +90,6 @@ function NovaLibrary:CreateWindow(options)
 		end
 	end)
 
-	-- Tab container
 	local TabContainer = Instance.new("Frame")
 	TabContainer.Size = UDim2.new(0, 120, 1, -30)
 	TabContainer.Position = UDim2.new(0, 0, 0, 30)
@@ -105,7 +97,6 @@ function NovaLibrary:CreateWindow(options)
 	TabContainer.BorderSizePixel = 0
 	TabContainer.Parent = Main
 
-	-- Pages container
 	local PagesContainer = Instance.new("Frame")
 	PagesContainer.Size = UDim2.new(1, -120, 1, -30)
 	PagesContainer.Position = UDim2.new(0, 120, 0, 30)
@@ -113,14 +104,12 @@ function NovaLibrary:CreateWindow(options)
 	PagesContainer.BorderSizePixel = 0
 	PagesContainer.Parent = Main
 
-	-- Notifications container
 	local NotifContainer = Instance.new("Frame")
 	NotifContainer.Size = UDim2.new(0, 300, 0, 100)
 	NotifContainer.Position = UDim2.new(0.5, -150, 0, 20)
 	NotifContainer.BackgroundTransparency = 1
 	NotifContainer.Parent = ScreenGui
 
-	-- Helper to auto-layout elements inside page
 	local function AutoLayout(container)
 		local UIList = Instance.new("UIListLayout")
 		UIList.Padding = UDim.new(0,5)
@@ -132,7 +121,6 @@ function NovaLibrary:CreateWindow(options)
 		local Tab = {}
 		Tab.Name = Name
 
-		-- Button
 		local Button = Instance.new("TextButton")
 		Button.Size = UDim2.new(1, 0, 0, 40)
 		Button.Position = UDim2.new(0, 0, #self.Tabs*40, 0)
@@ -145,7 +133,6 @@ function NovaLibrary:CreateWindow(options)
 		Button.Parent = TabContainer
 		Tab.Button = Button
 
-		-- Page
 		local Page = Instance.new("Frame")
 		Page.Size = UDim2.new(1, 0, 1, 0)
 		Page.BackgroundTransparency = 1
@@ -153,7 +140,6 @@ function NovaLibrary:CreateWindow(options)
 		Page.Parent = PagesContainer
 		Tab.Page = Page
 
-		-- Auto layout
 		AutoLayout(Page)
 
 		Button.MouseButton1Click:Connect(function()
@@ -162,8 +148,7 @@ function NovaLibrary:CreateWindow(options)
 			end
 			Page.Visible = true
 		end)
-
-		-- Create Section
+		
 		function Tab:CreateSection(Title)
 			local Section = Instance.new("Frame")
 			Section.Size = UDim2.new(1, -10, 0, 30)
@@ -186,7 +171,6 @@ function NovaLibrary:CreateWindow(options)
 			return Section
 		end
 
-		-- Create Button
 		function Tab:CreateButton(Name, Callback)
 			local Button = Instance.new("TextButton")
 			Button.Size = UDim2.new(1, 0, 0, 30)
@@ -202,7 +186,6 @@ function NovaLibrary:CreateWindow(options)
 			return Button
 		end
 
-		-- Create Toggle
 		function Tab:CreateToggle(Name, Default, Callback)
 			local Toggled = Default
 			local Toggle = Instance.new("TextButton")
@@ -223,7 +206,6 @@ function NovaLibrary:CreateWindow(options)
 			return Toggle
 		end
 
-		-- Create Slider
 		function Tab:CreateSlider(Name, Min, Max, Increment, Default, Callback)
 			local SliderFrame = Instance.new("Frame")
 			SliderFrame.Size = UDim2.new(1, 0, 0, 30)
@@ -271,7 +253,6 @@ function NovaLibrary:CreateWindow(options)
 			return SliderFrame
 		end
 
-		-- Create Paragraph
 		function Tab:CreateParagraph(TitleText, ContentText)
 			local ParagraphTitle = Instance.new("TextLabel")
 			ParagraphTitle.Size = UDim2.new(1, 0, 0, 20)
@@ -297,7 +278,6 @@ function NovaLibrary:CreateWindow(options)
 			ParagraphContent.Parent = Page
 		end
 
-		-- Create Divider
 		function Tab:CreateDivider()
 			local Divider = Instance.new("Frame")
 			Divider.Size = UDim2.new(1, 0, 0, 2)
@@ -311,7 +291,6 @@ function NovaLibrary:CreateWindow(options)
 		return Tab
 	end
 
-	-- Notifications
 	function Window:Notify(Title, Text, Duration)
 		local Notif = Instance.new("Frame")
 		Notif.Size = UDim2.new(0, 300, 0, 50)
