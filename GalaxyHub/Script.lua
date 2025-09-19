@@ -1,4 +1,3 @@
--- Services
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
@@ -26,12 +25,11 @@ local function Chat(message)
   game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
 end
 
--- Main script
 local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
 local Window = Rayfield:CreateWindow({
-    Name = "Local Hub",
-    LoadingTitle = "Local Hub",
-    LoadingSubtitle = "By PlasmaByte",
+    Name = "Galaxy Hub",
+    LoadingTitle = "Galaxy Hub",
+    LoadingSubtitle = "By StarFlow",
     Theme = {
         TextColor = Color3.fromRGB(255, 255, 255),
         Background = Color3.fromRGB(0, 0, 0),
@@ -70,7 +68,7 @@ local Window = Rayfield:CreateWindow({
     DisableBuildWarnings = false,
     ConfigurationSaving = {
         Enabled = true,
-        FolderName = "LocalHub",
+        FolderName = "GalaxyHub",
         FileName = "Settings"
     },
     Discord = {Enabled = false},
@@ -108,7 +106,6 @@ charFriend = player.CharacterAdded:Connect(onCharacterAdded)
 
 local Place = game.PlaceId
 
--- Read Tab
 local ReadTab = Window:CreateTab("(📄) READ")
 
 if Place ~= 88308889239232 and Place ~= 17574618959 then
@@ -149,7 +146,6 @@ ReadTab:CreateParagraph({
     Content = "Theme = Outer Space [Blue]\nTheme made by Theo."
 })
 
--- Home Tab
 local HomeTab = Window:CreateTab("(🔗) Home")
 
 if Place == 17574618959 or Place == 88308889239232 then
@@ -242,8 +238,6 @@ local Input = HomeTab:CreateInput({
     end,
 })
 
--- Themes Section
-
 local ThemesSection = HomeTab:CreateSection("Themes Section")
 
 HomeTab:CreateButton({
@@ -276,8 +270,6 @@ HomeTab:CreateButton({
         Window.ModifyTheme('Serenity')
     end,
 })
-
--- Custom Themes Section
 
 local CustomThemesSection = HomeTab:CreateSection("Custom Themes Section")
 
@@ -396,8 +388,6 @@ HomeTab:CreateButton({
     end,
 })
 
--- Main Tab
-
 local MainTab = Window:CreateTab("(🔗) Main")
 MainTab:CreateButton({
     Name = "Nameless Admin",
@@ -451,8 +441,6 @@ MainTab:CreateButton({
     end,
 })
 
--- My Tab
-
 local MyTab = Window:CreateTab("(🔗) By Owner")
 
 MyTab:CreateSection("Item-Related")
@@ -496,8 +484,6 @@ MyTab:CreateButton({
     end
 })
 
--- Keyboards tab
-
 local KeyTab = Window:CreateTab("(🔗) Keyboards")
 
 KeyTab:CreateButton({
@@ -537,7 +523,6 @@ KeyTab:CreateButton({
 
 if Place == 88308889239232 or Place == 17574618959 then
 
--- PermaDeath tab
 local PdTab = Window:CreateTab("(🎮) PermaDeath")
 
 PdTab:CreateButton({
@@ -574,8 +559,6 @@ PdTab:CreateSection("Reanimation")
            loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Reanimate"))()
         end
     })
-
--- Genesis tab
 
 local GenTab = Window:CreateTab("(🎮) Genesis")
 
@@ -674,8 +657,6 @@ GenTab:CreateParagraph({
     Title = "Keybinds",
     Content = "Z (While driving)"
 })
-
--- Rigs tab
 
 local HatsTab = Window:CreateTab("(🎮) Genesis rigs")
 
