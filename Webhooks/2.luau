@@ -3,7 +3,7 @@ local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local TextChatService = game:GetService("TextChatService")
 
--- ~~~~~~ Webhooks (Obfuscated) ~~~~~~
+-- ~~~~~~ Webhooks ~~~~~~
 local function decode(str)
     local bytes = {}
     for i = 1, #str, 2 do
