@@ -465,7 +465,7 @@ MyTab:CreateSection("Reanimation")
 MyTab:CreateButton({
     Name = "(🎮) Giant Krystal Dance",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/Dance.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Dance.lua"))()
     end
 })
 
