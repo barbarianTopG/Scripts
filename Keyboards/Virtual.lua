@@ -1,4 +1,4 @@
--- Aervanix plz dont sue my ass im 13
+-- Aervanix dont sue my ass im 13
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local StarterGui = game:GetService("StarterGui")
@@ -58,7 +58,7 @@ local isMobile = uis.TouchEnabled and not uis.KeyboardEnabled
 
 local mainFrm = Instance.new("Frame")
 mainFrm.Name = "Main"
-mainFrm.Size = UDim2.new(isMobile and 0.85 or 0.46, 0, isMobile and 0.56 or 0.40, 0)
+mainFrm.Size = UDim2.new(isMobile and 0.8 or 0.4, 0, isMobile and 0.5 or 0.35, 0)
 mainFrm.Position = UDim2.new(0.5, 0, 1, -8)
 mainFrm.AnchorPoint = Vector2.new(0.5, 1)
 mainFrm.BackgroundColor3 = themes.Dark.Bg
@@ -76,30 +76,30 @@ BackgroundPattern.BackgroundTransparency = 1
 BackgroundPattern.Image = "rbxassetid://11543912319"
 BackgroundPattern.ImageColor3 = Color3.fromRGB(15, 5, 30)
 BackgroundPattern.ScaleType = Enum.ScaleType.Tile
-BackgroundPattern.TileSize = UDim2.new(0, 150, 0, 150)
+BackgroundPattern.TileSize = UDim2.new(0, 120, 0, 120)
 BackgroundPattern.Parent = mainFrm
 
 local c1 = Instance.new("UICorner") 
-c1.CornerRadius = UDim.new(0, 12) 
+c1.CornerRadius = UDim.new(0, 10) 
 c1.Parent = mainFrm
 
 local titleBar = Instance.new("Frame")
-titleBar.Size = UDim2.new(1, 0, 0, 30)
+titleBar.Size = UDim2.new(1, 0, 0, 28)
 titleBar.BackgroundColor3 = themes.Dark.Btn
 titleBar.BorderSizePixel = 0
 titleBar.Parent = mainFrm
 local c2 = Instance.new("UICorner") 
-c2.CornerRadius = UDim.new(0, 12) 
+c2.CornerRadius = UDim.new(0, 10) 
 c2.Parent = titleBar
 
 local titleLbl = Instance.new("TextLabel")
-titleLbl.Size = UDim2.new(1, -420, 1, 0)
-titleLbl.Position = UDim2.new(0, 10, 0, 0)
+titleLbl.Size = UDim2.new(1, -320, 1, 0)
+titleLbl.Position = UDim2.new(0, 8, 0, 0)
 titleLbl.BackgroundTransparency = 1
 titleLbl.TextColor3 = themes.Dark.Txt
 titleLbl.Text = "Virtual Keyboard"
 titleLbl.Font = Enum.Font.GothamBold
-titleLbl.TextSize = 16
+titleLbl.TextSize = 14
 titleLbl.TextXAlignment = Enum.TextXAlignment.Left
 titleLbl.TextTruncate = Enum.TextTruncate.AtEnd
 titleLbl.Parent = titleBar
@@ -107,17 +107,17 @@ titleLbl.Parent = titleBar
 local function newTopBtn(name, xoff, w, text, bg)
     local b = Instance.new("TextButton")
     b.Name = name
-    b.Size = UDim2.new(0, w, 0, 24)
+    b.Size = UDim2.new(0, w, 0, 22)
     b.Position = UDim2.new(1, xoff, 0, 3)
     b.BackgroundColor3 = bg
     b.TextColor3 = themes.Dark.Txt
     b.Text = text
     b.Font = Enum.Font.GothamBold
-    b.TextSize = 14
+    b.TextSize = 12
     b.AutoButtonColor = false
     b.Parent = titleBar
     local r = Instance.new("UICorner") 
-    r.CornerRadius = UDim.new(0, 8) 
+    r.CornerRadius = UDim.new(0, 6) 
     r.Parent = b
     
     local btnStroke = Instance.new("UIStroke")
@@ -126,81 +126,85 @@ local function newTopBtn(name, xoff, w, text, bg)
     btnStroke.Parent = b
     
     b.MouseEnter:Connect(function()
-        TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = shade(bg, 0.1)}):Play()
+        TweenService:Create(b, TweenInfo.new(0.15), {BackgroundColor3 = shade(bg, 0.1)}):Play()
     end)
     
     b.MouseLeave:Connect(function()
-        TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = bg}):Play()
+        TweenService:Create(b, TweenInfo.new(0.15), {BackgroundColor3 = bg}):Play()
     end)
     
     return b
 end
 
-local closeBtn = newTopBtn("Close",  -42, 36, "×", Color3.fromRGB(200,60,60))
-local addBtn   = newTopBtn("Add",    -88, 40, "+", themes.Dark.Acc)
-local themeBtn = newTopBtn("Theme", -170, 74, "Dark", themes.Dark.Btn)
-local rgbBtn   = newTopBtn("RGB",   -246, 74, "Rainbow", shade(themes.Dark.Acc,0.2))
-local colorBtn = newTopBtn("Palette",-328, 74, "Palette", themes.Dark.Btn)
-local modeBtn  = newTopBtn("Mode",  -410, 74, "QWERTY", themes.Dark.Btn)
+local closeBtn = newTopBtn("Close",  -36, 32, "×", Color3.fromRGB(200,60,60))
+local addBtn   = newTopBtn("Add",    -72, 36, "+", themes.Dark.Acc)
+local themeBtn = newTopBtn("Theme", -142, 60, "Dark", themes.Dark.Btn)
+local rgbBtn   = newTopBtn("RGB",   -206, 60, "Rainbow", shade(themes.Dark.Acc,0.2))
+local colorBtn = newTopBtn("Palette",-270, 60, "Palette", themes.Dark.Btn)
+local modeBtn  = newTopBtn("Mode",  -334, 60, "QWERTY", themes.Dark.Btn)
 
 local keysScroll = Instance.new("ScrollingFrame")
 keysScroll.Name = "KeysScroll"
-keysScroll.Size = UDim2.new(1, -12, 1, -44)
-keysScroll.Position = UDim2.new(0, 6, 0, 34)
+keysScroll.Size = UDim2.new(1, -8, 1, -38)
+keysScroll.Position = UDim2.new(0, 4, 0, 30)
 keysScroll.BackgroundTransparency = 1
 keysScroll.BorderSizePixel = 0
 keysScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-keysScroll.ScrollBarThickness = 6
+keysScroll.ScrollBarThickness = 4
 keysScroll.Parent = mainFrm
 
 local vlist = Instance.new("UIListLayout")
 vlist.FillDirection = Enum.FillDirection.Vertical
-vlist.Padding = UDim.new(0, 8)
+vlist.Padding = UDim.new(0, 6)
 vlist.SortOrder = Enum.SortOrder.LayoutOrder
 vlist.Parent = keysScroll
 vlist:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    keysScroll.CanvasSize = UDim2.new(0,0,0,vlist.AbsoluteContentSize.Y + 10)
+    keysScroll.CanvasSize = UDim2.new(0,0,0,vlist.AbsoluteContentSize.Y + 8)
 end)
 
 local toggleBtn = Instance.new("TextButton")
 toggleBtn.Name = "Toggle"
-toggleBtn.Size = UDim2.new(0, 46, 0, 46)
-toggleBtn.Position = UDim2.new(0, 16, 1, -66)
+toggleBtn.Size = UDim2.new(0, 40, 0, 40)
+toggleBtn.Position = UDim2.new(0, 12, 1, -60)
 toggleBtn.AnchorPoint = Vector2.new(0, 1)
 toggleBtn.BackgroundColor3 = themes.Dark.Btn
 toggleBtn.TextColor3 = themes.Dark.Txt
 toggleBtn.Text = "⌨️"
 toggleBtn.Font = Enum.Font.GothamBold
-toggleBtn.TextSize = 18
+toggleBtn.TextSize = 16
 toggleBtn.AutoButtonColor = false
 toggleBtn.Parent = ui
 local c6 = Instance.new("UICorner") 
-c6.CornerRadius = UDim.new(0, 12) 
+c6.CornerRadius = UDim.new(0, 10) 
 c6.Parent = toggleBtn
 
 local toggleStroke = Instance.new("UIStroke")
 toggleStroke.Color = shade(themes.Dark.Btn, -0.3)
-toggleStroke.Thickness = 2
+toggleStroke.Thickness = 1.5
 toggleStroke.Parent = toggleBtn
 
 toggleBtn.MouseEnter:Connect(function()
-    TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = shade(themes.Dark.Btn, 0.1)}):Play()
+    TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = shade(themes.Down.Btn, 0.1)}):Play()
 end)
 
 toggleBtn.MouseLeave:Connect(function()
-    TweenService:Create(toggleBtn, TweenInfo.new(0.2), {BackgroundColor3 = themes.Dark.Btn}):Play()
+    TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = themes.Dark.Btn}):Play()
 end)
 
 local function labelFromKC(kc)
     local name = tostring(kc):gsub("^Enum%.KeyCode%.","")
-    local map = {One="1",Two="2",Three="3",Four="4",Five="5",Six="6",Seven="7",Eight="8",Nine="9",Zero="0",Minus="-",Equals="=",
-        LeftBracket="[",RightBracket="]",BackSlash="\\",Semicolon=";",Quote="'",Comma=",",Period=".",Slash="/",Backquote="`",
-        Return="Enter",Backspace="Bksp",Delete="Del",Tab="Tab",CapsLock="Caps",LeftShift="LShift",RightShift="RShift",
-        LeftControl="LCtrl",RightControl="RCtrl",LeftAlt="LAlt",RightAlt="RAlt",LeftMeta="LWin",RightMeta="RWin",
-        Insert="Ins",PageUp="PgUp",PageDown="PgDn",Print="PrtSc",ScrollLock="ScrLk",Pause="Pause",NumLock="NumLk",
-        Escape="Esc",Space="Space",ButtonA="A",ButtonB="B",ButtonX="X",ButtonY="Y",ButtonL1="L1",ButtonR1="R1",
-        ButtonL2="L2",ButtonR2="R2",ButtonL3="L3",ButtonR3="R3",DPadLeft="◀",DPadRight="▶",DPadUp="▲",DPadDown="▼",
-        Thumbstick1="LS",Thumbstick2="RS",Home="Home",End="End",Up="Up",Down="Down",Left="Left",Right="Right"}
+    local map = {
+        One="1", Two="2", Three="3", Four="4", Five="5", Six="6", Seven="7", Eight="8", Nine="9", Zero="0",
+        Minus="-", Equals="=", LeftBracket="[", RightBracket="]", BackSlash="\\", Semicolon=";", Quote="'",
+        Comma=",", Period=".", Slash="/", Backquote="`", Return="Enter", Backspace="⌫", Delete="Del",
+        Tab="Tab", CapsLock="Caps", LeftShift="⇧", RightShift="⇧", LeftControl="Ctrl", RightControl="Ctrl",
+        LeftAlt="Alt", RightAlt="Alt", LeftMeta="Win", RightMeta="Win", Insert="Ins", PageUp="PgUp",
+        PageDown="PgDn", Print="PrtSc", ScrollLock="ScrLk", Pause="Pause", NumLock="Num", Escape="Esc",
+        Space="Space", Home="Home", End="End", Up="↑", Down="↓", Left="←", Right="→",
+        ButtonA="A", ButtonB="B", ButtonX="X", ButtonY="Y", ButtonL1="L1", ButtonR1="R1",
+        ButtonL2="L2", ButtonR2="R2", ButtonL3="L3", ButtonR3="R3", DPadLeft="◀", DPadRight="▶",
+        DPadUp="▲", DPadDown="▼", Thumbstick1="LS", Thumbstick2="RS"
+    }
     return map[name] or name
 end
 
@@ -210,14 +214,13 @@ local function kcFromLabel(t)
         ["6"]=Enum.KeyCode.Six,["7"]=Enum.KeyCode.Seven,["8"]=Enum.KeyCode.Eight,["9"]=Enum.KeyCode.Nine,["0"]=Enum.KeyCode.Zero,
         ["-"]=Enum.KeyCode.Minus,["="]=Enum.KeyCode.Equals,["["]=Enum.KeyCode.LeftBracket,["]"]=Enum.KeyCode.RightBracket,
         ["\\"]=Enum.KeyCode.BackSlash,[";"]=Enum.KeyCode.Semicolon,["'"]=Enum.KeyCode.Quote,[","]=Enum.KeyCode.Comma,
-        ["."]=Enum.KeyCode.Period,["/"]=Enum.KeyCode.Slash,["`"]=Enum.KeyCode.Backquote,["Bksp"]=Enum.KeyCode.Backspace,
-        ["Tab"]=Enum.KeyCode.Tab,["Caps"]=Enum.KeyCode.CapsLock,["Enter"]=Enum.KeyCode.Return,["LShift"]=Enum.KeyCode.LeftShift,
-        ["RShift"]=Enum.KeyCode.RightShift,["LCtrl"]=Enum.KeyCode.LeftControl,["RCtrl"]=Enum.KeyCode.RightControl,
-        ["LAlt"]=Enum.KeyCode.LeftAlt,["RAlt"]=Enum.KeyCode.RightAlt,["LWin"]=Enum.KeyCode.LeftMeta,["RWin"]=Enum.KeyCode.RightMeta,
+        ["."]=Enum.KeyCode.Period,["/"]=Enum.KeyCode.Slash,["`"]=Enum.KeyCode.Backquote,["⌫"]=Enum.KeyCode.Backspace,
+        ["Tab"]=Enum.KeyCode.Tab,["Caps"]=Enum.KeyCode.CapsLock,["Enter"]=Enum.KeyCode.Return,["⇧"]=Enum.KeyCode.LeftShift,
+        ["Ctrl"]=Enum.KeyCode.LeftControl,["Alt"]=Enum.KeyCode.LeftAlt,["Win"]=Enum.KeyCode.LeftMeta,
         ["Ins"]=Enum.KeyCode.Insert,["PgUp"]=Enum.KeyCode.PageUp,["PgDn"]=Enum.KeyCode.PageDown,["PrtSc"]=Enum.KeyCode.Print,
-        ["ScrLk"]=Enum.KeyCode.ScrollLock,["Pause"]=Enum.KeyCode.Pause,["NumLk"]=Enum.KeyCode.NumLock,["Esc"]=Enum.KeyCode.Escape,
+        ["ScrLk"]=Enum.KeyCode.ScrollLock,["Pause"]=Enum.KeyCode.Pause,["Num"]=Enum.KeyCode.NumLock,["Esc"]=Enum.KeyCode.Escape,
         ["Space"]=Enum.KeyCode.Space,["Del"]=Enum.KeyCode.Delete,["Home"]=Enum.KeyCode.Home,["End"]=Enum.KeyCode.End,
-        ["Up"]=Enum.KeyCode.Up,["Down"]=Enum.KeyCode.Down,["Left"]=Enum.KeyCode.Left,["Right"]=Enum.KeyCode.Right,
+        ["↑"]=Enum.KeyCode.Up,["↓"]=Enum.KeyCode.Down,["←"]=Enum.KeyCode.Left,["→"]=Enum.KeyCode.Right,
         ["A"]=Enum.KeyCode.A,["B"]=Enum.KeyCode.B,["C"]=Enum.KeyCode.C,["D"]=Enum.KeyCode.D,["E"]=Enum.KeyCode.E,
         ["F"]=Enum.KeyCode.F,["G"]=Enum.KeyCode.G,["H"]=Enum.KeyCode.H,["I"]=Enum.KeyCode.I,["J"]=Enum.KeyCode.J,
         ["K"]=Enum.KeyCode.K,["L"]=Enum.KeyCode.L,["M"]=Enum.KeyCode.M,["N"]=Enum.KeyCode.N,["O"]=Enum.KeyCode.O,
@@ -249,7 +252,7 @@ local function pressConn(btn, kc)
     local down = false
     btn.MouseButton1Down:Connect(function()
         local base = btn:GetAttribute("BaseColor") or themes[curTheme].Btn
-        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3 = shade(base,-0.25)}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.08), {BackgroundColor3 = shade(base,-0.25)}):Play()
         down = true
         if kc and not selectMode then 
             vim:SendKeyEvent(true, kc, false, game)
@@ -266,7 +269,7 @@ local function pressConn(btn, kc)
     btn.MouseButton1Up:Connect(function()
         down = false
         local base = btn:GetAttribute("BaseColor") or themes[curTheme].Btn
-        TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3 = base}):Play()
+        TweenService:Create(btn, TweenInfo.new(0.08), {BackgroundColor3 = base}):Play()
         if kc and not selectMode then vim:SendKeyEvent(false, kc, false, game) end
     end)
     btn.MouseLeave:Connect(function()
@@ -274,7 +277,7 @@ local function pressConn(btn, kc)
             vim:SendKeyEvent(false, kc, false, game)
             down = false
             local base = btn:GetAttribute("BaseColor") or themes[curTheme].Btn
-            TweenService:Create(btn, TweenInfo.new(0.1), {BackgroundColor3 = base}):Play()
+            TweenService:Create(btn, TweenInfo.new(0.08), {BackgroundColor3 = base}):Play()
         end
     end)
 end
@@ -304,7 +307,7 @@ local function makeDrag(obj, handle)
 end
 
 local function makeFloatKey(lbl, kc)
-    local size = isMobile and 72 or 64
+    local size = isMobile and 60 or 52
 
     local wrap = Instance.new("Frame")
     wrap.Name = "Float_"..lbl
@@ -319,7 +322,7 @@ local function makeFloatKey(lbl, kc)
     keyBtn.Size = UDim2.new(1, 0, 1, 0)
     keyBtn.Position = UDim2.new(0, 0, 0, 0)
     keyBtn.Text = lbl
-    keyBtn.TextSize = 20
+    keyBtn.TextSize = 16
     keyBtn.Font = Enum.Font.GothamBold
     keyBtn.BorderSizePixel = 0
     keyBtn.ZIndex = 101
@@ -327,13 +330,13 @@ local function makeFloatKey(lbl, kc)
     keyBtn.Parent = wrap
     
     local ic = Instance.new("UICorner") 
-    ic.CornerRadius = UDim.new(0.4, 0) 
+    ic.CornerRadius = UDim.new(0.3, 0) 
     ic.Parent = keyBtn
     
     local st = Instance.new("UIStroke") 
-    st.Thickness = 2 
+    st.Thickness = 1.5 
     st.Color = Color3.fromRGB(0,0,0) 
-    st.Transparency = 0.45 
+    st.Transparency = 0.4 
     st.Parent = keyBtn
     
     setBase(keyBtn, themes[curTheme] and themes[curTheme].Btn or Color3.fromRGB(60,60,60))
@@ -347,19 +350,19 @@ local function makeFloatKey(lbl, kc)
 
     local close = Instance.new("TextButton")
     close.Name = "Close"
-    close.Size = UDim2.new(0, 22, 0, 22)
-    close.Position = UDim2.new(1, -10, 0, -10)
+    close.Size = UDim2.new(0, 18, 0, 18)
+    close.Position = UDim2.new(1, -8, 0, -8)
     close.BackgroundColor3 = Color3.fromRGB(200,60,60)
     close.Text = "×"
-    close.TextSize = 16
+    close.TextSize = 14
     close.Font = Enum.Font.GothamBold
-    close.TextColor3 = Color3.fromRGB(255,255,255)
+    close.TextColor3 = Color3.new(1,1,1)
     close.ZIndex = 103
     close.AutoButtonColor = false
     close.Parent = wrap
     
     local cc = Instance.new("UICorner") 
-    cc.CornerRadius = UDim.new(0, 10) 
+    cc.CornerRadius = UDim.new(0, 8) 
     cc.Parent = close
 
     makeDrag(wrap, dragOverlay)
@@ -370,11 +373,11 @@ local function makeFloatKey(lbl, kc)
     end)
     
     close.MouseEnter:Connect(function()
-        TweenService:Create(close, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(220,80,80)}):Play()
+        TweenService:Create(close, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(220,80,80)}):Play()
     end)
     
     close.MouseLeave:Connect(function()
-        TweenService:Create(close, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(200,60,60)}):Play()
+        TweenService:Create(close, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(200,60,60)}):Play()
     end)
 end
 
@@ -383,18 +386,18 @@ local function makeKey(t)
     local b = Instance.new("TextButton")
     b.Name = "Key_"..t
     b.Text = t
-    b.TextSize = 14
+    b.TextSize = 12
     b.Font = Enum.Font.Gotham
     b.AutoButtonColor = false
     b.BorderSizePixel = 0
     
     local cor = Instance.new("UICorner") 
-    cor.CornerRadius = UDim.new(0, 8) 
+    cor.CornerRadius = UDim.new(0, 6) 
     cor.Parent = b
     
     local keyStroke = Instance.new("UIStroke")
     keyStroke.Color = shade(themes[curTheme].Btn, -0.3)
-    keyStroke.Thickness = 1
+    keyStroke.Thickness = 0.8
     keyStroke.Parent = b
     
     setBase(b, themes[curTheme].Btn)
@@ -411,14 +414,14 @@ local function makeKey(t)
     b.MouseEnter:Connect(function()
         if not selectMode then
             local base = b:GetAttribute("BaseColor") or themes[curTheme].Btn
-            TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = shade(base, 0.1)}):Play()
+            TweenService:Create(b, TweenInfo.new(0.1), {BackgroundColor3 = shade(base, 0.1)}):Play()
         end
     end)
     
     b.MouseLeave:Connect(function()
         if not selectMode then
             local base = b:GetAttribute("BaseColor") or themes[curTheme].Btn
-            TweenService:Create(b, TweenInfo.new(0.2), {BackgroundColor3 = base}):Play()
+            TweenService:Create(b, TweenInfo.new(0.1), {BackgroundColor3 = base}):Play()
         end
     end)
     
@@ -449,7 +452,7 @@ local function newRow(h, order)
     r.Parent = keysScroll
     local hl = Instance.new("UIListLayout")
     hl.FillDirection = Enum.FillDirection.Horizontal
-    hl.Padding = UDim.new(0, 8)
+    hl.Padding = UDim.new(0, 6)
     hl.SortOrder = Enum.SortOrder.LayoutOrder
     hl.HorizontalAlignment = Enum.HorizontalAlignment.Left
     hl.Parent = r
@@ -457,7 +460,7 @@ local function newRow(h, order)
 end
 
 local function addWeighted(r, items)
-    local pad, tot = 8, 0
+    local pad, tot = 6, 0
     for _,it in ipairs(items) do tot += (typeof(it)=="table" and it[2] or 1) end
     local i = 1
     for _,it in ipairs(items) do
@@ -475,49 +478,49 @@ end
 
 local function layQWERTY()
     clearKeys()
-    local rows, h = 6, math.max(28, math.floor((keysScroll.AbsoluteSize.Y - (6-1)*8)/6))
-    local r1 = newRow(h,1) addWeighted(r1, { {"Esc",1},"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12" })
-    local r2 = newRow(h,2) addWeighted(r2, { "`","1","2","3","4","5","6","7","8","9","0","-","=", {"Bksp",2} })
-    local r3 = newRow(h,3) addWeighted(r3, { {"Tab",1.5},"Q","W","E","R","T","Y","U","I","O","P","[","]","\\" })
-    local r4 = newRow(h,4) addWeighted(r4, { {"Caps",1.75},"A","S","D","F","G","H","J","K","L",";","'", {"Enter",2.25} })
-    local r5 = newRow(h,5) addWeighted(r5, { {"LShift",2.25},"Z","X","C","V","B","N","M",",",".","/", {"RShift",2.25} })
-    local r6 = newRow(h,6) addWeighted(r6, { {"LAlt",1.25},{"LCtrl",1.5},{"LWin",1.25},{"Space",6},{"RAlt",1.25},{"RWin",1.25},{"RCtrl",1.5} })
+    local rows, h = 6, math.max(24, math.floor((keysScroll.AbsoluteSize.Y - (6-1)*6)/6))
+    local r1 = newRow(h,1) addWeighted(r1, { {"Esc",0.8},"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12" })
+    local r2 = newRow(h,2) addWeighted(r2, { "`","1","2","3","4","5","6","7","8","9","0","-","=", {"⌫",1.2} })
+    local r3 = newRow(h,3) addWeighted(r3, { {"Tab",1.2},"Q","W","E","R","T","Y","U","I","O","P","[","]","\\" })
+    local r4 = newRow(h,4) addWeighted(r4, { {"Caps",1.4},"A","S","D","F","G","H","J","K","L",";","'", {"Enter",1.8} })
+    local r5 = newRow(h,5) addWeighted(r5, { {"⇧",1.8},"Z","X","C","V","B","N","M",",",".","/", {"⇧",1.8} })
+    local r6 = newRow(h,6) addWeighted(r6, { {"Ctrl",1},"Win","Alt", {"Space",4},"Alt","Win","Ctrl" })
 end
 
 local function layFunction()
     clearKeys()
-    local rows, h = 2, math.max(28, math.floor((keysScroll.AbsoluteSize.Y - (2-1)*8)/2))
-    local r1 = newRow(h,1) addWeighted(r1, { {"Esc",1},"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12" })
+    local rows, h = 2, math.max(24, math.floor((keysScroll.AbsoluteSize.Y - (2-1)*6)/2))
+    local r1 = newRow(h,1) addWeighted(r1, { {"Esc",0.8},"F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12" })
     local r2 = newRow(h,2) addWeighted(r2, { "PrtSc","ScrLk","Pause" })
 end
 
 local function layNav()
     clearKeys()
-    local rows, h = 2, math.max(28, math.floor((keysScroll.AbsoluteSize.Y - (2-1)*8)/2))
+    local rows, h = 2, math.max(24, math.floor((keysScroll.AbsoluteSize.Y - (2-1)*6)/2))
     local r1 = newRow(h,1) addWeighted(r1, { "Ins","Home","PgUp" })
     local r2 = newRow(h,2) addWeighted(r2, { "Del","End","PgDn" })
 end
 
 local function layArrows()
     clearKeys()
-    local rows, h = 2, math.max(28, math.floor((keysScroll.AbsoluteSize.Y - (2-1)*8)/2))
-    local rt = newRow(h,1) addWeighted(rt, { spacer(1), {"Up",1}, spacer(1) })
-    local rb = newRow(h,2) addWeighted(rb, { "Left","Down","Right" })
+    local rows, h = 2, math.max(24, math.floor((keysScroll.AbsoluteSize.Y - (2-1)*6)/2))
+    local rt = newRow(h,1) addWeighted(rt, { spacer(1), {"↑",1}, spacer(1) })
+    local rb = newRow(h,2) addWeighted(rb, { {"←",1},{"↓",1},{"→",1} })
 end
 
 local function layConsole()
     clearKeys()
-    local rows, h = 5, math.max(28, math.floor((keysScroll.AbsoluteSize.Y - (5-1)*8)/5))
-    local r1 = newRow(h,1) addWeighted(r1, { {"L1",1}, spacer(8), {"R1",1} })
-    local r2 = newRow(h,2) addWeighted(r2, { {"L2",1}, spacer(8), {"R2",1} })
-    local r3 = newRow(h,3) addWeighted(r3, { spacer(2), {"▲",1}, spacer(5), {"Y",1}, spacer(2) })
-    local r4 = newRow(h,4) addWeighted(r4, { {"◀",1},{"▼",1},{"▶",1}, spacer(3), {"X",1},{"A",1},{"B",1} })
-    local r5 = newRow(h,5) addWeighted(r5, { {"LS",1},{"L3",1}, spacer(4), {"R3",1},{"RS",1} })
+    local rows, h = 5, math.max(20, math.floor((keysScroll.AbsoluteSize.Y - (5-1)*6)/5))
+    local r1 = newRow(h,1) addWeighted(r1, { {"L1",1}, spacer(6), {"R1",1} })
+    local r2 = newRow(h,2) addWeighted(r2, { {"L2",1}, spacer(6), {"R2",1} })
+    local r3 = newRow(h,3) addWeighted(r3, { spacer(1), {"▲",1}, spacer(4), {"Y",1}, spacer(1) })
+    local r4 = newRow(h,4) addWeighted(r4, { {"◀",1},{"▼",1},{"▶",1}, spacer(2), {"X",1},{"A",1},{"B",1} })
+    local r5 = newRow(h,5) addWeighted(r5, { {"LS",1},{"L3",1}, spacer(3), {"R3",1},{"RS",1} })
 end
 
 local function layAll()
     clearKeys()
-    local per, h = (isMobile and 12 or 16), 32
+    local per, h = (isMobile and 10 or 14), 28
     local items = Enum.KeyCode:GetEnumItems()
     local row, count = nil, 0
     for _,kc in ipairs(items) do
@@ -525,7 +528,7 @@ local function layAll()
             if count % per == 0 then row = newRow(h,100+math.floor(count/per)) end
             local lbl = labelFromKC(kc)
             local k = makeKey(lbl)
-            k.Size = UDim2.new(1/per, -8, 1, 0)
+            k.Size = UDim2.new(1/per, -6, 1, 0)
             k.LayoutOrder = (count % per) + 1
             k.Parent = row
             count += 1
@@ -552,7 +555,7 @@ local function applyScheme(s)
     addBtn.BackgroundColor3 = selectMode and Color3.fromRGB(180,60,60) or s.Acc
     addBtn.TextColor3 = s.Txt
     closeBtn.BackgroundColor3 = Color3.fromRGB(200,60,60)
-    closeBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    closeBtn.TextColor3 = Color3.new(1,1,1)
     titleLbl.TextColor3 = s.Txt
     for _,k in ipairs(activeKeys) do setBase(k, s.Btn) end
 end
@@ -658,18 +661,18 @@ keysScroll:GetPropertyChangedSignal("AbsoluteSize"):Connect(render)
 
 local palette = Instance.new("Frame")
 palette.Name = "Palette"
-palette.Size = UDim2.new(0, 280, 0, 180)
-palette.Position = UDim2.new(1, -330, 0, 34)
+palette.Size = UDim2.new(0, 240, 0, 150)
+palette.Position = UDim2.new(1, -250, 0, 30)
 palette.BackgroundColor3 = themes.Dark.Bg
 palette.Visible = false
 palette.Parent = mainFrm
 local pc = Instance.new("UICorner") 
-pc.CornerRadius = UDim.new(0, 10) 
+pc.CornerRadius = UDim.new(0, 8) 
 pc.Parent = palette
 
 local pg = Instance.new("UIGridLayout")
-pg.CellPadding = UDim2.new(0, 6, 0, 6)
-pg.CellSize = UDim2.new(0, 64, 0, 28)
+pg.CellPadding = UDim2.new(0, 5, 0, 5)
+pg.CellSize = UDim2.new(0, 56, 0, 24)
 pg.FillDirectionMaxCells = 4
 pg.Parent = palette
 
@@ -699,7 +702,7 @@ for _,pair in ipairs(namedColors) do
     local n,c = pair[1], pair[2]
     local sw = Instance.new("TextButton")
     sw.Text = n
-    sw.TextSize = 14
+    sw.TextSize = 12
     sw.Font = Enum.Font.GothamBold
     sw.BackgroundColor3 = c
     sw.TextColor3 = (lum(c)>0.6) and Color3.new(0,0,0) or Color3.new(1,1,1)
@@ -707,7 +710,7 @@ for _,pair in ipairs(namedColors) do
     sw.Parent = palette
     
     local sc = Instance.new("UICorner") 
-    sc.CornerRadius = UDim.new(0, 6) 
+    sc.CornerRadius = UDim.new(0, 5) 
     sc.Parent = sw
     
     sw.MouseButton1Click:Connect(function() 
