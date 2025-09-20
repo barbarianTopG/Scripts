@@ -22,7 +22,6 @@ function notify(title, text, duration)
     })
 end
 
--- Color scheme
 local colorScheme = {
     primary = Color3.fromRGB(75, 0, 130),    -- Purple
     secondary = Color3.fromRGB(148, 0, 211), -- Dark Violet
