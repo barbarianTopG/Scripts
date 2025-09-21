@@ -57,7 +57,7 @@ local main = Instance.new("Frame", gui)
 main.Size = UDim2.new(0, 600, 0, 360)
 main.Position = UDim2.new(0.5, -300, 0.5, -180)
 main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-main.Active = false 
+main.Active = false
 main.Draggable = false
 applyCorner(main, 8)
 applyStroke(main, 2, 0.25, Color3.fromRGB(100, 0, 0))
@@ -228,7 +228,6 @@ favBtn.ZIndex = 3
 applyCorner(favBtn, 6)
 applyStroke(favBtn, 1, 0.2, Color3.fromRGB(80, 80, 80))
 
- Execute script
 execBtn.MouseButton1Click:Connect(function()
     local s = input.Text
     if s ~= "" then
@@ -241,15 +240,12 @@ execBtn.MouseButton1Click:Connect(function()
     end
 end)
 
- Clear script
 clearBtn.MouseButton1Click:Connect(function()
     input.Text = ""
 end)
 
- Add to favorites (FIXED)
 favBtn.MouseButton1Click:Connect(function()
     if input.Text ~= "" then
-         Create a popup to name the favorite
         local popup = Instance.new("Frame", gui)
         popup.Size = UDim2.new(0, 300, 0, 150)
         popup.Position = UDim2.new(0.5, -150, 0.5, -75)
@@ -275,11 +271,16 @@ favBtn.MouseButton1Click:Connect(function()
         title.TextSize = 16
         title.ZIndex = 21
         
+        local count = 0
+        for _ in pairs(favoritesData) do
+            count = count + 1
+        end
+        
         local nameInput = Instance.new("TextBox", popup)
         nameInput.Size = UDim2.new(1, -40, 0, 30)
         nameInput.Position = UDim2.new(0, 20, 0, 50)
         nameInput.PlaceholderText = "Favorite Name"
-        nameInput.Text = "Script " .. tostring(#favoritesData + 1)
+        nameInput.Text = "Script " .. tostring(count + 1)
         nameInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
         nameInput.TextColor3 = Color3.new(1, 1, 1)
         nameInput.Font = Enum.Font.Gotham
@@ -334,7 +335,6 @@ favBtn.MouseButton1Click:Connect(function()
     end
 end)
 
- Favorites tab
 local favList = Instance.new("ScrollingFrame", tabs.Favorites)
 favList.Size = UDim2.new(1, -20, 1, -20)
 favList.Position = UDim2.new(0, 10, 0, 10)
@@ -430,7 +430,6 @@ end
 
 refreshFavorites()
 
- Settings tab
 local destroyBtn = Instance.new("TextButton", tabs.Settings)
 destroyBtn.Size = UDim2.new(0, 130, 0, 35)
 destroyBtn.Position = UDim2.new(0, 10, 0, 10)
@@ -447,7 +446,6 @@ destroyBtn.MouseButton1Click:Connect(function()
     blur:Destroy()
 end)
 
- Add a subtle background pattern for visual interest
 local pattern = Instance.new("Frame", main)
 pattern.Size = UDim2.new(1, 0, 1, 0)
 pattern.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
