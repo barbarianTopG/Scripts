@@ -1,7 +1,7 @@
 --[[
-          Made by: Nexus, StarFlow
-          Idea: Nexus
-          Coder: StarFlow
+   Made by: Nexus, StarFlow
+   Idea: Nexus
+   Coder: StarFlow
 ]]
 local player = game:GetService("Players").LocalPlayer
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
