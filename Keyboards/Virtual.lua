@@ -1,4 +1,3 @@
--- Aervanix dont sue my ass im 13
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local StarterGui = game:GetService("StarterGui")
@@ -54,11 +53,12 @@ ui.ResetOnSpawn = false
 ui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 protectUI(ui)
 
-local isMobile = uis.TouchEnabled and not uis.KeyboardEnabled
+-- Force smaller size by always using mobile dimensions
+local isMobile = true -- Force mobile size
 
 local mainFrm = Instance.new("Frame")
 mainFrm.Name = "Main"
-mainFrm.Size = UDim2.new(isMobile and 0.8 or 0.4, 0, isMobile and 0.5 or 0.35, 0)
+mainFrm.Size = UDim2.new(0.8, 0, 0.5, 0) -- Always use mobile size
 mainFrm.Position = UDim2.new(0.5, 0, 1, -8)
 mainFrm.AnchorPoint = Vector2.new(0.5, 1)
 mainFrm.BackgroundColor3 = themes.Dark.Bg
@@ -184,7 +184,7 @@ toggleStroke.Thickness = 1.5
 toggleStroke.Parent = toggleBtn
 
 toggleBtn.MouseEnter:Connect(function()
-    TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = shade(themes.Down.Btn, 0.1)}):Play()
+    TweenService:Create(toggleBtn, TweenInfo.new(0.15), {BackgroundColor3 = shade(themes.Dark.Btn, 0.1)}):Play()
 end)
 
 toggleBtn.MouseLeave:Connect(function()
@@ -307,7 +307,7 @@ local function makeDrag(obj, handle)
 end
 
 local function makeFloatKey(lbl, kc)
-    local size = isMobile and 60 or 52
+    local size = 60 -- Always use mobile size
 
     local wrap = Instance.new("Frame")
     wrap.Name = "Float_"..lbl
@@ -520,7 +520,7 @@ end
 
 local function layAll()
     clearKeys()
-    local per, h = (isMobile and 10 or 14), 28
+    local per, h = 10, 28 -- Always use mobile size
     local items = Enum.KeyCode:GetEnumItems()
     local row, count = nil, 0
     for _,kc in ipairs(items) do
@@ -609,6 +609,7 @@ end
 
 themeBtn.MouseButton1Click:Connect(function()
     local opts = {"Dark","Light","Blue","Purple","Green"}
+    if themes.Custom then table.insert(opts, "Custom") end
     local i = table.find(opts, themeBtn.Text) or table.find(opts, curTheme) or 1
     setTheme(opts[i % #opts + 1])
 end)
