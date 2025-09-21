@@ -1,3 +1,8 @@
+--[[
+          Made by: Nexus, StarFlow
+          Idea: Nexus
+          Coder: StarFlow
+]]
 local player = game:GetService("Players").LocalPlayer
 local gui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
 gui.Name = "NoxonExecutor"
@@ -244,6 +249,92 @@ clearBtn.MouseButton1Click:Connect(function()
     input.Text = ""
 end)
 
+local function refreshFavorites()
+    if not favList then return end
+    favList:ClearAllChildren()
+    local y = 0
+    
+    if next(favoritesData) == nil then
+        local emptyLabel = Instance.new("TextLabel", favList)
+        emptyLabel.Size = UDim2.new(1, 0, 0, 30)
+        emptyLabel.Position = UDim2.new(0, 0, 0, 10)
+        emptyLabel.Text = "No favorites yet. Add scripts from the Executor tab."
+        emptyLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+        emptyLabel.BackgroundTransparency = 1
+        emptyLabel.Font = Enum.Font.Gotham
+        emptyLabel.TextSize = 14
+        emptyLabel.ZIndex = 2
+        y = 50
+    else
+        for name, code in pairs(favoritesData) do
+            local frame = Instance.new("Frame", favList)
+            frame.Size = UDim2.new(1, -10, 0, 60)
+            frame.Position = UDim2.new(0, 0, 0, y)
+            frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+            frame.ZIndex = 2
+            applyCorner(frame, 6)
+            applyStroke(frame, 1, 0.2, Color3.fromRGB(60, 60, 60))
+            
+            local lbl = Instance.new("TextLabel", frame)
+            lbl.Size = UDim2.new(1, -160, 0, 25)
+            lbl.Position = UDim2.new(0, 5, 0, 5)
+            lbl.Text = name
+            lbl.TextColor3 = Color3.new(1, 1, 1)
+            lbl.BackgroundTransparency = 1
+            lbl.Font = Enum.Font.GothamBold
+            lbl.TextXAlignment = Enum.TextXAlignment.Left
+            lbl.TextSize = 14
+            lbl.ZIndex = 3
+            
+            local codePreview = Instance.new("TextLabel", frame)
+            codePreview.Size = UDim2.new(1, -160, 0, 25)
+            codePreview.Position = UDim2.new(0, 5, 0, 30)
+            codePreview.Text = string.sub(code, 1, 40) .. (string.len(code) > 40 and "..." or "")
+            codePreview.TextColor3 = Color3.fromRGB(180, 180, 180)
+            codePreview.BackgroundTransparency = 1
+            codePreview.Font = Enum.Font.Code
+            codePreview.TextXAlignment = Enum.TextXAlignment.Left
+            codePreview.TextSize = 12
+            codePreview.ZIndex = 3
+            
+            local run = Instance.new("TextButton", frame)
+            run.Size = UDim2.new(0, 70, 0, 25)
+            run.Position = UDim2.new(1, -150, 0, 5)
+            run.Text = "Execute"
+            run.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+            run.TextColor3 = Color3.new(1, 1, 1)
+            run.Font = Enum.Font.GothamBold
+            run.ZIndex = 3
+            applyCorner(run, 6)
+            applyStroke(run, 1, 0, Color3.fromRGB(100, 0, 0))
+            
+            run.MouseButton1Click:Connect(function()
+                loadstring(code)()
+            end)
+            
+            local del = Instance.new("TextButton", frame)
+            del.Size = UDim2.new(0, 70, 0, 25)
+            del.Position = UDim2.new(1, -75, 0, 5)
+            del.Text = "Delete"
+            del.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            del.TextColor3 = Color3.new(1, 1, 1)
+            del.Font = Enum.Font.GothamBold
+            del.ZIndex = 3
+            applyCorner(del, 6)
+            applyStroke(del, 1, 0.2, Color3.fromRGB(80, 80, 80))
+            
+            del.MouseButton1Click:Connect(function()
+                favoritesData[name] = nil
+                saveFavorites(favoritesData)
+                refreshFavorites()
+            end)
+            
+            y += 70
+        end
+    end
+    favList.CanvasSize = UDim2.new(0, 0, 0, y)
+end
+
 favBtn.MouseButton1Click:Connect(function()
     if input.Text ~= "" then
         local popup = Instance.new("Frame", gui)
@@ -342,91 +433,6 @@ favList.BackgroundTransparency = 1
 favList.ScrollBarThickness = 6
 favList.CanvasSize = UDim2.new()
 favList.ZIndex = 2
-
-local function refreshFavorites()
-    favList:ClearAllChildren()
-    local y = 0
-    
-    if next(favoritesData) == nil then
-        local emptyLabel = Instance.new("TextLabel", favList)
-        emptyLabel.Size = UDim2.new(1, 0, 0, 30)
-        emptyLabel.Position = UDim2.new(0, 0, 0, 10)
-        emptyLabel.Text = "No favorites yet. Add scripts from the Executor tab."
-        emptyLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-        emptyLabel.BackgroundTransparency = 1
-        emptyLabel.Font = Enum.Font.Gotham
-        emptyLabel.TextSize = 14
-        emptyLabel.ZIndex = 2
-        y = 50
-    else
-        for name, code in pairs(favoritesData) do
-            local frame = Instance.new("Frame", favList)
-            frame.Size = UDim2.new(1, -10, 0, 60)
-            frame.Position = UDim2.new(0, 0, 0, y)
-            frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-            frame.ZIndex = 2
-            applyCorner(frame, 6)
-            applyStroke(frame, 1, 0.2, Color3.fromRGB(60, 60, 60))
-            
-            local lbl = Instance.new("TextLabel", frame)
-            lbl.Size = UDim2.new(1, -160, 0, 25)
-            lbl.Position = UDim2.new(0, 5, 0, 5)
-            lbl.Text = name
-            lbl.TextColor3 = Color3.new(1, 1, 1)
-            lbl.BackgroundTransparency = 1
-            lbl.Font = Enum.Font.GothamBold
-            lbl.TextXAlignment = Enum.TextXAlignment.Left
-            lbl.TextSize = 14
-            lbl.ZIndex = 3
-            
-            local codePreview = Instance.new("TextLabel", frame)
-            codePreview.Size = UDim2.new(1, -160, 0, 25)
-            codePreview.Position = UDim2.new(0, 5, 0, 30)
-            codePreview.Text = string.sub(code, 1, 40) .. (string.len(code) > 40 and "..." or "")
-            codePreview.TextColor3 = Color3.fromRGB(180, 180, 180)
-            codePreview.BackgroundTransparency = 1
-            codePreview.Font = Enum.Font.Code
-            codePreview.TextXAlignment = Enum.TextXAlignment.Left
-            codePreview.TextSize = 12
-            codePreview.ZIndex = 3
-            
-            local run = Instance.new("TextButton", frame)
-            run.Size = UDim2.new(0, 70, 0, 25)
-            run.Position = UDim2.new(1, -150, 0, 5)
-            run.Text = "Execute"
-            run.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
-            run.TextColor3 = Color3.new(1, 1, 1)
-            run.Font = Enum.Font.GothamBold
-            run.ZIndex = 3
-            applyCorner(run, 6)
-            applyStroke(run, 1, 0, Color3.fromRGB(100, 0, 0))
-            
-            run.MouseButton1Click:Connect(function()
-                loadstring(code)()
-            end)
-            
-            local del = Instance.new("TextButton", frame)
-            del.Size = UDim2.new(0, 70, 0, 25)
-            del.Position = UDim2.new(1, -75, 0, 5)
-            del.Text = "Delete"
-            del.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            del.TextColor3 = Color3.new(1, 1, 1)
-            del.Font = Enum.Font.GothamBold
-            del.ZIndex = 3
-            applyCorner(del, 6)
-            applyStroke(del, 1, 0.2, Color3.fromRGB(80, 80, 80))
-            
-            del.MouseButton1Click:Connect(function()
-                favoritesData[name] = nil
-                saveFavorites(favoritesData)
-                refreshFavorites()
-            end)
-            
-            y += 70
-        end
-    end
-    favList.CanvasSize = UDim2.new(0, 0, 0, y)
-end
 
 refreshFavorites()
 
