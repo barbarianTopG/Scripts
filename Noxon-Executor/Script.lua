@@ -35,6 +35,19 @@ local function applyStroke(inst, thickness, transparency, color)
     return stroke
 end
 
+local function createSquircle(parent, size, position, color)
+    local frame = Instance.new("Frame", parent)
+    frame.Size = size
+    frame.Position = position
+    frame.BackgroundColor3 = color
+    frame.ZIndex = 10
+    
+    local corner = Instance.new("UICorner", frame)
+    corner.CornerRadius = UDim.new(0, 8)
+    
+    return frame
+end
+
 local favoritesData = {}
 local favoritesStore
 local dataStoreEnabled = pcall(function()
@@ -42,30 +55,65 @@ local dataStoreEnabled = pcall(function()
 end)
 
 local function loadFavorites()
-    if not dataStoreEnabled then return {} end
+    if not dataStoreEnabled then 
+        print("DataStore not enabled, using local storage")
+        return {} 
+    end
+    
     local success, data = pcall(function()
         return favoritesStore:GetAsync(player.UserId) or {}
     end)
-    return success and data or {}
+    
+    if not success then
+        warn("Failed to load favorites: " .. tostring(data))
+        return {}
+    end
+    
+    return data
 end
 
 local function saveFavorites(data)
-    if not dataStoreEnabled then return end
-    pcall(function()
+    if not dataStoreEnabled then 
+        print("DataStore not enabled, cannot save favorites")
+        return 
+    end
+    
+    local success, err = pcall(function()
         favoritesStore:SetAsync(player.UserId, data)
     end)
+    
+    if not success then
+        warn("Failed to save favorites: " .. tostring(err))
+    else
+        print("Favorites saved successfully")
+    end
 end
 
 favoritesData = loadFavorites()
 
+local isMinimized = false
+local originalSize = UDim2.new(0, 600, 0, 360)
+local originalPosition = UDim2.new(0.5, -300, 0.5, -180)
+
 local main = Instance.new("Frame", gui)
-main.Size = UDim2.new(0, 600, 0, 360)
-main.Position = UDim2.new(0.5, -300, 0.5, -180)
+main.Size = originalSize
+main.Position = originalPosition
 main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 main.Active = false
 main.Draggable = false
 applyCorner(main, 8)
 applyStroke(main, 2, 0.25, Color3.fromRGB(100, 0, 0))
+
+local minimizeBtn = createSquircle(main, UDim2.new(0, 30, 0, 30), UDim2.new(1, -70, 0, 5), Color3.fromRGB(200, 0, 0))
+applyStroke(minimizeBtn, 1, 0, Color3.fromRGB(100, 0, 0))
+
+local nLabel = Instance.new("TextLabel", minimizeBtn)
+nLabel.Size = UDim2.new(1, 0, 1, 0)
+nLabel.Text = "N"
+nLabel.TextColor3 = Color3.new(1, 1, 1)
+nLabel.BackgroundTransparency = 1
+nLabel.Font = Enum.Font.GothamBlack
+nLabel.TextSize = 18
 
 local close = Instance.new("TextButton", main)
 close.Size = UDim2.new(0, 30, 0, 30)
@@ -79,6 +127,19 @@ close.ZIndex = 10
 applyCorner(close, 6)
 applyStroke(close, 1, 0, Color3.fromRGB(100, 0, 0))
 
+local function toggleMinimize()
+    if isMinimized then
+        main.Size = originalSize
+        main.Position = originalPosition
+        isMinimized = false
+    else
+        main.Size = UDim2.new(0, 200, 0, 40)
+        main.Position = UDim2.new(0.5, -100, 0, 10)
+        isMinimized = true
+    end
+end
+
+minimizeBtn.MouseButton1Click:Connect(toggleMinimize)
 close.MouseButton1Click:Connect(function()
     gui:Destroy()
     blur:Destroy()
@@ -249,8 +310,106 @@ clearBtn.MouseButton1Click:Connect(function()
     input.Text = ""
 end)
 
+favBtn.MouseButton1Click:Connect(function()
+    if input.Text ~= "" then
+        local popup = Instance.new("Frame", gui)
+        popup.Size = UDim2.new(0, 300, 0, 150)
+        popup.Position = UDim2.new(0.5, -150, 0.5, -75)
+        popup.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        popup.ZIndex = 20
+        applyCorner(popup, 8)
+        applyStroke(popup, 2, 0.1, Color3.fromRGB(100, 0, 0))
+        
+        local overlay = Instance.new("Frame", gui)
+        overlay.Size = UDim2.new(1, 0, 1, 0)
+        overlay.Position = UDim2.new(0, 0, 0, 0)
+        overlay.BackgroundColor3 = Color3.new(0, 0, 0)
+        overlay.BackgroundTransparency = 0.5
+        overlay.ZIndex = 15
+        
+        local title = Instance.new("TextLabel", popup)
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.Position = UDim2.new(0, 0, 0, 10)
+        title.Text = "Name Your Favorite"
+        title.TextColor3 = Color3.new(1, 1, 1)
+        title.BackgroundTransparency = 1
+        title.Font = Enum.Font.GothamBold
+        title.TextSize = 16
+        title.ZIndex = 21
+        
+        local count = 0
+        for _ in pairs(favoritesData) do
+            count = count + 1
+        end
+        
+        local nameInput = Instance.new("TextBox", popup)
+        nameInput.Size = UDim2.new(1, -40, 0, 30)
+        nameInput.Position = UDim2.new(0, 20, 0, 50)
+        nameInput.PlaceholderText = "Favorite Name"
+        nameInput.Text = "Script " .. tostring(count + 1)
+        nameInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        nameInput.TextColor3 = Color3.new(1, 1, 1)
+        nameInput.Font = Enum.Font.Gotham
+        nameInput.ZIndex = 21
+        applyCorner(nameInput, 6)
+        applyStroke(nameInput, 1, 0.2, Color3.fromRGB(60, 60, 60))
+        
+        local buttonContainer = Instance.new("Frame", popup)
+        buttonContainer.Size = UDim2.new(1, -40, 0, 30)
+        buttonContainer.Position = UDim2.new(0, 20, 1, -40)
+        buttonContainer.BackgroundTransparency = 1
+        buttonContainer.ZIndex = 21
+        
+        local cancelBtn = Instance.new("TextButton", buttonContainer)
+        cancelBtn.Size = UDim2.new(0, 100, 1, 0)
+        cancelBtn.Position = UDim2.new(0, 0, 0, 0)
+        cancelBtn.Text = "Cancel"
+        cancelBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+        cancelBtn.TextColor3 = Color3.new(1, 1, 1)
+        cancelBtn.Font = Enum.Font.GothamBold
+        cancelBtn.ZIndex = 22
+        applyCorner(cancelBtn, 6)
+        applyStroke(cancelBtn, 1, 0.2, Color3.fromRGB(60, 60, 60))
+        
+        local saveBtn = Instance.new("TextButton", buttonContainer)
+        saveBtn.Size = UDim2.new(0, 100, 1, 0)
+        saveBtn.Position = UDim2.new(1, -100, 0, 0)
+        saveBtn.Text = "Save"
+        saveBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+        saveBtn.TextColor3 = Color3.new(1, 1, 1)
+        saveBtn.Font = Enum.Font.GothamBold
+        saveBtn.ZIndex = 22
+        applyCorner(saveBtn, 6)
+        applyStroke(saveBtn, 1, 0, Color3.fromRGB(100, 0, 0))
+        
+        local function closePopup()
+            popup:Destroy()
+            overlay:Destroy()
+        end
+        
+        cancelBtn.MouseButton1Click:Connect(closePopup)
+        
+        saveBtn.MouseButton1Click:Connect(function()
+            local name = nameInput.Text
+            if name ~= "" then
+                favoritesData[name] = input.Text
+                saveFavorites(favoritesData)
+                refreshFavorites()
+                closePopup()
+            end
+        end)
+    end
+end)
+
+local favList = Instance.new("ScrollingFrame", tabs.Favorites)
+favList.Size = UDim2.new(1, -20, 1, -20)
+favList.Position = UDim2.new(0, 10, 0, 10)
+favList.BackgroundTransparency = 1
+favList.ScrollBarThickness = 6
+favList.CanvasSize = UDim2.new()
+favList.ZIndex = 2
+
 local function refreshFavorites()
-    if not favList then return end
     favList:ClearAllChildren()
     local y = 0
     
@@ -334,105 +493,6 @@ local function refreshFavorites()
     end
     favList.CanvasSize = UDim2.new(0, 0, 0, y)
 end
-
-favBtn.MouseButton1Click:Connect(function()
-    if input.Text ~= "" then
-        local popup = Instance.new("Frame", gui)
-        popup.Size = UDim2.new(0, 300, 0, 150)
-        popup.Position = UDim2.new(0.5, -150, 0.5, -75)
-        popup.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-        popup.ZIndex = 20
-        applyCorner(popup, 8)
-        applyStroke(popup, 2, 0.1, Color3.fromRGB(100, 0, 0))
-        
-        local overlay = Instance.new("Frame", gui)
-        overlay.Size = UDim2.new(1, 0, 1, 0)
-        overlay.Position = UDim2.new(0, 0, 0, 0)
-        overlay.BackgroundColor3 = Color3.new(0, 0, 0)
-        overlay.BackgroundTransparency = 0.5
-        overlay.ZIndex = 15
-        
-        local title = Instance.new("TextLabel", popup)
-        title.Size = UDim2.new(1, 0, 0, 30)
-        title.Position = UDim2.new(0, 0, 0, 10)
-        title.Text = "Script Name"
-        title.TextColor3 = Color3.new(1, 1, 1)
-        title.BackgroundTransparency = 1
-        title.Font = Enum.Font.GothamBold
-        title.TextSize = 16
-        title.ZIndex = 21
-        
-        local count = 0
-        for _ in pairs(favoritesData) do
-            count = count + 1
-        end
-        
-        local nameInput = Instance.new("TextBox", popup)
-        nameInput.Size = UDim2.new(1, -40, 0, 30)
-        nameInput.Position = UDim2.new(0, 20, 0, 50)
-        nameInput.PlaceholderText = "Favorite Name"
-        nameInput.Text = "Script " .. tostring(count + 1)
-        nameInput.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-        nameInput.TextColor3 = Color3.new(1, 1, 1)
-        nameInput.Font = Enum.Font.Gotham
-        nameInput.ZIndex = 21
-        applyCorner(nameInput, 6)
-        applyStroke(nameInput, 1, 0.2, Color3.fromRGB(60, 60, 60))
-        
-        local buttonContainer = Instance.new("Frame", popup)
-        buttonContainer.Size = UDim2.new(1, -40, 0, 30)
-        buttonContainer.Position = UDim2.new(0, 20, 1, -40)
-        buttonContainer.BackgroundTransparency = 1
-        buttonContainer.ZIndex = 21
-        
-        local cancelBtn = Instance.new("TextButton", buttonContainer)
-        cancelBtn.Size = UDim2.new(0, 100, 1, 0)
-        cancelBtn.Position = UDim2.new(0, 0, 0, 0)
-        cancelBtn.Text = "Cancel"
-        cancelBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-        cancelBtn.TextColor3 = Color3.new(1, 1, 1)
-        cancelBtn.Font = Enum.Font.GothamBold
-        cancelBtn.ZIndex = 22
-        applyCorner(cancelBtn, 6)
-        applyStroke(cancelBtn, 1, 0.2, Color3.fromRGB(60, 60, 60))
-        
-        local saveBtn = Instance.new("TextButton", buttonContainer)
-        saveBtn.Size = UDim2.new(0, 100, 1, 0)
-        saveBtn.Position = UDim2.new(1, -100, 0, 0)
-        saveBtn.Text = "Save"
-        saveBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
-        saveBtn.TextColor3 = Color3.new(1, 1, 1)
-        saveBtn.Font = Enum.Font.GothamBold
-        saveBtn.ZIndex = 22
-        applyCorner(saveBtn, 6)
-        applyStroke(saveBtn, 1, 0, Color3.fromRGB(100, 0, 0))
-        
-        local function closePopup()
-            popup:Destroy()
-            overlay:Destroy()
-        end
-        
-        cancelBtn.MouseButton1Click:Connect(closePopup)
-        
-        saveBtn.MouseButton1Click:Connect(function()
-            local name = nameInput.Text
-            if name ~= "" then
-                favoritesData[name] = input.Text
-                saveFavorites(favoritesData)
-                refreshFavorites()
-                closePopup()
-            end
-        end)
-    end
-end)
-
-local favList = Instance.new("ScrollingFrame", tabs.Favorites)
-favList.Size = UDim2.new(1, -20, 1, -20)
-favList.Position = UDim2.new(0, 10, 0, 10)
-favList.BackgroundTransparency = 1
-favList.ScrollBarThickness = 6
-favList.CanvasSize = UDim2.new()
-favList.ZIndex = 2
 
 refreshFavorites()
 
