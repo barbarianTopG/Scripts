@@ -355,7 +355,7 @@ favBtn.MouseButton1Click:Connect(function()
         local title = Instance.new("TextLabel", popup)
         title.Size = UDim2.new(1, 0, 0, 30)
         title.Position = UDim2.new(0, 0, 0, 10)
-        title.Text = "Name Your Favorite"
+        title.Text = "Script Name"
         title.TextColor3 = Color3.new(1, 1, 1)
         title.BackgroundTransparency = 1
         title.Font = Enum.Font.GothamBold
