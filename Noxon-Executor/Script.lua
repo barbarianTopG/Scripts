@@ -35,19 +35,6 @@ local function applyStroke(inst, thickness, transparency, color)
     return stroke
 end
 
-local function createSquircle(parent, size, position, color)
-    local frame = Instance.new("Frame", parent)
-    frame.Size = size
-    frame.Position = position
-    frame.BackgroundColor3 = color
-    frame.ZIndex = 10
-    
-    local corner = Instance.new("UICorner", frame)
-    corner.CornerRadius = UDim.new(0, 8)
-    
-    return frame
-end
-
 local favoritesData = {}
 local favoritesStore
 local dataStoreEnabled = pcall(function()
@@ -55,65 +42,30 @@ local dataStoreEnabled = pcall(function()
 end)
 
 local function loadFavorites()
-    if not dataStoreEnabled then 
-        print("DataStore not enabled, using local storage")
-        return {} 
-    end
-    
+    if not dataStoreEnabled then return {} end
     local success, data = pcall(function()
         return favoritesStore:GetAsync(player.UserId) or {}
     end)
-    
-    if not success then
-        warn("Failed to load favorites: " .. tostring(data))
-        return {}
-    end
-    
-    return data
+    return success and data or {}
 end
 
 local function saveFavorites(data)
-    if not dataStoreEnabled then 
-        print("DataStore not enabled, cannot save favorites")
-        return 
-    end
-    
-    local success, err = pcall(function()
+    if not dataStoreEnabled then return end
+    pcall(function()
         favoritesStore:SetAsync(player.UserId, data)
     end)
-    
-    if not success then
-        warn("Failed to save favorites: " .. tostring(err))
-    else
-        print("Favorites saved successfully")
-    end
 end
 
 favoritesData = loadFavorites()
 
-local isMinimized = false
-local originalSize = UDim2.new(0, 600, 0, 360)
-local originalPosition = UDim2.new(0.5, -300, 0.5, -180)
-
 local main = Instance.new("Frame", gui)
-main.Size = originalSize
-main.Position = originalPosition
+main.Size = UDim2.new(0, 600, 0, 360)
+main.Position = UDim2.new(0.5, -300, 0.5, -180)
 main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-main.Active = false
+main.Active = false  
 main.Draggable = false
 applyCorner(main, 8)
 applyStroke(main, 2, 0.25, Color3.fromRGB(100, 0, 0))
-
-local minimizeBtn = createSquircle(main, UDim2.new(0, 30, 0, 30), UDim2.new(1, -70, 0, 5), Color3.fromRGB(200, 0, 0))
-applyStroke(minimizeBtn, 1, 0, Color3.fromRGB(100, 0, 0))
-
-local nLabel = Instance.new("TextLabel", minimizeBtn)
-nLabel.Size = UDim2.new(1, 0, 1, 0)
-nLabel.Text = "N"
-nLabel.TextColor3 = Color3.new(1, 1, 1)
-nLabel.BackgroundTransparency = 1
-nLabel.Font = Enum.Font.GothamBlack
-nLabel.TextSize = 18
 
 local close = Instance.new("TextButton", main)
 close.Size = UDim2.new(0, 30, 0, 30)
@@ -127,19 +79,6 @@ close.ZIndex = 10
 applyCorner(close, 6)
 applyStroke(close, 1, 0, Color3.fromRGB(100, 0, 0))
 
-local function toggleMinimize()
-    if isMinimized then
-        main.Size = originalSize
-        main.Position = originalPosition
-        isMinimized = false
-    else
-        main.Size = UDim2.new(0, 200, 0, 40)
-        main.Position = UDim2.new(0.5, -100, 0, 10)
-        isMinimized = true
-    end
-end
-
-minimizeBtn.MouseButton1Click:Connect(toggleMinimize)
 close.MouseButton1Click:Connect(function()
     gui:Destroy()
     blur:Destroy()
