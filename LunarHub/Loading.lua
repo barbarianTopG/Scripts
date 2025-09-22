@@ -234,8 +234,7 @@ local function loadHubAndClose()
     ScreenGui:Destroy()
     BackgroundBlur:Destroy()
 
-    -- BLANK LOADSTRING PLACEHOLDER
-    -- loadstring(game:HttpGet("YOUR LINK HERE"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/LunarHub/Main.lua"))()
 end
 
 SkipButton.MouseButton1Click:Connect(loadHubAndClose)
