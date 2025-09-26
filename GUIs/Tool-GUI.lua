@@ -210,16 +210,36 @@ local function updateStatus(text, color)
     StatusLabel.TextColor3 = color or Color3.fromRGB(150, 150, 150)
 end
 
-local function resetCharacter()
-    if lp.Character then
-        lp.Character:BreakJoints()
+local function waitForRespawn()
+    if isPlayerAlive(lp) then return true end
+    updateStatus("Waiting for respawn...", Color3.fromRGB(255, 200, 50))
+    local startTime = tick()
+    local connection
+    local respawned = false
+    connection = lp.CharacterAdded:Connect(function()
+        respawned = true
+        if connection then connection:Disconnect() end
+    end)
+    while not respawned and tick() - startTime < 15 do
+        task.wait(0.5)
+        if isPlayerAlive(lp) then
+            respawned = true
+            break
+        end
     end
-    task.wait(2)
+    if connection then connection:Disconnect() end
+    if respawned then
+        task.wait(1)
+        return true
+    else
+        updateStatus("Respawn timeout", Color3.fromRGB(255, 50, 50))
+        return false
+    end
 end
 
 local function equipAllTools()
     local character = lp.Character
-    if not character then return end
+    if not character then return false end
     local backpack = lp.Backpack
     local humanoid = character:FindFirstChildOfClass("Humanoid")
     if humanoid then
@@ -233,13 +253,15 @@ local function equipAllTools()
                 tool.Parent = character
             end
         end
+        return true
     end
+    return false
 end
 
 local function performKill()
-    if killInProgress then 
+    if killInProgress then
         updateStatus("Kill already in progress", Color3.fromRGB(255, 150, 50))
-        return false 
+        return false
     end
     local Player = gplr(Username.Text)[1]
     if not Player then
@@ -253,9 +275,10 @@ local function performKill()
         return false
     end
     if not isPlayerAlive(lp) then
-        updateStatus("Waiting for respawn...", Color3.fromRGB(255, 150, 50))
-        repeat task.wait(0.5) until isPlayerAlive(lp) or not loopKillEnabled
-        if not isPlayerAlive(lp) then return false end
+        if not waitForRespawn() then
+            updateStatus("Respawn failed", Color3.fromRGB(255, 50, 50))
+            return false
+        end
     end
     killInProgress = true
     updateStatus("Starting kill...", Color3.fromRGB(255, 200, 50))
@@ -266,10 +289,15 @@ local function performKill()
         attempts += 1
         updateStatus("Attempt "..attempts.."/"..maxAttempts, Color3.fromRGB(255, 200, 50))
         local LocalPlayer = game.Players.LocalPlayer
+        if not isPlayerAlive(lp) then
+            updateStatus("Died before attempt, waiting...", Color3.fromRGB(255, 150, 50))
+            if not waitForRespawn() then
+                break
+            end
+        end
         local previousCFrame = LocalPlayer.Character.PrimaryPart.CFrame
         if LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
             local Character = LocalPlayer.Character
-            local currentHealth = Character.Humanoid.Health
             Character.Archivable = true
             local Clone = Character:Clone()
             LocalPlayer.Character = Clone
@@ -282,7 +310,10 @@ local function performKill()
                 end
                 local Humanoid = Instance.new("Humanoid")
                 Humanoid.Parent = LocalPlayer.Character
-                equipAllTools()
+                if not equipAllTools() then
+                    updateStatus("Tool equip failed", Color3.fromRGB(255, 50, 50))
+                    break
+                end
                 local tools = {}
                 for _, tool in pairs(LocalPlayer.Character:GetChildren()) do
                     if tool:IsA("Tool") then
@@ -305,20 +336,11 @@ local function performKill()
                     Player.Character.HumanoidRootPart.Anchored = false
                     task.wait(0.05)
                     Humanoid.Health = 0
+                    task.wait(0.5)
                     LocalPlayer.Character = nil
-                    local respawnSuccess = false
-                    local charConnection
-                    charConnection = LocalPlayer.CharacterAdded:Connect(function(char)
-                        charConnection:Disconnect()
-                        respawnSuccess = true
-                        task.wait(0.5)
-                        if char and char.PrimaryPart then
-                            char:SetPrimaryPartCFrame(previousCFrame)
-                        end
-                    end)
-                    local respawnStart = tick()
-                    while not respawnSuccess and tick() - respawnStart < 10 do
-                        task.wait(0.1)
+                    updateStatus("Waiting for respawn...", Color3.fromRGB(255, 200, 50))
+                    if not waitForRespawn() then
+                        break
                     end
                     if Player.Character and Player.Character.Humanoid.Health <= 15 then
                         updateStatus("Kill successful!", Color3.fromRGB(50, 255, 50))
@@ -328,7 +350,6 @@ local function performKill()
                         if attempts < maxAttempts then
                             updateStatus("Retrying...", Color3.fromRGB(255, 150, 50))
                             notify("Attempt "..attempts.." failed, retrying...")
-                            resetCharacter()
                             task.wait(2)
                         else
                             updateStatus("Kill failed after "..maxAttempts.." attempts", Color3.fromRGB(255, 50, 50))
@@ -361,11 +382,17 @@ local function startLoopKill()
         while loopKillEnabled and targetPlayer do
             if not isPlayerAlive(targetPlayer) then
                 updateStatus("Waiting for target respawn...", Color3.fromRGB(255, 200, 50))
-                repeat task.wait(1) until isPlayerAlive(targetPlayer) or not loopKillEnabled or not targetPlayer
+                repeat
+                    task.wait(1)
+                    if not loopKillEnabled or not targetPlayer then break end
+                until isPlayerAlive(targetPlayer)
             end
             if not isPlayerAlive(lp) then
                 updateStatus("Waiting for local respawn...", Color3.fromRGB(255, 200, 50))
-                repeat task.wait(1) until isPlayerAlive(lp) or not loopKillEnabled or not targetPlayer
+                repeat
+                    task.wait(1)
+                    if not loopKillEnabled or not targetPlayer then break end
+                until isPlayerAlive(lp)
             end
             if loopKillEnabled and targetPlayer and isPlayerAlive(targetPlayer) and isPlayerAlive(lp) and not killInProgress then
                 local success = performKill()
@@ -377,6 +404,10 @@ local function startLoopKill()
             else
                 task.wait(0.5)
             end
+            task.wait(0.1)
+        end
+        if not loopKillEnabled then
+            updateStatus("Loop kill stopped", Color3.fromRGB(150, 150, 150))
         end
     end)
 end
@@ -387,7 +418,6 @@ Kill.MouseButton1Click:Connect(function()
         performKill()
     end
 end)
-
 LoopKill.MouseButton1Click:Connect(function()
     loopKillEnabled = not loopKillEnabled
     if loopKillEnabled then
@@ -407,14 +437,12 @@ LoopKill.MouseButton1Click:Connect(function()
         LoopKill.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
         LoopKill.TextColor3 = Color3.fromRGB(150, 150, 150)
         updateStatus("Loop kill deactivated", Color3.fromRGB(150, 150, 150))
+        targetPlayer = nil
     end
 end)
-
 lp.CharacterAdded:Connect(function()
     if killInProgress then
-        killInProgress = false
-        updateStatus("Auto-reset complete", Color3.fromRGB(100, 255, 100))
+        updateStatus("Respawned, continuing...", Color3.fromRGB(100, 255, 100))
     end
 end)
-
 highlightMatches()
