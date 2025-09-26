@@ -1,6 +1,10 @@
 local lp = game:GetService("Players").LocalPlayer
-local textChatEnabled = true
-local currentPhrase = "GET OUT!!!"
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local loopKillEnabled = false
+local targetPlayer = nil
+local killInProgress = false
+local lastFailTime = 0
 
 local function gplr(String)
     local Found = {}
@@ -23,7 +27,8 @@ local function gplr(String)
         end
     else
         for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-            if v.Name:lower():sub(1, #String) == String:lower() then
+            if v.Name:lower():sub(1, #String) == String:lower() or 
+               (v.DisplayName and v.DisplayName:lower():sub(1, #String) == String:lower()) then
                 table.insert(Found,v)
             end
         end
@@ -39,6 +44,17 @@ local function notify(text)
     })
 end
 
+local function tweenObject(obj, properties, duration, style)
+    local tweenInfo = TweenInfo.new(duration, style or Enum.EasingStyle.Quad)
+    local tween = TweenService:Create(obj, tweenInfo, properties)
+    tween:Play()
+    return tween
+end
+
+local function isPlayerAlive(player)
+    return player and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
+end
+
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -47,17 +63,21 @@ local ui = Instance.new("Frame")
 ui.Name = "ui"
 ui.Parent = ScreenGui
 ui.Active = true
-ui.BackgroundColor3 = Color3.fromRGB(33, 0, 84)
+ui.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
 ui.BackgroundTransparency = 0
-ui.BorderSizePixel = 2
-ui.BorderColor3 = Color3.fromRGB(150, 0, 255)
-ui.Position = UDim2.new(0.254, 0, 0.419, 0)
-ui.Size = UDim2.new(0, 278, 0, 220)
+ui.BorderSizePixel = 0
+ui.Position = UDim2.new(0.3, 0, 0.3, 0)
+ui.Size = UDim2.new(0, 320, 0, 200)
 ui.Draggable = true
 
 local UICorner = Instance.new("UICorner")
 UICorner.Parent = ui
-UICorner.CornerRadius = UDim.new(0.1, 0)
+UICorner.CornerRadius = UDim.new(0.08, 0)
+
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Parent = ui
+uiStroke.Color = Color3.fromRGB(60, 60, 80)
+uiStroke.Thickness = 2
 
 local title = Instance.new("TextLabel")
 title.Name = "title"
@@ -65,140 +85,121 @@ title.Parent = ui
 title.BackgroundTransparency = 1
 title.Position = UDim2.new(0, 0, 0.02, 0)
 title.Size = UDim2.new(1, 0, 0, 50)
-title.Font = Enum.Font.SourceSans
+title.Font = Enum.Font.GothamBold
 title.Text = "★ Kill Gui ★"
-title.TextColor3 = Color3.fromRGB(150, 0, 255)
+title.TextColor3 = Color3.fromRGB(0, 200, 255)
 title.TextScaled = true
 title.TextWrapped = true
 
+local titleGlow = Instance.new("UIGradient")
+titleGlow.Parent = title
+titleGlow.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 200))
+})
+titleGlow.Rotation = 45
+
 local Frame = Instance.new("Frame")
 Frame.Parent = title
-Frame.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
 Frame.Position = UDim2.new(0.07, 0, 0.86, 0)
-Frame.Size = UDim2.new(0.85, 0, 0, 6)
+Frame.Size = UDim2.new(0.85, 0, 0, 3)
+Frame.BorderSizePixel = 0
 
 local Username = Instance.new("TextBox")
 Username.Name = "Username"
 Username.Parent = ui
-Username.BackgroundColor3 = Color3.new(1, 1, 1)
-Username.Position = UDim2.new(0.1, 0, 0.3, 0)
-Username.Size = UDim2.new(0.6, 0, 0, 50)
-Username.Font = Enum.Font.SourceSans
-Username.PlaceholderText = "Username"
+Username.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+Username.Position = UDim2.new(0.05, 0, 0.25, 0)
+Username.Size = UDim2.new(0.9, 0, 0, 40)
+Username.Font = Enum.Font.Gotham
+Username.PlaceholderText = "Username or Display Name"
 Username.Text = ""
-Username.TextColor3 = Color3.new(0, 0, 0)
+Username.TextColor3 = Color3.fromRGB(220, 220, 220)
 Username.TextScaled = true
 Username.TextWrapped = true
+Username.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 
-local ShowListBtn = Instance.new("TextButton")
-ShowListBtn.Name = "ShowListBtn"
-ShowListBtn.Parent = ui
-ShowListBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-ShowListBtn.Position = UDim2.new(0.72, 0, 0.3, 0)
-ShowListBtn.Size = UDim2.new(0, 50, 0, 50)
-ShowListBtn.Text = "List"
-ShowListBtn.TextColor3 = Color3.new(1,1,1)
-ShowListBtn.TextScaled = true
-ShowListBtn.TextWrapped = true
+local textBoxCorner = Instance.new("UICorner")
+textBoxCorner.CornerRadius = UDim.new(0, 6)
+textBoxCorner.Parent = Username
 
-local btnCorner = Instance.new("UICorner")
-btnCorner.CornerRadius = UDim.new(0, 6)
-btnCorner.Parent = ShowListBtn
-
-local PlayerListBG = Instance.new("Frame")
-PlayerListBG.Parent = ui
-PlayerListBG.BackgroundColor3 = Color3.fromRGB(33, 0, 84)
-PlayerListBG.Position = UDim2.new(1.05, 0, 0, 0)
-PlayerListBG.Size = UDim2.new(0, 270, 0, 200)
-PlayerListBG.BorderSizePixel = 2
-PlayerListBG.BorderColor3 = Color3.fromRGB(150, 0, 255)
-PlayerListBG.Visible = false
-PlayerListBG.ClipsDescendants = true
-
-local playerListCorner = Instance.new("UICorner")
-playerListCorner.CornerRadius = UDim.new(0, 6)
-playerListCorner.Parent = PlayerListBG
-
-local PlayerListTitle = Instance.new("TextLabel")
-PlayerListTitle.Parent = PlayerListBG
-PlayerListTitle.BackgroundTransparency = 1
-PlayerListTitle.Position = UDim2.new(0, 0, 0, 0)
-PlayerListTitle.Size = UDim2.new(1, 0, 0, 25)
-PlayerListTitle.Font = Enum.Font.SourceSans
-PlayerListTitle.Text = "Player List"
-PlayerListTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-PlayerListTitle.TextScaled = true
-PlayerListTitle.TextWrapped = true
-
-local ScrollingFrame = Instance.new("ScrollingFrame")
-ScrollingFrame.Parent = PlayerListBG
-ScrollingFrame.BackgroundTransparency = 1
-ScrollingFrame.Position = UDim2.new(0, 0, 0, 25)
-ScrollingFrame.Size = UDim2.new(1, 0, 1, -25)
-ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
-ScrollingFrame.ScrollBarThickness = 5
-
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Parent = ScrollingFrame
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 2)
+local textBoxStroke = Instance.new("UIStroke")
+textBoxStroke.Parent = Username
+textBoxStroke.Color = Color3.fromRGB(60, 60, 80)
+textBoxStroke.Thickness = 1
 
 local Kill = Instance.new("TextButton")
 Kill.Name = "Kill"
 Kill.Parent = ui
-Kill.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-Kill.Position = UDim2.new(0.25, 0, 0.62, 0)
-Kill.Size = UDim2.new(0.5, 0, 0, 45)
-Kill.Font = Enum.Font.Gotham
+Kill.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
+Kill.Position = UDim2.new(0.1, 0, 0.55, 0)
+Kill.Size = UDim2.new(0.35, 0, 0, 35)
+Kill.Font = Enum.Font.GothamBold
 Kill.Text = "Kill"
 Kill.TextColor3 = Color3.new(1, 1, 1)
 Kill.TextScaled = true
 Kill.TextWrapped = true
 
-local ToggleChat = Instance.new("TextButton")
-ToggleChat.Name = "ToggleChat"
-ToggleChat.Parent = ui
-ToggleChat.BackgroundColor3 = Color3.fromRGB(100, 0, 200)
-ToggleChat.Position = UDim2.new(0.25, 0, 0.82, 0)
-ToggleChat.Size = UDim2.new(0.5, 0, 0, 30)
-ToggleChat.Font = Enum.Font.Gotham
-ToggleChat.Text = "Send Text: ON"
-ToggleChat.TextColor3 = Color3.new(1, 1, 1)
-ToggleChat.TextScaled = true
-ToggleChat.TextWrapped = true
-ToggleChat.MouseButton1Click:Connect(function()
-    textChatEnabled = not textChatEnabled
-    ToggleChat.Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
-    ToggleChat.BackgroundColor3 = textChatEnabled and Color3.fromRGB(100, 0, 200) or Color3.fromRGB(50, 50, 50)
-end)
+local killCorner = Instance.new("UICorner")
+killCorner.CornerRadius = UDim.new(0, 6)
+killCorner.Parent = Kill
 
-local function updatePlayerList()
-    for _, child in pairs(ScrollingFrame:GetChildren()) do
-        if child:IsA("TextButton") then child:Destroy() end
-    end
-    local totalHeight = 0
-    for _, player in pairs(game:GetService("Players"):GetPlayers()) do
-        if player ~= lp then
-            local btn = Instance.new("TextButton")
-            btn.Size = UDim2.new(1, 0, 0, 25)
-            btn.BackgroundColor3 = Color3.fromRGB(150, 0, 255)
-            btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            btn.Font = Enum.Font.SourceSans
-            btn.TextSize = 14
-            btn.Text = player.DisplayName.." ("..player.Name..")"
-            local btnCorner = Instance.new("UICorner")
-            btnCorner.CornerRadius = UDim.new(0, 6)
-            btnCorner.Parent = btn
-            btn.Parent = ScrollingFrame
-            btn.MouseButton1Click:Connect(function()
-                Username.Text = player.Name
-                PlayerListBG.Visible = false
-            end)
-            totalHeight = totalHeight + 27
-        end
-    end
-    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
-end
+local killGradient = Instance.new("UIGradient")
+killGradient.Parent = Kill
+killGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 200, 200))
+})
+
+local LoopKill = Instance.new("TextButton")
+LoopKill.Name = "LoopKill"
+LoopKill.Parent = ui
+LoopKill.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+LoopKill.Position = UDim2.new(0.55, 0, 0.55, 0)
+LoopKill.Size = UDim2.new(0.35, 0, 0, 35)
+LoopKill.Font = Enum.Font.GothamBold
+LoopKill.Text = "Loop: OFF"
+LoopKill.TextColor3 = Color3.fromRGB(150, 150, 150)
+LoopKill.TextScaled = true
+LoopKill.TextWrapped = true
+
+local loopCorner = Instance.new("UICorner")
+loopCorner.CornerRadius = UDim.new(0, 6)
+loopCorner.Parent = LoopKill
+
+local loopStroke = Instance.new("UIStroke")
+loopStroke.Parent = LoopKill
+loopStroke.Color = Color3.fromRGB(60, 60, 80)
+loopStroke.Thickness = 1
+
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Name = "StatusLabel"
+StatusLabel.Parent = ui
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Position = UDim2.new(0.05, 0, 0.8, 0)
+StatusLabel.Size = UDim2.new(0.9, 0, 0, 25)
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.Text = "Ready"
+StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+StatusLabel.TextScaled = true
+StatusLabel.TextWrapped = true
+
+local ResetBtn = Instance.new("TextButton")
+ResetBtn.Name = "ResetBtn"
+ResetBtn.Parent = ui
+ResetBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 50)
+ResetBtn.Position = UDim2.new(0.3, 0, 0.75, 0)
+ResetBtn.Size = UDim2.new(0.4, 0, 0, 25)
+ResetBtn.Font = Enum.Font.GothamBold
+ResetBtn.Text = "Reset Character"
+ResetBtn.TextColor3 = Color3.new(1, 1, 1)
+ResetBtn.TextScaled = true
+ResetBtn.TextWrapped = true
+
+local resetCorner = Instance.new("UICorner")
+resetCorner.CornerRadius = UDim.new(0, 6)
+resetCorner.Parent = ResetBtn
 
 local function highlightMatches()
     for _, player in pairs(game:GetService("Players"):GetPlayers()) do
@@ -206,13 +207,14 @@ local function highlightMatches()
             if player.Character:FindFirstChild("Highlight") then
                 player.Character.Highlight:Destroy()
             end
-            if Username.Text ~= "" and string.find(player.Name:lower(), Username.Text:lower()) then
+            if Username.Text ~= "" and (string.find(player.Name:lower(), Username.Text:lower()) or 
+               string.find(player.DisplayName:lower(), Username.Text:lower())) then
                 local highlight = Instance.new("Highlight")
                 highlight.Name = "Highlight"
                 highlight.Adornee = player.Character
-                highlight.FillColor = Color3.fromRGB(255, 0, 0)
-                highlight.FillTransparency = 0.5
-                highlight.OutlineColor = Color3.fromRGB(150, 0, 255)
+                highlight.FillColor = Color3.fromRGB(255, 50, 50)
+                highlight.FillTransparency = 0.7
+                highlight.OutlineColor = Color3.fromRGB(255, 0, 0)
                 highlight.OutlineTransparency = 0
                 highlight.Parent = player.Character
             end
@@ -220,32 +222,66 @@ local function highlightMatches()
     end
 end
 
-Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
-game:GetService("Players").PlayerAdded:Connect(function() updatePlayerList(); highlightMatches() end)
-game:GetService("Players").PlayerRemoving:Connect(function() updatePlayerList(); highlightMatches() end)
-updatePlayerList()
+local function updateStatus(text, color)
+    StatusLabel.Text = text
+    StatusLabel.TextColor3 = color or Color3.fromRGB(150, 150, 150)
+end
 
-ShowListBtn.MouseButton1Click:Connect(function()
-    PlayerListBG.Visible = not PlayerListBG.Visible
-end)
+local function resetCharacter()
+    if lp.Character then
+        lp.Character:BreakJoints()
+        updateStatus("Character reset", Color3.fromRGB(255, 200, 50))
+    end
+end
 
-Kill.MouseButton1Click:Connect(function()
+local function performKill()
+    if killInProgress then 
+        updateStatus("Kill already in progress", Color3.fromRGB(255, 150, 50))
+        return false 
+    end
+    
+    if os.time() - lastFailTime < 5 then
+        updateStatus("Cooling down...", Color3.fromRGB(255, 150, 50))
+        notify("Wait 5 seconds after failure")
+        return false
+    end
+    
     local Player = gplr(Username.Text)[1]
-    if Player then
-        local LocalPlayer = game.Players.LocalPlayer
-        if textChatEnabled then
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(currentPhrase)
-            task.wait(0.1)
-        end
+    if not Player then
+        updateStatus("Player not found", Color3.fromRGB(255, 50, 50))
+        notify("Player is not in the server.")
+        return false
+    end
+    
+    if not isPlayerAlive(Player) then
+        updateStatus("Target is not alive", Color3.fromRGB(255, 150, 50))
+        notify("Target player is not alive.")
+        return false
+    end
+    
+    if not isPlayerAlive(lp) then
+        updateStatus("Wait for respawn", Color3.fromRGB(255, 150, 50))
+        notify("Please wait for your character to respawn.")
+        return false
+    end
+    
+    killInProgress = true
+    updateStatus("Starting kill...", Color3.fromRGB(255, 200, 50))
+    
+    local success = false
+    local LocalPlayer = game.Players.LocalPlayer
+    local previousCFrame = LocalPlayer.Character.PrimaryPart.CFrame
+
+    local ok, err = pcall(function()
         if LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
             local Character = LocalPlayer.Character
-            local previous = LocalPlayer.Character.PrimaryPart.CFrame
             Character.Archivable = true
             local Clone = Character:Clone()
             LocalPlayer.Character = Clone
-            wait(0.5)
+            task.wait(0.2)
             LocalPlayer.Character = Character
-            wait(0.2)
+            task.wait(0.1)
+            
             if LocalPlayer.Character and Player.Character and Player.Character.PrimaryPart then
                 if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
                     LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):Destroy()
@@ -253,11 +289,18 @@ Kill.MouseButton1Click:Connect(function()
                 local Humanoid = Instance.new("Humanoid")
                 Humanoid.Parent = LocalPlayer.Character
                 local Tool = nil
-                if LocalPlayer.Character:FindFirstChildOfClass("Tool") then
-                    Tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
-                elseif LocalPlayer.Backpack and LocalPlayer.Backpack:FindFirstChildOfClass("Tool") then
-                    Tool = LocalPlayer.Backpack:FindFirstChildOfClass("Tool")
+                
+                for _, tool in pairs(LocalPlayer.Backpack:GetChildren()) do
+                    if tool:IsA("Tool") then
+                        Tool = tool
+                        break
+                    end
                 end
+                
+                if not Tool and LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+                    Tool = LocalPlayer.Character:FindFirstChildOfClass("Tool")
+                end
+                
                 if Tool ~= nil then
                     Tool.Parent = LocalPlayer.Backpack
                     Player.Character.HumanoidRootPart.Anchored = true
@@ -265,33 +308,141 @@ Kill.MouseButton1Click:Connect(function()
                     Tool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
                     Tool.Parent = LocalPlayer.Character
                     workspace.CurrentCamera.CameraSubject = Tool.Handle
-                    repeat wait() until not Tool or (Tool.Parent == workspace or Tool.Parent == Player.Character)
+                    
+                    local timeout = 0
+                    repeat 
+                        task.wait(0.1)
+                        timeout = timeout + 1
+                    until not Tool or (Tool.Parent == workspace or Tool.Parent == Player.Character) or timeout > 50
+                    
                     Player.Character.HumanoidRootPart.Anchored = false
-                    wait(0.1)
+                    task.wait(0.05)
                     Humanoid.Health = 0
                     LocalPlayer.Character = nil
-                    spawn(function()
-                        LocalPlayer.CharacterAdded:Wait()
+                    
+                    local respawnTime = tick()
+                    local charAdded
+                    charAdded = LocalPlayer.CharacterAdded:Connect(function(char)
+                        charAdded:Disconnect()
                         Player.Character.HumanoidRootPart.Anchored = false
-                        if Player.Character.Humanoid.Health <= 15 then
+                        
+                        task.wait(0.2) 
+                        if char and char.PrimaryPart then
+                            char:SetPrimaryPartCFrame(previousCFrame)
+                        end
+                        
+                        if Player.Character and Player.Character.Humanoid.Health <= 15 then
+                            updateStatus("Kill successful!", Color3.fromRGB(50, 255, 50))
                             notify("Success!")
-                            repeat wait() until LocalPlayer.Character and LocalPlayer.Character.PrimaryPart
-                            wait(0.4)
-                            LocalPlayer.Character:SetPrimaryPartCFrame(previous)
+                            success = true
+                            lastFailTime = 0
                         else
-                            notify("Error: Error, possible reasons: Reanimation/Just failed.")
+                            updateStatus("Kill failed", Color3.fromRGB(255, 50, 50))
+                            notify("Kill may have failed.")
+                            lastFailTime = os.time()
+                        end
+                    end)
+                    
+                    task.spawn(function()
+                        task.wait(5)
+                        if killInProgress then
+                            updateStatus("Respawn timeout", Color3.fromRGB(255, 50, 50))
+                            lastFailTime = os.time()
+                            killInProgress = false
                         end
                     end)
                 else
-                    notify("Error: Error, possible reasons: Reanimation/Just failed.")
+                    updateStatus("No tool found", Color3.fromRGB(255, 50, 50))
+                    notify("Error: No tool equipped.")
+                    lastFailTime = os.time()
                 end
             else
-                notify("Error: Error, possible reasons: Reanimation/Just failed.")
+                updateStatus("Character error", Color3.fromRGB(255, 50, 50))
+                notify("Error: Character issue.")
+                lastFailTime = os.time()
             end
         else
-            notify("Error: Error, possible reasons: Reanimation/Just failed.")
+            updateStatus("Local player error", Color3.fromRGB(255, 50, 50))
+            notify("Error: Local player issue.")
+            lastFailTime = os.time()
         end
-    else
-        notify("Player is not in the server.")
+    end)
+    
+    if not ok then
+        updateStatus("Script error", Color3.fromRGB(255, 50, 50))
+        warn("Kill error: " .. tostring(err))
+        lastFailTime = os.time()
+        killInProgress = false
+    end
+    
+    return success
+end
+
+local function startLoopKill()
+    if not targetPlayer then return end
+    
+    spawn(function()
+        while loopKillEnabled and targetPlayer do
+            if not isPlayerAlive(targetPlayer) then
+                updateStatus("Waiting for target respawn...", Color3.fromRGB(255, 200, 50))
+                repeat
+                    task.wait(1)
+                until isPlayerAlive(targetPlayer) or not loopKillEnabled or not targetPlayer
+            end
+            
+            if not isPlayerAlive(lp) then
+                updateStatus("Waiting for local respawn...", Color3.fromRGB(255, 200, 50))
+                repeat
+                    task.wait(1)
+                until isPlayerAlive(lp) or not loopKillEnabled or not targetPlayer
+            end
+            
+            if loopKillEnabled and targetPlayer and isPlayerAlive(targetPlayer) and isPlayerAlive(lp) and not killInProgress then
+                local success = performKill()
+                if not success then
+                    task.wait(3) 
+                else
+                    task.wait(1) 
+                end
+            else
+                task.wait(0.5)
+            end
+        end
+    end)
+end
+
+Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
+
+Kill.MouseButton1Click:Connect(function()
+    if not killInProgress then
+        performKill()
     end
 end)
+
+LoopKill.MouseButton1Click:Connect(function()
+    loopKillEnabled = not loopKillEnabled
+    if loopKillEnabled then
+        targetPlayer = gplr(Username.Text)[1]
+        if targetPlayer then
+            LoopKill.Text = "Loop: ON"
+            LoopKill.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+            LoopKill.TextColor3 = Color3.fromRGB(255, 255, 255)
+            updateStatus("Loop kill activated", Color3.fromRGB(255, 100, 100))
+            startLoopKill()
+        else
+            loopKillEnabled = false
+            updateStatus("Invalid target for loop", Color3.fromRGB(255, 50, 50))
+        end
+    else
+        LoopKill.Text = "Loop: OFF"
+        LoopKill.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
+        LoopKill.TextColor3 = Color3.fromRGB(150, 150, 150)
+        updateStatus("Loop kill deactivated", Color3.fromRGB(150, 150, 150))
+    end
+end)
+
+ResetBtn.MouseButton1Click:Connect(function()
+    resetCharacter()
+end)
+
+highlightMatches()
