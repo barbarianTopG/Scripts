@@ -203,7 +203,6 @@ local function updateStatus(text, color)
     StatusLabel.TextColor3 = color or Color3.fromRGB(150, 150, 150)
 end
 
--- Fast respawn function
 local function fastRespawn()
     if isPlayerAlive(lp) then return true end
     
@@ -348,7 +347,7 @@ local function performKill()
                         local transferStart = tick()
                         while tool and tool.Parent ~= workspace and tool.Parent ~= Player.Character do
                             if tick() - transferStart > 2 then break end 
-                            task.wait(0.03) -- Very fast polling
+                            task.wait(0.03) 
                         end
                         if tool and (tool.Parent == workspace or tool.Parent == Player.Character) then
                             toolsTransferred = toolsTransferred + 1
@@ -357,17 +356,15 @@ local function performKill()
                 end
                 
                 Player.Character.HumanoidRootPart.Anchored = false
-                task.wait(0.02) -- Minimal delay
+                task.wait(0.02) 
                 Humanoid.Health = 0
                 
-                -- Instant respawn and return to position
                 task.wait(0.15)
                 updateStatus("Fast respawning...", Color3.fromRGB(255, 200, 50))
                 
                 if fastRespawn() and lp.Character and lp.Character.PrimaryPart then
                     lp.Character.PrimaryPart.CFrame = previousCFrame
                     
-                    -- Check kill success
                     if Player.Character and Player.Character.Humanoid.Health <= 15 then
                         updateStatus("Kill successful! Tools: "..toolsTransferred, Color3.fromRGB(50, 255, 50))
                         notify("★ Success! ★ Tools used: "..toolsTransferred)
@@ -400,28 +397,23 @@ local function performKill()
     end
 end
 
--- FAST LOOP KILL FUNCTION
 local function startLoopKill()
     if not targetPlayer then return end
     
     spawn(function()
         while loopKillEnabled and targetPlayer do
-            -- Skip if conditions aren't met
             if not isPlayerAlive(targetPlayer) or killInProgress then
                 task.wait(0.3)
                 continue
             end
             
-            -- Ultra-fast kill attempt
             performKill()
             
-            -- Very short wait between attempts for maximum speed
             task.wait(0.3)
         end
     end)
 end
 
--- UI Connections
 Username:GetPropertyChangedSignal("Text"):Connect(highlightMatches)
 
 Kill.MouseButton1Click:Connect(function()
