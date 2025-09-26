@@ -27,7 +27,7 @@ local function gplr(String)
     else
         for i,v in pairs(game:GetService("Players"):GetPlayers()) do
             if v.Name:lower():sub(1, #String) == String:lower() or
-                (v.DisplayName and v.DisplayName:lower():sub(1, #String) == String:lower()) then
+               (v.DisplayName and v.DisplayName:lower():sub(1, #String) == String:lower()) then
                 table.insert(Found,v)
             end
         end
@@ -43,13 +43,6 @@ local function notify(text)
     })
 end
 
-local function tweenObject(obj, properties, duration, style)
-    local tweenInfo = TweenInfo.new(duration, style or Enum.EasingStyle.Quad)
-    local tween = TweenService:Create(obj, tweenInfo, properties)
-    tween:Play()
-    return tween
-end
-
 local function isPlayerAlive(player)
     return player and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0
 end
@@ -62,8 +55,7 @@ local ui = Instance.new("Frame")
 ui.Name = "ui"
 ui.Parent = ScreenGui
 ui.Active = true
-ui.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
-ui.BackgroundTransparency = 0
+ui.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
 ui.BorderSizePixel = 0
 ui.Position = UDim2.new(0.3, 0, 0.3, 0)
 ui.Size = UDim2.new(0, 320, 0, 200)
@@ -75,40 +67,30 @@ UICorner.CornerRadius = UDim.new(0.08, 0)
 
 local uiStroke = Instance.new("UIStroke")
 uiStroke.Parent = ui
-uiStroke.Color = Color3.fromRGB(60, 60, 80)
+uiStroke.Color = Color3.fromRGB(120, 0, 180)
 uiStroke.Thickness = 2
 
 local title = Instance.new("TextLabel")
-title.Name = "title"
 title.Parent = ui
 title.BackgroundTransparency = 1
 title.Position = UDim2.new(0, 0, 0.02, 0)
 title.Size = UDim2.new(1, 0, 0, 50)
 title.Font = Enum.Font.GothamBold
 title.Text = "★ Kill Gui ★"
-title.TextColor3 = Color3.fromRGB(0, 200, 255)
+title.TextColor3 = Color3.fromRGB(200, 100, 255)
 title.TextScaled = true
 title.TextWrapped = true
 
-local titleGlow = Instance.new("UIGradient")
-titleGlow.Parent = title
-titleGlow.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 200))
-})
-titleGlow.Rotation = 45
-
 local Frame = Instance.new("Frame")
 Frame.Parent = title
-Frame.BackgroundColor3 = Color3.fromRGB(0, 200, 255)
+Frame.BackgroundColor3 = Color3.fromRGB(120, 0, 180)
 Frame.Position = UDim2.new(0.07, 0, 0.86, 0)
 Frame.Size = UDim2.new(0.85, 0, 0, 3)
 Frame.BorderSizePixel = 0
 
 local Username = Instance.new("TextBox")
-Username.Name = "Username"
 Username.Parent = ui
-Username.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+Username.BackgroundColor3 = Color3.fromRGB(20, 10, 30)
 Username.Position = UDim2.new(0.05, 0, 0.25, 0)
 Username.Size = UDim2.new(0.9, 0, 0, 40)
 Username.Font = Enum.Font.Gotham
@@ -117,7 +99,7 @@ Username.Text = ""
 Username.TextColor3 = Color3.fromRGB(220, 220, 220)
 Username.TextScaled = true
 Username.TextWrapped = true
-Username.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+Username.PlaceholderColor3 = Color3.fromRGB(150, 100, 180)
 
 local textBoxCorner = Instance.new("UICorner")
 textBoxCorner.CornerRadius = UDim.new(0, 6)
@@ -125,7 +107,7 @@ textBoxCorner.Parent = Username
 
 local textBoxStroke = Instance.new("UIStroke")
 textBoxStroke.Parent = Username
-textBoxStroke.Color = Color3.fromRGB(60, 60, 80)
+textBoxStroke.Color = Color3.fromRGB(120, 0, 180)
 textBoxStroke.Thickness = 1
 
 local Kill = Instance.new("TextButton")
@@ -144,13 +126,6 @@ local killCorner = Instance.new("UICorner")
 killCorner.CornerRadius = UDim.new(0, 6)
 killCorner.Parent = Kill
 
-local killGradient = Instance.new("UIGradient")
-killGradient.Parent = Kill
-killGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 150, 255)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 200, 200))
-})
-
 local LoopKill = Instance.new("TextButton")
 LoopKill.Name = "LoopKill"
 LoopKill.Parent = ui
@@ -159,7 +134,7 @@ LoopKill.Position = UDim2.new(0.55, 0, 0.55, 0)
 LoopKill.Size = UDim2.new(0.35, 0, 0, 35)
 LoopKill.Font = Enum.Font.GothamBold
 LoopKill.Text = "Loop: OFF"
-LoopKill.TextColor3 = Color3.fromRGB(150, 150, 150)
+LoopKill.TextColor3 = Color3.fromRGB(180, 100, 200)
 LoopKill.TextScaled = true
 LoopKill.TextWrapped = true
 
@@ -169,18 +144,17 @@ loopCorner.Parent = LoopKill
 
 local loopStroke = Instance.new("UIStroke")
 loopStroke.Parent = LoopKill
-loopStroke.Color = Color3.fromRGB(60, 60, 80)
+loopStroke.Color = Color3.fromRGB(120, 0, 180)
 loopStroke.Thickness = 1
 
 local StatusLabel = Instance.new("TextLabel")
-StatusLabel.Name = "StatusLabel"
 StatusLabel.Parent = ui
 StatusLabel.BackgroundTransparency = 1
 StatusLabel.Position = UDim2.new(0.05, 0, 0.8, 0)
 StatusLabel.Size = UDim2.new(0.9, 0, 0, 25)
 StatusLabel.Font = Enum.Font.Gotham
 StatusLabel.Text = "Ready"
-StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+StatusLabel.TextColor3 = Color3.fromRGB(180, 100, 200)
 StatusLabel.TextScaled = true
 StatusLabel.TextWrapped = true
 
@@ -191,7 +165,7 @@ local function highlightMatches()
                 player.Character.Highlight:Destroy()
             end
             if Username.Text ~= "" and (string.find(player.Name:lower(), Username.Text:lower()) or
-                string.find(player.DisplayName:lower(), Username.Text:lower())) then
+               string.find(player.DisplayName:lower(), Username.Text:lower())) then
                 local highlight = Instance.new("Highlight")
                 highlight.Name = "Highlight"
                 highlight.Adornee = player.Character
@@ -207,60 +181,49 @@ end
 
 local function updateStatus(text, color)
     StatusLabel.Text = text
-    StatusLabel.TextColor3 = color or Color3.fromRGB(150, 150, 150)
+    StatusLabel.TextColor3 = color or Color3.fromRGB(180, 100, 200)
 end
 
-local function waitForRespawn()
+local function fastRespawn()
     if isPlayerAlive(lp) then return true end
-    updateStatus("Waiting for respawn...", Color3.fromRGB(255, 200, 50))
-    local startTime = tick()
+    if lp.Character then
+        lp.Character:BreakJoints()
+    end
+    local characterLoaded = false
     local connection
-    local respawned = false
     connection = lp.CharacterAdded:Connect(function()
-        respawned = true
+        characterLoaded = true
         if connection then connection:Disconnect() end
     end)
-    while not respawned and tick() - startTime < 15 do
-        task.wait(0.5)
-        if isPlayerAlive(lp) then
-            respawned = true
-            break
-        end
+    local startTime = tick()
+    while not characterLoaded and tick() - startTime < 3 do
+        task.wait(0.1)
     end
     if connection then connection:Disconnect() end
-    if respawned then
-        task.wait(1)
-        return true
-    else
-        updateStatus("Respawn timeout", Color3.fromRGB(255, 50, 50))
-        return false
-    end
-end
-
-local function equipAllTools()
-    local character = lp.Character
-    if not character then return false end
-    local backpack = lp.Backpack
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        for _, tool in pairs(character:GetChildren()) do
-            if tool:IsA("Tool") then
-                tool.Parent = backpack
-            end
-        end
-        for _, tool in pairs(backpack:GetChildren()) do
-            if tool:IsA("Tool") then
-                tool.Parent = character
-            end
-        end
+    if characterLoaded and lp.Character and lp.Character.PrimaryPart then
+        task.wait(0.3)
         return true
     end
     return false
 end
 
+local function teleportToTarget(target)
+    if not target or not target.Character or not target.Character.PrimaryPart then return false end
+    if not lp.Character or not lp.Character.PrimaryPart then return false end
+    for _, tool in pairs(lp.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = lp.Character
+        end
+    end
+    local targetPos = target.Character.PrimaryPart.Position
+    local offset = CFrame.new(3, 0, 0)
+    lp.Character.PrimaryPart.CFrame = CFrame.new(targetPos) * offset
+    return true
+end
+
 local function performKill()
     if killInProgress then
-        updateStatus("Kill already in progress", Color3.fromRGB(255, 150, 50))
+        updateStatus("Kill in progress", Color3.fromRGB(255, 150, 50))
         return false
     end
     local Player = gplr(Username.Text)[1]
@@ -270,144 +233,114 @@ local function performKill()
         return false
     end
     if not isPlayerAlive(Player) then
-        updateStatus("Target is not alive", Color3.fromRGB(255, 150, 50))
+        updateStatus("Target not alive", Color3.fromRGB(255, 150, 50))
         notify("Target player is not alive.")
         return false
     end
+    killInProgress = true
+    updateStatus("Fast kill starting...", Color3.fromRGB(200, 100, 255))
+    local LocalPlayer = lp
     if not isPlayerAlive(lp) then
-        if not waitForRespawn() then
+        updateStatus("Fast respawning...", Color3.fromRGB(255, 200, 50))
+        if not fastRespawn() then
             updateStatus("Respawn failed", Color3.fromRGB(255, 50, 50))
+            killInProgress = false
             return false
         end
     end
-    killInProgress = true
-    updateStatus("Starting kill...", Color3.fromRGB(255, 200, 50))
-    local success = false
-    local maxAttempts = 3
-    local attempts = 0
-    while attempts < maxAttempts and not success do
-        attempts += 1
-        updateStatus("Attempt "..attempts.."/"..maxAttempts, Color3.fromRGB(255, 200, 50))
-        local LocalPlayer = game.Players.LocalPlayer
-        if not isPlayerAlive(lp) then
-            updateStatus("Died before attempt, waiting...", Color3.fromRGB(255, 150, 50))
-            if not waitForRespawn() then
-                break
+    local previousCFrame = LocalPlayer.Character.PrimaryPart.CFrame
+    updateStatus("Teleporting...", Color3.fromRGB(200, 100, 255))
+    if not teleportToTarget(Player) then
+        updateStatus("Teleport failed", Color3.fromRGB(255, 50, 50))
+        killInProgress = false
+        return false
+    end
+    task.wait(0.2)
+    if LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
+        local Character = LocalPlayer.Character
+        Character.Archivable = true
+        local Clone = Character:Clone()
+        LocalPlayer.Character = Clone
+        task.wait(0.2)
+        LocalPlayer.Character = Character
+        task.wait(0.1)
+        if LocalPlayer.Character and Player.Character and Player.Character.PrimaryPart then
+            if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+                LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):Destroy()
             end
-        end
-        local previousCFrame = LocalPlayer.Character.PrimaryPart.CFrame
-        if LocalPlayer.Character and LocalPlayer.Character.PrimaryPart then
-            local Character = LocalPlayer.Character
-            Character.Archivable = true
-            local Clone = Character:Clone()
-            LocalPlayer.Character = Clone
-            task.wait(0.3)
-            LocalPlayer.Character = Character
-            task.wait(0.15)
-            if LocalPlayer.Character and Player.Character and Player.Character.PrimaryPart then
-                if LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
-                    LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):Destroy()
+            local Humanoid = Instance.new("Humanoid")
+            Humanoid.Parent = LocalPlayer.Character
+            for _, tool in pairs(lp.Backpack:GetChildren()) do
+                if tool:IsA("Tool") then
+                    tool.Parent = lp.Character
                 end
-                local Humanoid = Instance.new("Humanoid")
-                Humanoid.Parent = LocalPlayer.Character
-                if not equipAllTools() then
-                    updateStatus("Tool equip failed", Color3.fromRGB(255, 50, 50))
-                    break
+            end
+            local tools = {}
+            for _, tool in pairs(LocalPlayer.Character:GetChildren()) do
+                if tool:IsA("Tool") then
+                    table.insert(tools, tool)
                 end
-                local tools = {}
-                for _, tool in pairs(LocalPlayer.Character:GetChildren()) do
-                    if tool:IsA("Tool") then
-                        table.insert(tools, tool)
-                    end
-                end
-                if #tools > 0 then
-                    Player.Character.HumanoidRootPart.Anchored = true
-                    local primaryTool = tools[1]
-                    local Arm = game.Players.LocalPlayer.Character['Right Arm'].CFrame * CFrame.new(0, -1, 0, 1, 0, 0, 0, 0, 1, 0, -1, 0)
-                    primaryTool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
-                    workspace.CurrentCamera.CameraSubject = primaryTool.Handle
-                    local startTime = tick()
-                    while primaryTool and primaryTool.Parent ~= workspace and primaryTool.Parent ~= Player.Character do
-                        if tick() - startTime > 5 then
-                            break
-                        end
-                        task.wait(0.1)
-                    end
-                    Player.Character.HumanoidRootPart.Anchored = false
+            end
+            if #tools > 0 then
+                Player.Character.HumanoidRootPart.Anchored = true
+                local primaryTool = tools[1]
+                local Arm = LocalPlayer.Character['Right Arm'].CFrame * CFrame.new(0, -1, 0)
+                primaryTool.Grip = Arm:ToObjectSpace(Player.Character.PrimaryPart.CFrame):Inverse()
+                workspace.CurrentCamera.CameraSubject = primaryTool.Handle
+                local startTime = tick()
+                while primaryTool and primaryTool.Parent ~= workspace and primaryTool.Parent ~= Player.Character do
+                    if tick() - startTime > 3 then break end
                     task.wait(0.05)
-                    Humanoid.Health = 0
-                    task.wait(0.5)
-                    LocalPlayer.Character = nil
-                    updateStatus("Waiting for respawn...", Color3.fromRGB(255, 200, 50))
-                    if not waitForRespawn() then
-                        break
-                    end
+                end
+                Player.Character.HumanoidRootPart.Anchored = false
+                task.wait(0.03)
+                Humanoid.Health = 0
+                task.wait(0.2)
+                updateStatus("Fast respawning...", Color3.fromRGB(255, 200, 50))
+                if fastRespawn() and lp.Character and lp.Character.PrimaryPart then
+                    lp.Character.PrimaryPart.CFrame = previousCFrame
                     if Player.Character and Player.Character.Humanoid.Health <= 15 then
                         updateStatus("Kill successful!", Color3.fromRGB(50, 255, 50))
-                        notify("Success!")
-                        success = true
+                        notify("★ Success! ★")
+                        killInProgress = false
+                        return true
                     else
-                        if attempts < maxAttempts then
-                            updateStatus("Retrying...", Color3.fromRGB(255, 150, 50))
-                            notify("Attempt "..attempts.." failed, retrying...")
-                            task.wait(2)
-                        else
-                            updateStatus("Kill failed after "..maxAttempts.." attempts", Color3.fromRGB(255, 50, 50))
-                            notify("Kill failed after "..maxAttempts.." attempts.")
-                        end
+                        updateStatus("Target survived", Color3.fromRGB(255, 150, 50))
+                        killInProgress = false
+                        return false
                     end
                 else
-                    updateStatus("No tools found", Color3.fromRGB(255, 50, 50))
-                    notify("Error: No tools equipped.")
-                    break
+                    updateStatus("Respawn failed", Color3.fromRGB(255, 50, 50))
+                    killInProgress = false
+                    return false
                 end
             else
-                updateStatus("Character error", Color3.fromRGB(255, 50, 50))
-                notify("Error: Character issue.")
-                break
+                updateStatus("No tools found", Color3.fromRGB(255, 50, 50))
+                killInProgress = false
+                return false
             end
         else
-            updateStatus("Local player error", Color3.fromRGB(255, 50, 50))
-            notify("Error: Local player issue.")
-            break
+            updateStatus("Character error", Color3.fromRGB(255, 50, 50))
+            killInProgress = false
+            return false
         end
+    else
+        updateStatus("Local player error", Color3.fromRGB(255, 50, 50))
+        killInProgress = false
+        return false
     end
-    killInProgress = false
-    return success
 end
 
 local function startLoopKill()
     if not targetPlayer then return end
     spawn(function()
         while loopKillEnabled and targetPlayer do
-            if not isPlayerAlive(targetPlayer) then
-                updateStatus("Waiting for target respawn...", Color3.fromRGB(255, 200, 50))
-                repeat
-                    task.wait(1)
-                    if not loopKillEnabled or not targetPlayer then break end
-                until isPlayerAlive(targetPlayer)
-            end
-            if not isPlayerAlive(lp) then
-                updateStatus("Waiting for local respawn...", Color3.fromRGB(255, 200, 50))
-                repeat
-                    task.wait(1)
-                    if not loopKillEnabled or not targetPlayer then break end
-                until isPlayerAlive(lp)
-            end
-            if loopKillEnabled and targetPlayer and isPlayerAlive(targetPlayer) and isPlayerAlive(lp) and not killInProgress then
-                local success = performKill()
-                if not success then
-                    task.wait(3)
-                else
-                    task.wait(1)
-                end
-            else
+            if not isPlayerAlive(targetPlayer) or killInProgress then
                 task.wait(0.5)
+                continue
             end
-            task.wait(0.1)
-        end
-        if not loopKillEnabled then
-            updateStatus("Loop kill stopped", Color3.fromRGB(150, 150, 150))
+            performKill()
+            task.wait(0.5)
         end
     end)
 end
@@ -426,23 +359,19 @@ LoopKill.MouseButton1Click:Connect(function()
             LoopKill.Text = "Loop: ON"
             LoopKill.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
             LoopKill.TextColor3 = Color3.fromRGB(255, 255, 255)
-            updateStatus("Loop kill activated", Color3.fromRGB(255, 100, 100))
+            updateStatus("Fast loop activated!", Color3.fromRGB(255, 100, 100))
             startLoopKill()
         else
             loopKillEnabled = false
-            updateStatus("Invalid target for loop", Color3.fromRGB(255, 50, 50))
+            updateStatus("Invalid target", Color3.fromRGB(255, 50, 50))
         end
     else
         LoopKill.Text = "Loop: OFF"
         LoopKill.BackgroundColor3 = Color3.fromRGB(40, 40, 50)
-        LoopKill.TextColor3 = Color3.fromRGB(150, 150, 150)
-        updateStatus("Loop kill deactivated", Color3.fromRGB(150, 150, 150))
+        LoopKill.TextColor3 = Color3.fromRGB(180, 100, 200)
+        updateStatus("Loop stopped", Color3.fromRGB(180, 100, 200))
         targetPlayer = nil
     end
 end)
-lp.CharacterAdded:Connect(function()
-    if killInProgress then
-        updateStatus("Respawned, continuing...", Color3.fromRGB(100, 255, 100))
-    end
-end)
+
 highlightMatches()
