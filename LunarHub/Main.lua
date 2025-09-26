@@ -446,14 +446,14 @@ MyTab:CreateSection("Item-Related")
 MyTab:CreateButton({
     Name = "(🎮) Kill GUI",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/KillGUI.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Tool-GUI.lua"))()
     end
 })
 
 MyTab:CreateButton({
     Name = "(🎮) Dupe GUI",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/DupeGUI.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Item-GUI.lua"))()
     end
 })
 
