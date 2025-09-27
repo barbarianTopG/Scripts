@@ -32,33 +32,33 @@ G2L["WelcomeText"]["Text"] = "Welcome! Please choose version:"
 G2L["WelcomeText"]["TextColor3"] = Color3.fromRGB(200, 200, 200)
 G2L["WelcomeText"]["TextSize"] = 14
 
-G2L["Version1Button"] = Instance.new("TextButton", G2L["MainFrame"])
-G2L["Version1Button"]["BackgroundColor3"] = Color3.fromRGB(60, 120, 200)
-G2L["Version1Button"]["BorderSizePixel"] = 0
-G2L["Version1Button"]["Position"] = UDim2.new(0.1, 0, 0.5, 0)
-G2L["Version1Button"]["Size"] = UDim2.new(0.8, 0, 0, 30)
-G2L["Version1Button"]["Font"] = Enum.Font.GothamBold
-G2L["Version1Button"]["Text"] = "Version 1"
-G2L["Version1Button"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["Version1Button"]["TextSize"] = 14
+G2L["V1"] = Instance.new("TextButton", G2L["MainFrame"])
+G2L["V1"]["BackgroundColor3"] = Color3.fromRGB(60, 120, 200)
+G2L["V1"]["BorderSizePixel"] = 0
+G2L["V1"]["Position"] = UDim2.new(0.1, 0, 0.5, 0)
+G2L["V1"]["Size"] = UDim2.new(0.8, 0, 0, 30)
+G2L["V1"]["Font"] = Enum.Font.GothamBold
+G2L["V1"]["Text"] = "Rayfield UI"
+G2L["V1"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+G2L["V1"]["TextSize"] = 14
 
-G2L["Button1Corner"] = Instance.new("UICorner", G2L["Version1Button"])
+G2L["Button1Corner"] = Instance.new("UICorner", G2L["V1"])
 G2L["Button1Corner"]["CornerRadius"] = UDim.new(0, 4)
 
-G2L["Version2Button"] = Instance.new("TextButton", G2L["MainFrame"])
-G2L["Version2Button"]["BackgroundColor3"] = Color3.fromRGB(200, 80, 60)
-G2L["Version2Button"]["BorderSizePixel"] = 0
-G2L["Version2Button"]["Position"] = UDim2.new(0.1, 0, 0.75, 0)
-G2L["Version2Button"]["Size"] = UDim2.new(0.8, 0, 0, 30)
-G2L["Version2Button"]["Font"] = Enum.Font.GothamBold
-G2L["Version2Button"]["Text"] = "Version 2"
-G2L["Version2Button"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
-G2L["Version2Button"]["TextSize"] = 14
+G2L["V2"] = Instance.new("TextButton", G2L["MainFrame"])
+G2L["V2"]["BackgroundColor3"] = Color3.fromRGB(200, 80, 60)
+G2L["V2"]["BorderSizePixel"] = 0
+G2L["V2"]["Position"] = UDim2.new(0.1, 0, 0.75, 0)
+G2L["V2"]["Size"] = UDim2.new(0.8, 0, 0, 30)
+G2L["V2"]["Font"] = Enum.Font.GothamBold
+G2L["V2"]["Text"] = "Custom UI"
+G2L["V2"]["TextColor3"] = Color3.fromRGB(255, 255, 255)
+G2L["V2"]["TextSize"] = 14
 
-G2L["Button2Corner"] = Instance.new("UICorner", G2L["Version2Button"])
+G2L["Button2Corner"] = Instance.new("UICorner", G2L["V2"])
 G2L["Button2Corner"]["CornerRadius"] = UDim.new(0, 4)
 
-G2L["Version1Button"].MouseButton1Click:Connect(function()
+G2L["V1"].MouseButton1Click:Connect(function()
     G2L["WelcomeText"].Text = "Loading Version 1..."
     
     -- loadstring(game:HttpGet("YOUR_VERSION_1_URL"))()
@@ -67,7 +67,7 @@ G2L["Version1Button"].MouseButton1Click:Connect(function()
     G2L["ScreenGui"]:Destroy()
 end)
 
-G2L["Version2Button"].MouseButton1Click:Connect(function()
+G2L["V2"].MouseButton1Click:Connect(function()
     G2L["WelcomeText"].Text = "Loading Version 2..."
     
     -- loadstring(game:HttpGet("YOUR_VERSION_2_URL"))()
