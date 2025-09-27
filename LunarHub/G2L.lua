@@ -275,7 +275,7 @@ charFriend = player.CharacterAdded:Connect(onCharacterAdded)
 
 local Place = game.PlaceId
 
-local ReadTab = Window:AddTab("READ", 1)
+local ReadTab = Window:AddTab("(📄) READ", 1)
 if Place ~= 88308889239232 and Place ~= 17574618959 then
   ReadTab:CreateButton("Click me!", function()
     notify("❗︱Game Not Supported", "Some features from this hub are removed.")
