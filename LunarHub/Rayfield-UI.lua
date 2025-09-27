@@ -66,7 +66,7 @@ local Window = Rayfield:CreateWindow({
     DisableBuildWarnings = false,
     ConfigurationSaving = {
         Enabled = true,
-        FolderName = "GalaxyHub",
+        FolderName = "LunarHub",
         FileName = "Settings"
     },
     Discord = {Enabled = false},
