@@ -1,11 +1,4 @@
---[[
- d888b  db    db d888888b      .d888b.      db      db    db  .d8b.  
-88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
-88      88    88    88            odD'      88      88    88 88ooo88 
-88  ooo 88    88    88          .88'        88      88    88 88~~~88 
-88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    @uniquadev
- Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  CONVERTER 
-]]--
+
 
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
@@ -64,14 +57,9 @@ G2L["ContentLayout_7"]["Padding"] = UDim.new(0, 5)
 G2L["UIAspectRatioConstraint_8"] = Instance.new("UIAspectRatioConstraint", G2L["MainFrame_2"])
 G2L["UIAspectRatioConstraint_8"]["AspectRatio"] = 1.65672
 
-
-
-
-
 local LunarHub = {}
 LunarHub.Tabs = {}
 LunarHub.CurrentTab = nil
-LunarHub.TabCount = 0
 
 function notify(title, text, duration)
     game:GetService("StarterGui"):SetCore("SendNotification", {
@@ -99,9 +87,126 @@ function LunarHub:AddTab(name, order)
     local tab = {
         Name = name,
         Button = tabButton,
-        Order = order or (#LunarHub.Tabs + 1),
         Elements = {},
-        ElementCount = 0
+        ElementCount = 0,
+        
+        CreateButton = function(self, buttonName, callback)
+            local button = Instance.new("TextButton")
+            button.Name = buttonName .. "Button"
+            button.Text = buttonName
+            button.TextColor3 = Color3.fromRGB(119, 0, 255)
+            button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            button.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            button.Size = UDim2.new(0, 404, 0, 30)
+            button.TextScaled = true
+            
+            self.ElementCount = self.ElementCount + 1
+            button.LayoutOrder = self.ElementCount
+            
+            button.MouseButton1Click:Connect(callback)
+            
+            table.insert(self.Elements, button)
+            
+            if LunarHub.CurrentTab == self then
+                button.Parent = G2L["ContentScrollFrame_6"]
+            end
+            
+            return button
+        end,
+        
+        CreateToggle = function(self, toggleName, callback)
+            local toggleFrame = Instance.new("Frame")
+            toggleFrame.Name = toggleName .. "Toggle"
+            toggleFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            toggleFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            toggleFrame.Size = UDim2.new(0, 404, 0, 30)
+            
+            local toggleButton = Instance.new("TextButton")
+            toggleButton.Name = "ToggleButton"
+            toggleButton.Text = toggleName .. " [OFF]"
+            toggleButton.TextColor3 = Color3.fromRGB(119, 0, 255)
+            toggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            toggleButton.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            toggleButton.Size = UDim2.new(1, 0, 1, 0)
+            toggleButton.TextScaled = true
+            toggleButton.Parent = toggleFrame
+            
+            local toggleState = false
+            
+            self.ElementCount = self.ElementCount + 1
+            toggleFrame.LayoutOrder = self.ElementCount
+            
+            toggleButton.MouseButton1Click:Connect(function()
+                toggleState = not toggleState
+                if toggleState then
+                    toggleButton.Text = toggleName .. " [ON]"
+                    toggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
+                else
+                    toggleButton.Text = toggleName .. " [OFF]"
+                    toggleButton.TextColor3 = Color3.fromRGB(119, 0, 255)
+                end
+                callback(toggleState)
+            end)
+            
+            table.insert(self.Elements, toggleFrame)
+            
+            if LunarHub.CurrentTab == self then
+                toggleFrame.Parent = G2L["ContentScrollFrame_6"]
+            end
+            
+            return toggleFrame
+        end,
+        
+        CreateNote = function(self, title, text)
+            local noteFrame = Instance.new("Frame")
+            noteFrame.Name = title .. "Note"
+            noteFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+            noteFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            noteFrame.Size = UDim2.new(0, 404, 0, 0)
+            noteFrame.AutomaticSize = Enum.AutomaticSize.Y
+            
+            local titleLabel = Instance.new("TextLabel")
+            titleLabel.Name = "Title"
+            titleLabel.Text = title
+            titleLabel.TextColor3 = Color3.fromRGB(119, 0, 255)
+            titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            titleLabel.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            titleLabel.Size = UDim2.new(1, 0, 0, 25)
+            titleLabel.TextScaled = true
+            titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+            titleLabel.Parent = noteFrame
+            
+            local textLabel = Instance.new("TextLabel")
+            textLabel.Name = "Text"
+            textLabel.Text = text
+            textLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            textLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            textLabel.BorderSizePixel = 0
+            textLabel.Size = UDim2.new(1, -10, 0, 0)
+            textLabel.Position = UDim2.new(0, 5, 0, 30)
+            textLabel.TextWrapped = true
+            textLabel.TextXAlignment = Enum.TextXAlignment.Left
+            textLabel.TextYAlignment = Enum.TextYAlignment.Top
+            textLabel.AutomaticSize = Enum.AutomaticSize.Y
+            textLabel.Parent = noteFrame
+            
+            titleLabel.Active = false
+            titleLabel.Selectable = false
+            textLabel.Active = false
+            textLabel.Selectable = false
+            noteFrame.Active = false
+            
+            self.ElementCount = self.ElementCount + 1
+            noteFrame.LayoutOrder = self.ElementCount
+            
+            table.insert(self.Elements, noteFrame)
+            
+            if LunarHub.CurrentTab == self then
+                noteFrame.Parent = G2L["ContentScrollFrame_6"]
+            end
+            
+            return noteFrame
+        end
     }
     
     table.insert(LunarHub.Tabs, tab)
@@ -118,7 +223,11 @@ function LunarHub:AddTab(name, order)
 end
 
 function LunarHub:SelectTab(tab)
-    G2L["ContentScrollFrame_6"]:ClearAllChildren()
+    for _, child in pairs(G2L["ContentScrollFrame_6"]:GetChildren()) do
+        if not child:IsA("UIListLayout") then
+            child:Destroy()
+        end
+    end
     
     for _, element in ipairs(tab.Elements) do
         element.Parent = G2L["ContentScrollFrame_6"]
@@ -127,157 +236,11 @@ function LunarHub:SelectTab(tab)
     LunarHub.CurrentTab = tab
 end
 
-function LunarHub:CreateButton(tab, name, callback)
-    local button = Instance.new("TextButton")
-    button.Name = name .. "Button"
-    button.Text = name
-    button.TextColor3 = Color3.fromRGB(119, 0, 255)
-    button.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    button.BorderColor3 = Color3.fromRGB(119, 0, 255)
-    button.Size = UDim2.new(0, 404, 0, 30)
-    button.TextScaled = true
-    
-    tab.ElementCount = tab.ElementCount + 1
-    button.LayoutOrder = tab.ElementCount
-    
-    button.MouseButton1Click:Connect(callback)
-    
-    table.insert(tab.Elements, button)
-    
-    if LunarHub.CurrentTab == tab then
-        button.Parent = G2L["ContentScrollFrame_6"]
-    end
-    
-    return button
-end
-
-function LunarHub:CreateToggle(tab, name, callback)
-    local toggleFrame = Instance.new("Frame")
-    toggleFrame.Name = name .. "Toggle"
-    toggleFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    toggleFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
-    toggleFrame.Size = UDim2.new(0, 404, 0, 30)
-    
-    local toggleButton = Instance.new("TextButton")
-    toggleButton.Name = "ToggleButton"
-    toggleButton.Text = name .. " [OFF]"
-    toggleButton.TextColor3 = Color3.fromRGB(119, 0, 255)
-    toggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    toggleButton.BorderColor3 = Color3.fromRGB(119, 0, 255)
-    toggleButton.Size = UDim2.new(1, 0, 1, 0)
-    toggleButton.TextScaled = true
-    toggleButton.Parent = toggleFrame
-    
-    local toggleState = false
-    
-    tab.ElementCount = tab.ElementCount + 1
-    toggleFrame.LayoutOrder = tab.ElementCount
-    
-    toggleButton.MouseButton1Click:Connect(function()
-        toggleState = not toggleState
-        if toggleState then
-            toggleButton.Text = name .. " [ON]"
-            toggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
-        else
-            toggleButton.Text = name .. " [OFF]"
-            toggleButton.TextColor3 = Color3.fromRGB(119, 0, 255)
-        end
-        callback(toggleState)
-    end)
-    
-    table.insert(tab.Elements, toggleFrame)
-    
-    if LunarHub.CurrentTab == tab then
-        toggleFrame.Parent = G2L["ContentScrollFrame_6"]
-    end
-    
-    return toggleFrame
-end
-
-function LunarHub:CreateNote(tab, title, text)
-    local noteFrame = Instance.new("Frame")
-    noteFrame.Name = title .. "Note"
-    noteFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    noteFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
-    noteFrame.Size = UDim2.new(0, 404, 0, 0)
-    noteFrame.AutomaticSize = Enum.AutomaticSize.Y
-    
-    local titleLabel = Instance.new("TextLabel")
-    titleLabel.Name = "Title"
-    titleLabel.Text = title
-    titleLabel.TextColor3 = Color3.fromRGB(119, 0, 255)
-    titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    titleLabel.BorderColor3 = Color3.fromRGB(119, 0, 255)
-    titleLabel.Size = UDim2.new(1, 0, 0, 25)
-    titleLabel.TextScaled = true
-    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-    titleLabel.Parent = noteFrame
-    
-    local textLabel = Instance.new("TextLabel")
-    textLabel.Name = "Text"
-    textLabel.Text = text
-    textLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
-    textLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    textLabel.BorderSizePixel = 0
-    textLabel.Size = UDim2.new(1, -10, 0, 0)
-    textLabel.Position = UDim2.new(0, 5, 0, 30)
-    textLabel.TextWrapped = true
-    textLabel.TextXAlignment = Enum.TextXAlignment.Left
-    textLabel.TextYAlignment = Enum.TextYAlignment.Top
-    textLabel.AutomaticSize = Enum.AutomaticSize.Y
-    textLabel.Parent = noteFrame
-    
-    titleLabel.Active = false
-    titleLabel.Selectable = false
-    textLabel.Active = false
-    textLabel.Selectable = false
-    noteFrame.Active = false
-    
-    tab.ElementCount = tab.ElementCount + 1
-    noteFrame.LayoutOrder = tab.ElementCount
-    
-    table.insert(tab.Elements, noteFrame)
-    
-    if LunarHub.CurrentTab == tab then
-        noteFrame.Parent = G2L["ContentScrollFrame_6"]
-    end
-    
-    return noteFrame
-end
-
 Window = {
     AddTab = function(name, order)
         return LunarHub:AddTab(name, order)
     end
 }
-
-local tabMetaTable = {}
-tabMetaTable.__index = function(self, key)
-    if key == "CreateButton" then
-        return function(name, callback)
-            return LunarHub:CreateButton(self, name, callback)
-        end
-    elseif key == "CreateToggle" then
-        return function(name, callback)
-            return LunarHub:CreateToggle(self, name, callback)
-        end
-    elseif key == "CreateNote" then
-        return function(title, text)
-            return LunarHub:CreateNote(self, title, text)
-        end
-    end
-end
-
-for _, tab in ipairs(LunarHub.Tabs) do
-    setmetatable(tab, tabMetaTable)
-end
-
-local originalAddTab = LunarHub.AddTab
-function LunarHub:AddTab(name, order)
-    local tab = originalAddTab(self, name, order)
-    setmetatable(tab, tabMetaTable)
-    return tab
-end
 
 
 
@@ -327,7 +290,6 @@ end
 
 ReadTab:CreateNote("🌌︱Theme credits", "Theme made by Theo.")
 
-
 if Place == 17574618959 or Place == 88308889239232 then
     HomeTab:CreateButton("Sit", function() Chat("-sit ") end)
     HomeTab:CreateButton("Spawn Dummy", function() Chat("-dummy ") end)
@@ -354,23 +316,28 @@ end)
 HomeTab:CreateNote("Walkspeed/JumpPower", "Use these to modify your character's movement:")
 
 HomeTab:CreateButton("Set WalkSpeed to 50", function()
-    player.Character.Humanoid.WalkSpeed = 50
-    notify("WalkSpeed", "Set to 50", 3)
+    if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = 50
+        notify("WalkSpeed", "Set to 50", 3)
+    end
 end)
 
 HomeTab:CreateButton("Set JumpPower to 100", function()
-    player.Character.Humanoid.JumpPower = 100
-    notify("JumpPower", "Set to 100", 3)
+    if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        player.Character.Humanoid.JumpPower = 100
+        notify("JumpPower", "Set to 100", 3)
+    end
 end)
 
 HomeTab:CreateButton("Reset Movement", function()
-    player.Character.Humanoid.WalkSpeed = 16
-    player.Character.Humanoid.JumpPower = 50
-    notify("Movement", "Reset to default", 3)
+    if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = 16
+        player.Character.Humanoid.JumpPower = 50
+        notify("Movement", "Reset to default", 3)
+    end
 end)
 
 HomeTab:CreateNote("Themes", "Theme changing functionality not available in this version")
-
 
 MainTab:CreateButton("Nameless Admin", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
@@ -401,7 +368,6 @@ MainTab:CreateButton("KaterHub V3", function()
     loadstring(game:HttpGet("https://katerhub-inc.github.io/KaterHub/main.lua"))()
 end)
 
-
 MyTab:CreateNote("Item-Related", "")
 MyTab:CreateButton("(🎮) Kill GUI", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Tool-GUI.lua"))()
@@ -420,7 +386,6 @@ MyTab:CreateNote("Visuals", "")
 MyTab:CreateButton("Realistic Mode (1st Person)", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/RealisticMode.lua"))()
 end)
-
 
 KeyTab:CreateButton("Delta Keyboard", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Delta.lua"))()
@@ -442,12 +407,10 @@ KeyTab:CreateButton("Mob Keyboard", function()
     loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
 end)
 
-
 if Place == 88308889239232 or Place == 17574618959 then
     local PdTab = Window:AddTab("(🎮) PermaDeath", 6)
     local GenTab = Window:AddTab("(🎮) Genesis", 7)
     local HatsTab = Window:AddTab("(🎮) Genesis rigs", 8)
-    
     
     PdTab:CreateButton("KDV3 By Theo", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Solary-3/Scripts/refs/heads/main/Choose.lua"))()
@@ -467,7 +430,6 @@ if Place == 88308889239232 or Place == 17574618959 then
     PdTab:CreateButton("Gelatek Reanimation", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Reanimate"))()
     end)
-    
     
     GenTab:CreateButton("Krystal Dance", function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Krystal%20Dance"))()
@@ -504,7 +466,6 @@ if Place == 88308889239232 or Place == 17574618959 then
     end)
     GenTab:CreateNote("Keybinds", "Z (While driving)")
     
-    
     HatsTab:CreateNote("IMPORTANT", "Always load PermaDeath before reanimating.")
     HatsTab:CreateButton("PermaDeath", function() Chat("-pd ") end)
     HatsTab:CreateButton("Remove Hats", function() Chat("-ch ") end)
@@ -531,4 +492,4 @@ end
 
 
 
-return G2L["ScreenGui_1"], LunarHub
+return G2L["ScreenGui_1"]
