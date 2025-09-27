@@ -453,7 +453,7 @@ MyTab:CreateButton({
 MyTab:CreateButton({
     Name = "(🎮) Dupe GUI",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Item-GUI.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Dupe.lua"))()
     end
 })
 
