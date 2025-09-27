@@ -446,7 +446,7 @@ MyTab:CreateSection("Item-Related")
 MyTab:CreateButton({
     Name = "(🎮) Kill GUI",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Tool-GUI.lua"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Kill.lua"))()
     end
 })
 
