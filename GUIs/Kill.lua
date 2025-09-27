@@ -20,145 +20,145 @@ local targetPlayer = nil
 local killInProgress = false
 local playerListVisible = false
 
-local KillGui = {}
+local KillGUI = {}
 
-KillGui["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
-KillGui["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
-KillGui["ScreenGui_1"]["ResetOnSpawn"] = false
-CollectionService:AddTag(KillGui["ScreenGui_1"], [[main]])
+KillGUI["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
+KillGUI["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
+KillGUI["ScreenGui_1"]["ResetOnSpawn"] = false
+CollectionService:AddTag(KillGUI["ScreenGui_1"], [[main]])
 
-KillGui["Frame_2"] = Instance.new("Frame", KillGui["ScreenGui_1"])
-KillGui["Frame_2"]["BorderSizePixel"] = 0
-KillGui["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
-KillGui["Frame_2"]["Size"] = UDim2.new(0.3055, 0, 0.36783, 0)
-KillGui["Frame_2"]["Position"] = UDim2.new(0.34639, 0, 0.26597, 0)
+KillGUI["Frame_2"] = Instance.new("Frame", KillGUI["ScreenGui_1"])
+KillGUI["Frame_2"]["BorderSizePixel"] = 0
+KillGUI["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+KillGUI["Frame_2"]["Size"] = UDim2.new(0.3055, 0, 0.36783, 0)
+KillGUI["Frame_2"]["Position"] = UDim2.new(0.34639, 0, 0.26597, 0)
 
-KillGui["FrameCorner_3"] = Instance.new("UICorner", KillGui["Frame_2"])
-KillGui["FrameCorner_3"]["Name"] = [[FrameCorner]]
+KillGUI["FrameCorner_3"] = Instance.new("UICorner", KillGUI["Frame_2"])
+KillGUI["FrameCorner_3"]["Name"] = [[FrameCorner]]
 
-KillGui["Creator_4"] = Instance.new("TextLabel", KillGui["Frame_2"])
-KillGui["Creator_4"]["TextWrapped"] = true
-KillGui["Creator_4"]["BorderSizePixel"] = 0
-KillGui["Creator_4"]["TextScaled"] = true
-KillGui["Creator_4"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["Creator_4"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
-KillGui["Creator_4"]["Size"] = UDim2.new(0.56693, 0, 0.18462, 0)
-KillGui["Creator_4"]["Text"] = [[Made by StarFlow]]
-KillGui["Creator_4"]["Name"] = [[Creator]]
-KillGui["Creator_4"]["Position"] = UDim2.new(0.4252, 0, 0.01538, 0)
+KillGUI["Creator_4"] = Instance.new("TextLabel", KillGUI["Frame_2"])
+KillGUI["Creator_4"]["TextWrapped"] = true
+KillGUI["Creator_4"]["BorderSizePixel"] = 0
+KillGUI["Creator_4"]["TextScaled"] = true
+KillGUI["Creator_4"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["Creator_4"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+KillGUI["Creator_4"]["Size"] = UDim2.new(0.56693, 0, 0.18462, 0)
+KillGUI["Creator_4"]["Text"] = [[Made by StarFlow]]
+KillGUI["Creator_4"]["Name"] = [[Creator]]
+KillGUI["Creator_4"]["Position"] = UDim2.new(0.4252, 0, 0.01538, 0)
 
-KillGui["UICorner_5"] = Instance.new("UICorner", KillGui["Creator_4"])
+KillGUI["UICorner_5"] = Instance.new("UICorner", KillGUI["Creator_4"])
 
-KillGui["Kill_6"] = Instance.new("TextButton", KillGui["Frame_2"])
-KillGui["Kill_6"]["TextWrapped"] = true
-KillGui["Kill_6"]["BorderSizePixel"] = 0
-KillGui["Kill_6"]["TextScaled"] = true
-KillGui["Kill_6"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
-KillGui["Kill_6"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["Kill_6"]["Size"] = UDim2.new(0.48819, 0, 0.29231, 0)
-KillGui["Kill_6"]["Text"] = [[Kill]]
-KillGui["Kill_6"]["Name"] = [[Kill]]
-KillGui["Kill_6"]["Position"] = UDim2.new(0.0315, 0, 0.63077, 0)
+KillGUI["Kill_6"] = Instance.new("TextButton", KillGUI["Frame_2"])
+KillGUI["Kill_6"]["TextWrapped"] = true
+KillGUI["Kill_6"]["BorderSizePixel"] = 0
+KillGUI["Kill_6"]["TextScaled"] = true
+KillGUI["Kill_6"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+KillGUI["Kill_6"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["Kill_6"]["Size"] = UDim2.new(0.48819, 0, 0.29231, 0)
+KillGUI["Kill_6"]["Text"] = [[Kill]]
+KillGUI["Kill_6"]["Name"] = [[Kill]]
+KillGUI["Kill_6"]["Position"] = UDim2.new(0.0315, 0, 0.63077, 0)
 
-KillGui["UICorner_7"] = Instance.new("UICorner", KillGui["Kill_6"])
+KillGUI["UICorner_7"] = Instance.new("UICorner", KillGUI["Kill_6"])
 
-KillGui["ScriptName_8"] = Instance.new("TextLabel", KillGui["Frame_2"])
-KillGui["ScriptName_8"]["TextWrapped"] = true
-KillGui["ScriptName_8"]["BorderSizePixel"] = 0
-KillGui["ScriptName_8"]["TextScaled"] = true
-KillGui["ScriptName_8"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["ScriptName_8"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
-KillGui["ScriptName_8"]["Size"] = UDim2.new(0.40157, 0, 0.18462, 0)
-KillGui["ScriptName_8"]["Text"] = [[Kill Gui]]
-KillGui["ScriptName_8"]["Name"] = [[ScriptName]]
-KillGui["ScriptName_8"]["Position"] = UDim2.new(0.00787, 0, 0.01538, 0)
+KillGUI["ScriptName_8"] = Instance.new("TextLabel", KillGUI["Frame_2"])
+KillGUI["ScriptName_8"]["TextWrapped"] = true
+KillGUI["ScriptName_8"]["BorderSizePixel"] = 0
+KillGUI["ScriptName_8"]["TextScaled"] = true
+KillGUI["ScriptName_8"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["ScriptName_8"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+KillGUI["ScriptName_8"]["Size"] = UDim2.new(0.40157, 0, 0.18462, 0)
+KillGUI["ScriptName_8"]["Text"] = [[Kill Gui]]
+KillGUI["ScriptName_8"]["Name"] = [[ScriptName]]
+KillGUI["ScriptName_8"]["Position"] = UDim2.new(0.00787, 0, 0.01538, 0)
 
-KillGui["UICorner_9"] = Instance.new("UICorner", KillGui["ScriptName_8"])
+KillGUI["UICorner_9"] = Instance.new("UICorner", KillGUI["ScriptName_8"])
 
-KillGui["List_a"] = Instance.new("TextButton", KillGui["Frame_2"])
-KillGui["List_a"]["TextWrapped"] = true
-KillGui["List_a"]["BorderSizePixel"] = 0
-KillGui["List_a"]["TextScaled"] = true
-KillGui["List_a"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["List_a"]["Size"] = UDim2.new(0.17323, 0, 0.30769, 0)
-KillGui["List_a"]["Text"] = [[📋]]
-KillGui["List_a"]["Name"] = [[List]]
-KillGui["List_a"]["Position"] = UDim2.new(0.7874, 0, 0.26154, 0)
+KillGUI["List_a"] = Instance.new("TextButton", KillGUI["Frame_2"])
+KillGUI["List_a"]["TextWrapped"] = true
+KillGUI["List_a"]["BorderSizePixel"] = 0
+KillGUI["List_a"]["TextScaled"] = true
+KillGUI["List_a"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["List_a"]["Size"] = UDim2.new(0.17323, 0, 0.30769, 0)
+KillGUI["List_a"]["Text"] = [[📋]]
+KillGUI["List_a"]["Name"] = [[List]]
+KillGUI["List_a"]["Position"] = UDim2.new(0.7874, 0, 0.26154, 0)
 
-KillGui["UICorner_b"] = Instance.new("UICorner", KillGui["List_a"])
+KillGUI["UICorner_b"] = Instance.new("UICorner", KillGUI["List_a"])
 
-KillGui["FrameStroke_c"] = Instance.new("UIStroke", KillGui["Frame_2"])
-KillGui["FrameStroke_c"]["Name"] = [[FrameStroke]]
-KillGui["FrameStroke_c"]["Color"] = Color3.fromRGB(119, 0, 255)
+KillGUI["FrameStroke_c"] = Instance.new("UIStroke", KillGUI["Frame_2"])
+KillGUI["FrameStroke_c"]["Name"] = [[FrameStroke]]
+KillGUI["FrameStroke_c"]["Color"] = Color3.fromRGB(119, 0, 255)
 
-KillGui["TextBox_d"] = Instance.new("TextBox", KillGui["Frame_2"])
-KillGui["TextBox_d"]["CursorPosition"] = -1
-KillGui["TextBox_d"]["BorderSizePixel"] = 0
-KillGui["TextBox_d"]["TextWrapped"] = true
-KillGui["TextBox_d"]["TextColor3"] = Color3.fromRGB(113, 113, 113)
-KillGui["TextBox_d"]["TextScaled"] = true
-KillGui["TextBox_d"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["TextBox_d"]["PlaceholderText"] = [[DisplayName or Username]]
-KillGui["TextBox_d"]["Size"] = UDim2.new(0.74803, 0, 0.35385, 0)
-KillGui["TextBox_d"]["Position"] = UDim2.new(0.02362, 0, 0.23077, 0)
-KillGui["TextBox_d"]["Text"] = [[]]
+KillGUI["TextBox_d"] = Instance.new("TextBox", KillGUI["Frame_2"])
+KillGUI["TextBox_d"]["CursorPosition"] = -1
+KillGUI["TextBox_d"]["BorderSizePixel"] = 0
+KillGUI["TextBox_d"]["TextWrapped"] = true
+KillGUI["TextBox_d"]["TextColor3"] = Color3.fromRGB(113, 113, 113)
+KillGUI["TextBox_d"]["TextScaled"] = true
+KillGUI["TextBox_d"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["TextBox_d"]["PlaceholderText"] = [[DisplayName or Username]]
+KillGUI["TextBox_d"]["Size"] = UDim2.new(0.74803, 0, 0.35385, 0)
+KillGUI["TextBox_d"]["Position"] = UDim2.new(0.02362, 0, 0.23077, 0)
+KillGUI["TextBox_d"]["Text"] = [[]]
 
-KillGui["UICorner_e"] = Instance.new("UICorner", KillGui["TextBox_d"])
+KillGUI["UICorner_e"] = Instance.new("UICorner", KillGUI["TextBox_d"])
 
-KillGui["UIDragDetector_f"] = Instance.new("UIDragDetector", KillGui["Frame_2"])
-KillGui["UIDragDetector_f"]["DragUDim2"] = UDim2.new(0, 23, 0, -1)
+KillGUI["UIDragDetector_f"] = Instance.new("UIDragDetector", KillGUI["Frame_2"])
+KillGUI["UIDragDetector_f"]["DragUDim2"] = UDim2.new(0, 23, 0, -1)
 
-KillGui["Loop_10"] = Instance.new("TextButton", KillGui["Frame_2"])
-KillGui["Loop_10"]["TextWrapped"] = true
-KillGui["Loop_10"]["BorderSizePixel"] = 0
-KillGui["Loop_10"]["TextScaled"] = true
-KillGui["Loop_10"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
-KillGui["Loop_10"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["Loop_10"]["Size"] = UDim2.new(0.4252, 0, 0.30769, 0)
-KillGui["Loop_10"]["Text"] = [[Looped: false]]
-KillGui["Loop_10"]["Name"] = [[Loop]]
-KillGui["Loop_10"]["Position"] = UDim2.new(0.53543, 0, 0.63077, 0)
+KillGUI["Loop_10"] = Instance.new("TextButton", KillGUI["Frame_2"])
+KillGUI["Loop_10"]["TextWrapped"] = true
+KillGUI["Loop_10"]["BorderSizePixel"] = 0
+KillGUI["Loop_10"]["TextScaled"] = true
+KillGUI["Loop_10"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+KillGUI["Loop_10"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["Loop_10"]["Size"] = UDim2.new(0.4252, 0, 0.30769, 0)
+KillGUI["Loop_10"]["Text"] = [[Looped: false]]
+KillGUI["Loop_10"]["Name"] = [[Loop]]
+KillGUI["Loop_10"]["Position"] = UDim2.new(0.53543, 0, 0.63077, 0)
 
-KillGui["UICorner_11"] = Instance.new("UICorner", KillGui["Loop_10"])
+KillGUI["UICorner_11"] = Instance.new("UICorner", KillGUI["Loop_10"])
 
-KillGui["UIAspectRatioConstraint_12"] = Instance.new("UIAspectRatioConstraint", KillGui["Frame_2"])
-KillGui["UIAspectRatioConstraint_12"]["AspectRatio"] = 1.95385
+KillGUI["UIAspectRatioConstraint_12"] = Instance.new("UIAspectRatioConstraint", KillGUI["Frame_2"])
+KillGUI["UIAspectRatioConstraint_12"]["AspectRatio"] = 1.95385
 
-KillGui["PlayerListFrame"] = Instance.new("Frame", KillGui["ScreenGui_1"])
-KillGui["PlayerListFrame"]["BorderSizePixel"] = 0
-KillGui["PlayerListFrame"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
-KillGui["PlayerListFrame"]["Size"] = UDim2.new(0.25, 0, 0.4, 0)
-KillGui["PlayerListFrame"]["Position"] = UDim2.new(0.65, 0, 0.26597, 0)
-KillGui["PlayerListFrame"]["Visible"] = false
+KillGUI["PlayerListFrame"] = Instance.new("Frame", KillGUI["ScreenGui_1"])
+KillGUI["PlayerListFrame"]["BorderSizePixel"] = 0
+KillGUI["PlayerListFrame"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+KillGUI["PlayerListFrame"]["Size"] = UDim2.new(0.25, 0, 0.4, 0)
+KillGUI["PlayerListFrame"]["Position"] = UDim2.new(0.65, 0, 0.26597, 0)
+KillGUI["PlayerListFrame"]["Visible"] = false
 
-KillGui["PlayerListCorner"] = Instance.new("UICorner", KillGui["PlayerListFrame"])
+KillGUI["PlayerListCorner"] = Instance.new("UICorner", KillGUI["PlayerListFrame"])
 
-KillGui["PlayerListStroke"] = Instance.new("UIStroke", KillGui["PlayerListFrame"])
-KillGui["PlayerListStroke"]["Color"] = Color3.fromRGB(119, 0, 255)
+KillGUI["PlayerListStroke"] = Instance.new("UIStroke", KillGUI["PlayerListFrame"])
+KillGUI["PlayerListStroke"]["Color"] = Color3.fromRGB(119, 0, 255)
 
-KillGui["PlayerListTitle"] = Instance.new("TextLabel", KillGui["PlayerListFrame"])
-KillGui["PlayerListTitle"]["TextWrapped"] = true
-KillGui["PlayerListTitle"]["BorderSizePixel"] = 0
-KillGui["PlayerListTitle"]["TextScaled"] = true
-KillGui["PlayerListTitle"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-KillGui["PlayerListTitle"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
-KillGui["PlayerListTitle"]["Size"] = UDim2.new(0.9, 0, 0.1, 0)
-KillGui["PlayerListTitle"]["Text"] = [[Player List]]
-KillGui["PlayerListTitle"]["Position"] = UDim2.new(0.05, 0, 0.02, 0)
+KillGUI["PlayerListTitle"] = Instance.new("TextLabel", KillGUI["PlayerListFrame"])
+KillGUI["PlayerListTitle"]["TextWrapped"] = true
+KillGUI["PlayerListTitle"]["BorderSizePixel"] = 0
+KillGUI["PlayerListTitle"]["TextScaled"] = true
+KillGUI["PlayerListTitle"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+KillGUI["PlayerListTitle"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+KillGUI["PlayerListTitle"]["Size"] = UDim2.new(0.9, 0, 0.1, 0)
+KillGUI["PlayerListTitle"]["Text"] = [[Player List]]
+KillGUI["PlayerListTitle"]["Position"] = UDim2.new(0.05, 0, 0.02, 0)
 
-KillGui["PlayerListUICorner"] = Instance.new("UICorner", KillGui["PlayerListTitle"])
+KillGUI["PlayerListUICorner"] = Instance.new("UICorner", KillGUI["PlayerListTitle"])
 
-KillGui["PlayerListScrollingFrame"] = Instance.new("ScrollingFrame", KillGui["PlayerListFrame"])
-KillGui["PlayerListScrollingFrame"]["BorderSizePixel"] = 0
-KillGui["PlayerListScrollingFrame"]["BackgroundColor3"] = Color3.fromRGB(20, 20, 20)
-KillGui["PlayerListScrollingFrame"]["Size"] = UDim2.new(0.9, 0, 0.8, 0)
-KillGui["PlayerListScrollingFrame"]["Position"] = UDim2.new(0.05, 0, 0.15, 0)
-KillGui["PlayerListScrollingFrame"]["ScrollBarThickness"] = 8
+KillGUI["PlayerListScrollingFrame"] = Instance.new("ScrollingFrame", KillGUI["PlayerListFrame"])
+KillGUI["PlayerListScrollingFrame"]["BorderSizePixel"] = 0
+KillGUI["PlayerListScrollingFrame"]["BackgroundColor3"] = Color3.fromRGB(20, 20, 20)
+KillGUI["PlayerListScrollingFrame"]["Size"] = UDim2.new(0.9, 0, 0.8, 0)
+KillGUI["PlayerListScrollingFrame"]["Position"] = UDim2.new(0.05, 0, 0.15, 0)
+KillGUI["PlayerListScrollingFrame"]["ScrollBarThickness"] = 8
 
-KillGui["PlayerListScrollingCorner"] = Instance.new("UICorner", KillGui["PlayerListScrollingFrame"])
+KillGUI["PlayerListScrollingCorner"] = Instance.new("UICorner", KillGUI["PlayerListScrollingFrame"])
 
-KillGui["PlayerListLayout"] = Instance.new("UIListLayout", KillGui["PlayerListScrollingFrame"])
-KillGui["PlayerListLayout"]["Padding"] = UDim.new(0, 5)
+KillGUI["PlayerListLayout"] = Instance.new("UIListLayout", KillGUI["PlayerListScrollingFrame"])
+KillGUI["PlayerListLayout"]["Padding"] = UDim.new(0, 5)
 
 local function gplr(String)
     local Found = {}
@@ -210,7 +210,7 @@ local function isPlayerAlive(player)
 end
 
 local function updatePlayerList()
-    local scrollingFrame = KillGui["PlayerListScrollingFrame"]
+    local scrollingFrame = KillGUI["PlayerListScrollingFrame"]
     
     for _, child in pairs(scrollingFrame:GetChildren()) do
         if child:IsA("TextButton") then
@@ -237,9 +237,9 @@ local function updatePlayerList()
         corner.Parent = playerButton
         
         playerButton.MouseButton1Click:Connect(function()
-            KillGui["TextBox_d"].Text = player.Name
+            KillGUI["TextBox_d"].Text = player.Name
             if playerListVisible then
-                KillGui["PlayerListFrame"].Visible = false
+                KillGUI["PlayerListFrame"].Visible = false
                 playerListVisible = false
             end
         end)
@@ -255,7 +255,7 @@ local function performKill()
         return false
     end
 
-    local Player = gplr(KillGui["TextBox_d"].Text)[1]
+    local Player = gplr(KillGUI["TextBox_d"].Text)[1]
     if not Player then
         notify("Player not found")
         return false
@@ -360,27 +360,27 @@ local function startLoopKill()
     end)
 end
 
-KillGui["List_a"].MouseButton1Click:Connect(function()
+KillGUI["List_a"].MouseButton1Click:Connect(function()
     playerListVisible = not playerListVisible
-    KillGui["PlayerListFrame"].Visible = playerListVisible
+    KillGUI["PlayerListFrame"].Visible = playerListVisible
     if playerListVisible then
         updatePlayerList()
     end
 end)
 
-KillGui["Kill_6"].MouseButton1Click:Connect(function()
+KillGUI["Kill_6"].MouseButton1Click:Connect(function()
     if not killInProgress then
         performKill()
     end
 end)
 
-KillGui["Loop_10"].MouseButton1Click:Connect(function()
+KillGUI["Loop_10"].MouseButton1Click:Connect(function()
     loopKillEnabled = not loopKillEnabled
     if loopKillEnabled then
-        targetPlayer = gplr(KillGui["TextBox_d"].Text)[1]
+        targetPlayer = gplr(KillGUI["TextBox_d"].Text)[1]
         if targetPlayer then
-            KillGui["Loop_10"].Text = "Looped: true"
-            KillGui["Loop_10"].BackgroundColor3 = Color3.fromRGB(80, 0, 160)
+            KillGUI["Loop_10"].Text = "Looped: true"
+            KillGUI["Loop_10"].BackgroundColor3 = Color3.fromRGB(80, 0, 160)
             notify("Loop kill activated")
             startLoopKill()
         else
@@ -388,8 +388,8 @@ KillGui["Loop_10"].MouseButton1Click:Connect(function()
             notify("Invalid target for loop")
         end
     else
-        KillGui["Loop_10"].Text = "Looped: Off"
-        KillGui["Loop_10"].BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+        KillGUI["Loop_10"].Text = "Looped: Off"
+        KillGUI["Loop_10"].BackgroundColor3 = Color3.fromRGB(31, 31, 31)
         notify("Loop kill deactivated")
     end
 end)
@@ -399,4 +399,4 @@ Players.PlayerRemoving:Connect(updatePlayerList)
 
 updatePlayerList()
 
-return KillGui["ScreenGui_1"], require
+return KillGUI["ScreenGui_1"], require
