@@ -3,12 +3,12 @@
 88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
 88      88    88    88            odD'      88      88    88 88ooo88 
 88  ooo 88    88    88          .88'        88      88    88 88~~~88 
-88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    
- Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P'  
+88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    @uniquadev
+ Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  CONVERTER 
 ]]--
---[[ Note - for now its a placeholder as im importing the gui ]]
 
 local CollectionService = game:GetService("CollectionService")
+local Players = game:GetService("Players")
 local G2L = {}
 
 G2L["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
@@ -42,22 +42,20 @@ G2L["TabScrollFrame_4"]["Position"] = UDim2.new(0.01351, 0, 0.14179, 0)
 G2L["TabScrollFrame_4"]["BorderColor3"] = Color3.fromRGB(119, 0, 255)
 G2L["TabScrollFrame_4"]["ScrollBarThickness"] = 5
 G2L["TabScrollFrame_4"]["CanvasSize"] = UDim2.new(2, 0, 0, 0)
-G2L["TabScrollFrame_4"]["AutomaticCanvasSize"] = Enum.AutomaticSize.X 
+G2L["TabScrollFrame_4"]["AutomaticCanvasSize"] = Enum.AutomaticSize.X
 
 G2L["TabLayout_5"] = Instance.new("UIListLayout", G2L["TabScrollFrame_4"])
 G2L["TabLayout_5"]["FillDirection"] = Enum.FillDirection.Horizontal
 G2L["TabLayout_5"]["Padding"] = UDim.new(0, 5)
 
 G2L["ContentScrollFrame_6"] = Instance.new("ScrollingFrame", G2L["MainFrame_2"])
-G2L["ContentScrollFrame_6"]["CanvasPosition"] = Vector2.new(1.71429, 0)
 G2L["ContentScrollFrame_6"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
 G2L["ContentScrollFrame_6"]["Name"] = "ContentScrollFrame"
 G2L["ContentScrollFrame_6"]["Size"] = UDim2.new(0.96847, 0, 0.72388, 0)
 G2L["ContentScrollFrame_6"]["ScrollBarImageColor3"] = Color3.fromRGB(119, 0, 255)
 G2L["ContentScrollFrame_6"]["Position"] = UDim2.new(0.01802, 0, 0.26119, 0)
 G2L["ContentScrollFrame_6"]["BorderColor3"] = Color3.fromRGB(119, 0, 255)
-G2L["ContentScrollFrame_6"]["AutomaticCanvasSize"] = Enum.AutomaticSize.Y 
-
+G2L["ContentScrollFrame_6"]["AutomaticCanvasSize"] = Enum.AutomaticSize.Y
 
 G2L["ContentLayout_7"] = Instance.new("UIListLayout", G2L["ContentScrollFrame_6"])
 G2L["ContentLayout_7"]["FillDirection"] = Enum.FillDirection.Vertical
@@ -67,8 +65,6 @@ G2L["UIAspectRatioConstraint_8"] = Instance.new("UIAspectRatioConstraint", G2L["
 G2L["UIAspectRatioConstraint_8"]["AspectRatio"] = 1.65672
 
 
-if G2L["ButtonExample"] then G2L["ButtonExample"]:Destroy() end
-if G2L["TabExample"] then G2L["TabExample"]:Destroy() end
 
 
 
@@ -76,6 +72,18 @@ local LunarHub = {}
 LunarHub.Tabs = {}
 LunarHub.CurrentTab = nil
 LunarHub.TabCount = 0
+
+function notify(title, text, duration)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 5
+    })
+end
+
+local function Chat(message)
+    game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
 
 function LunarHub:AddTab(name, order)
     local tabButton = Instance.new("TextButton")
@@ -186,13 +194,62 @@ function LunarHub:CreateToggle(tab, name, callback)
     return toggleFrame
 end
 
+function LunarHub:CreateNote(tab, title, text)
+    local noteFrame = Instance.new("Frame")
+    noteFrame.Name = title .. "Note"
+    noteFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    noteFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
+    noteFrame.Size = UDim2.new(0, 404, 0, 0)
+    noteFrame.AutomaticSize = Enum.AutomaticSize.Y
+    
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Name = "Title"
+    titleLabel.Text = title
+    titleLabel.TextColor3 = Color3.fromRGB(119, 0, 255)
+    titleLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    titleLabel.BorderColor3 = Color3.fromRGB(119, 0, 255)
+    titleLabel.Size = UDim2.new(1, 0, 0, 25)
+    titleLabel.TextScaled = true
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = noteFrame
+    
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Name = "Text"
+    textLabel.Text = text
+    textLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    textLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    textLabel.BorderSizePixel = 0
+    textLabel.Size = UDim2.new(1, -10, 0, 0)
+    textLabel.Position = UDim2.new(0, 5, 0, 30)
+    textLabel.TextWrapped = true
+    textLabel.TextXAlignment = Enum.TextXAlignment.Left
+    textLabel.TextYAlignment = Enum.TextYAlignment.Top
+    textLabel.AutomaticSize = Enum.AutomaticSize.Y
+    textLabel.Parent = noteFrame
+    
+    titleLabel.Active = false
+    titleLabel.Selectable = false
+    textLabel.Active = false
+    textLabel.Selectable = false
+    noteFrame.Active = false
+    
+    tab.ElementCount = tab.ElementCount + 1
+    noteFrame.LayoutOrder = tab.ElementCount
+    
+    table.insert(tab.Elements, noteFrame)
+    
+    if LunarHub.CurrentTab == tab then
+        noteFrame.Parent = G2L["ContentScrollFrame_6"]
+    end
+    
+    return noteFrame
+end
+
 Window = {
     AddTab = function(name, order)
         return LunarHub:AddTab(name, order)
     end
 }
-
-
 
 local tabMetaTable = {}
 tabMetaTable.__index = function(self, key)
@@ -203,6 +260,10 @@ tabMetaTable.__index = function(self, key)
     elseif key == "CreateToggle" then
         return function(name, callback)
             return LunarHub:CreateToggle(self, name, callback)
+        end
+    elseif key == "CreateNote" then
+        return function(title, text)
+            return LunarHub:CreateNote(self, title, text)
         end
     end
 end
@@ -218,42 +279,16 @@ function LunarHub:AddTab(name, order)
     return tab
 end
 
--- Script build:
-local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
-local RunService = game:GetService("RunService")
-local HttpService = game:GetService("HttpService")
-
-local Wait = task.wait
 
 
-function notify(title, text, duration)
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = duration or 5
-    })
-end
 
-local function Chat(message)
-  
-  game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
-end
-
-pcall(function()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
-end)
 
 local player = Players.LocalPlayer
 local preventToolsEnabled = false
-local toolFriend = nil
-local charFriend = nil
+local Place = game.PlaceId
 
 function setupToolListener(char)
-    if toolFriend then
-        toolFriend:Disconnect()
-    end
-    toolFriend = char.ChildAdded:Connect(function(child)
+    char.ChildAdded:Connect(function(child)
         if preventToolsEnabled and child:IsA("Tool") then
             local humanoid = char:FindFirstChildOfClass("Humanoid")
             if humanoid then
@@ -270,32 +305,230 @@ end
 if player.Character then
     onCharacterAdded(player.Character)
 end
-
-charFriend = player.CharacterAdded:Connect(onCharacterAdded)
-
-local Place = game.PlaceId
+player.CharacterAdded:Connect(onCharacterAdded)
 
 local ReadTab = Window:AddTab("(📄) READ", 1)
-if Place ~= 88308889239232 and Place ~= 17574618959 then
-  ReadTab:CreateButton("Click me!", function()
-    notify("❗︱Game Not Supported", "Some features from this hub are removed.")
-    end
-end)
+local HomeTab = Window:AddTab("(🔗) Home", 2)
+local MainTab = Window:AddTab("(🔗) Main", 3)
+local MyTab = Window:AddTab("(🔗) By Owner", 4)
+local KeyTab = Window:AddTab("(🔗) Keyboards", 5)
 
-  ReadTab:CreateButton("Click me! (2)", function()
-    notify("Meaning of emojis", "🎮 - Only supported games\n🔗 - Any game")
-    end
-end)
+if Place ~= 88308889239232 and Place ~= 17574618959 then
+    ReadTab:CreateNote("❗︱Game Not Supported", "Some features from this hub are removed.")
+end
+
+ReadTab:CreateNote("‼️ PLEASE READ THIS ‼️", "I DO NOT OWN THE SCRIPTS IN THIS SCRIPT!!! ALL CREDIT GOES TO RESPECTIVE OWNERS OF THE SCRIPTS!!")
+ReadTab:CreateNote("Meaning of emojis", "🎮 - Only supported games\n🔗 - Any game")
 
 if Place == 88308889239232 or Place == 17574618959 then
-  ReadTab:CreateButton("Click me! (3)", function()
-    notify("How to use this hub? 🤔", "If you're gonna use genesis, go to the Genesis rigs tab, once your done loading the hats and rigs, head to the Genesis tab and execute the scripts there!!1!")
+    ReadTab:CreateNote("How to use this hub? 🤔", "If you're gonna use genesis, go to the Genesis rigs tab, once your done loading the hats and rigs, head to the Genesis tab and execute the scripts there!!1!")
+    ReadTab:CreateNote("‼️ Notice ‼️", "Credits to Theo for the idea of adding genesis, he's a cool guy make sure to check out his hub too! :)")
+end
+
+ReadTab:CreateNote("🌌︱Theme credits", "Theme made by Theo.")
+
+
+if Place == 17574618959 or Place == 88308889239232 then
+    HomeTab:CreateButton("Sit", function() Chat("-sit ") end)
+    HomeTab:CreateButton("Spawn Dummy", function() Chat("-dummy ") end)
+    HomeTab:CreateButton("Respawn", function() Chat("-re ") end)
+    HomeTab:CreateButton("Remove Hats", function() Chat("-ch ") end)
+    HomeTab:CreateButton("Save hats", function() Chat("-sh ") end)
+    HomeTab:CreateButton("PermaDeath", function() Chat("-pd ") end)
+end
+
+HomeTab:CreateToggle("Prevent tools", function(Value)
+    preventToolsEnabled = Value
+    local char = player.Character
+    if char then
+        local tool = char:FindFirstChildOfClass("Tool")
+        if tool and preventToolsEnabled then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:UnequipTools()
+            end
+        end
     end
 end)
 
-  ReadTab:CreateButton("Click me! (4)", function()
-    notify("‼️ Notice ‼️", "Credits to Theo for the idea of adding genesis, he's a cool guy make sure to check out his hub too! :)")
-    end
+HomeTab:CreateNote("Walkspeed/JumpPower", "Use these to modify your character's movement:")
+
+HomeTab:CreateButton("Set WalkSpeed to 50", function()
+    player.Character.Humanoid.WalkSpeed = 50
+    notify("WalkSpeed", "Set to 50", 3)
 end)
+
+HomeTab:CreateButton("Set JumpPower to 100", function()
+    player.Character.Humanoid.JumpPower = 100
+    notify("JumpPower", "Set to 100", 3)
+end)
+
+HomeTab:CreateButton("Reset Movement", function()
+    player.Character.Humanoid.WalkSpeed = 16
+    player.Character.Humanoid.JumpPower = 50
+    notify("Movement", "Reset to default", 3)
+end)
+
+HomeTab:CreateNote("Themes", "Theme changing functionality not available in this version")
+
+
+MainTab:CreateButton("Nameless Admin", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
+end)
+
+MainTab:CreateButton("Infinite Yield", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+end)
+
+MainTab:CreateButton("Rochips Panel", function()
+    loadstring(game:HttpGet("https://glot.io/snippets/gzrux646yj/raw/main.ts"))()
+    notify("Rochips Panel", "Loading... (Wait 2-30 seconds)", 5)
+end)
+
+MainTab:CreateButton("Hub by Theo", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Solary-3/Scripts/refs/heads/main/JustABaseplateHub.lua"))()
+end)
+
+MainTab:CreateButton("Cloud hub", function()
+    loadstring(game:HttpGet("https://pastefy.app/X6fuVyEZ/raw"))()
+end)
+
+MainTab:CreateButton("Pilots hub", function()
+    loadstring(game:HttpGet("https://pastefy.app/U1o71wOq/raw"))()
+end)
+
+MainTab:CreateButton("KaterHub V3", function()
+    loadstring(game:HttpGet("https://katerhub-inc.github.io/KaterHub/main.lua"))()
+end)
+
+
+MyTab:CreateNote("Item-Related", "")
+MyTab:CreateButton("(🎮) Kill GUI", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Tool-GUI.lua"))()
+end)
+
+MyTab:CreateButton("(🎮) Dupe GUI", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Item-GUI.lua"))()
+end)
+
+MyTab:CreateNote("Reanimation", "")
+MyTab:CreateButton("(🎮) Giant Dance", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Dance.lua"))()
+end)
+
+MyTab:CreateNote("Visuals", "")
+MyTab:CreateButton("Realistic Mode (1st Person)", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/RealisticMode.lua"))()
+end)
+
+
+KeyTab:CreateButton("Delta Keyboard", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Delta.lua"))()
+end)
+
+KeyTab:CreateButton("Virtual Keyboard", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Virtual.lua"))()
+end)
+
+KeyTab:CreateButton("Byte Keyboard", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Byte.lua"))()
+end)
+
+KeyTab:CreateButton("Kilobyte Keyboard", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/KiloByte.lua"))()
+end)
+
+KeyTab:CreateButton("Mob Keyboard", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+end)
+
+
+if Place == 88308889239232 or Place == 17574618959 then
+    local PdTab = Window:AddTab("(🎮) PermaDeath", 6)
+    local GenTab = Window:AddTab("(🎮) Genesis", 7)
+    local HatsTab = Window:AddTab("(🎮) Genesis rigs", 8)
+    
+    
+    PdTab:CreateButton("KDV3 By Theo", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Solary-3/Scripts/refs/heads/main/Choose.lua"))()
+    end)
+    
+    PdTab:CreateNote("Credits", "To the owners of the scripts :D")
+    PdTab:CreateNote("Reanimation", "")
+    
+    PdTab:CreateButton("Just a Baseplate reanimation", function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Just-a-baseplate.-Just-A-Baseplate-Working-Reanimation-39126"))()
+    end)
+    
+    PdTab:CreateButton("Currentangle V2", function()
+        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-CurrentAngle-V2-Old-46018"))()
+    end)
+    
+    PdTab:CreateButton("Gelatek Reanimation", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Reanimate"))()
+    end)
+    
+    
+    GenTab:CreateButton("Krystal Dance", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Krystal%20Dance"))()
+    end)
+    GenTab:CreateNote("Keybinds", "Q, E, R, T, Y, U, P, F, G, H, J, K, L")
+    
+    GenTab:CreateButton("Neptunian V", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Neptunian%20V"))()
+    end)
+    GenTab:CreateNote("Keybinds", "F, Z, X, R")
+    
+    GenTab:CreateButton("Sin Dragon", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Sin%20Dragon"))()
+    end)
+    GenTab:CreateNote("Keybinds", "G, Z, X, C")
+    
+    GenTab:CreateButton("Lightning Cannon", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Lightning%20Cannon"))()
+    end)
+    GenTab:CreateNote("Keybinds", "E, Z, X, C, V, B, M")
+    
+    GenTab:CreateButton("Goner", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Goner"))()
+    end)
+    GenTab:CreateNote("Keybinds", "Q")
+    
+    GenTab:CreateButton("Ban Hammer", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Ban%20Hammer"))()
+    end)
+    GenTab:CreateNote("Keybinds", "E, R")
+    
+    GenTab:CreateButton("Motorcycle", function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Motorcycle"))()
+    end)
+    GenTab:CreateNote("Keybinds", "Z (While driving)")
+    
+    
+    HatsTab:CreateNote("IMPORTANT", "Always load PermaDeath before reanimating.")
+    HatsTab:CreateButton("PermaDeath", function() Chat("-pd ") end)
+    HatsTab:CreateButton("Remove Hats", function() Chat("-ch ") end)
+    HatsTab:CreateButton("Respawn", function() Chat("-re ") end)
+    HatsTab:CreateButton("Save hats", function() Chat("-sh ") end)
+    
+    HatsTab:CreateNote("IMPORTANT!", "It's important to always load the rigs so everyone can see you!")
+    HatsTab:CreateButton("Genesis Rigs", function() Chat("-gh 138364679836274 82942681251131 140395948277978 102599402682100 90960046381276 13058406993 ") end)
+    HatsTab:CreateButton("Genesis Rigs [Black]", function() Chat("-gh 131385506535381 85392395166623 129462518582032 138364679836274 12850150835 106249329428811 ") end)
+    
+    HatsTab:CreateNote("Custom Rigs", "")
+    HatsTab:CreateButton("Genesis Rigs [Noob]", function() Chat("-gh 95290698984301, 84451219120140, 72292903231768, 108186273151388, 139904067056008 ") end)
+    HatsTab:CreateButton("Genesis Rigs [Guest]", function() Chat("-gh 13058406993 138364679836274 131385506535381 85392395166623 129462518582032 106249329428811 108224319902592 82404150383568 100856932339214") end)
+    HatsTab:CreateButton("Genesis Rigs [1x1x1x1]", function() Chat("-gh 131385506535381 85392395166623 129462518582032 12850150835 106249329428811 17681457649 17532925923 16296624548") end)
+    
+    HatsTab:CreateButton("Neptunian V", function() Chat("-gh 5316479641") end)
+    HatsTab:CreateButton("Sin Dragon", function() Chat("-gh 117186631495734 99965319383570 132770514241770 3756389957 14864581977 150381051 4504231783") end)
+    HatsTab:CreateButton("Lightning Cannon", function() Chat("-gh 111672581230926 126145101810389 136055191177936 4504231783") end)
+    HatsTab:CreateButton("Goner", function() Chat("-gh 17770317484 17822722698 17822749561 17772174303 17835236579") end)
+    HatsTab:CreateButton("Ban Hammer", function() Chat("-gh 15548314241") end)
+    HatsTab:CreateButton("Motorcycle", function() Chat("-gh 4504231783, 11354413365, 191101707, 18209672127 ") end)
+end
+
+
+
 
 return G2L["ScreenGui_1"], LunarHub
