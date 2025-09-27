@@ -6,7 +6,9 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
+pcall(function()
+  loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
+end
 
 local Wait = task.wait
 
@@ -33,10 +35,18 @@ local colorScheme = {
     subtext = Color3.fromRGB(180, 180, 190)  -- Light Gray
 }
 
+-- Store UI state for persistence
+local uiState = {
+    enabled = false,
+    minimized = false,
+    lastSize = UDim2.new(0, 350, 0, 300)
+}
+
 local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
+-- Improved minimizer button with better text handling
 local minimizer = Instance.new("TextButton")
 minimizer.Size = UDim2.new(0, 100, 0, 40)
 minimizer.Position = UDim2.new(0, 10, 0, 10) 
@@ -45,6 +55,8 @@ minimizer.Font = Enum.Font.Arcade
 minimizer.TextSize = 16
 minimizer.TextColor3 = colorScheme.text
 minimizer.Text = "Enable"
+minimizer.TextScaled = true -- Allow text to scale
+minimizer.TextWrapped = true -- Prevent text overflow
 minimizer.Parent = gui
 minimizer.ZIndex = 10
 
@@ -61,11 +73,13 @@ minimizerBg.Parent = minimizer
 local cornerBg = Instance.new("UICorner", minimizerBg)
 cornerBg.CornerRadius = UDim.new(0, 23)
 
+-- Improved popup with better text handling
 local popup = Instance.new("Frame")
-popup.Size = UDim2.new(0, 350, 0, 300)
+popup.Size = uiState.lastSize
 popup.Position = UDim2.new(0.5, -175, 0.5, -150)
 popup.BackgroundColor3 = colorScheme.background
 popup.Visible = false
+popup.ClipsDescendants = true -- Prevent text from overflowing
 popup.Parent = gui
 
 local corner = Instance.new("UICorner", popup)
@@ -79,24 +93,29 @@ gradient.Color = ColorSequence.new{
 gradient.Rotation = 90
 gradient.Parent = popup
 
+-- Improved title label with auto-scaling
 local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, 0, 0, 40)
-titleLabel.Position = UDim2.new(0, 0, 0, 20)
+titleLabel.Size = UDim2.new(1, -40, 0, 40) -- Reduced width to prevent overflow
+titleLabel.Position = UDim2.new(0, 20, 0, 20)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Font = Enum.Font.Arcade
-titleLabel.TextSize = 24
+titleLabel.TextSize = 22 -- Slightly smaller for better fit
 titleLabel.TextColor3 = colorScheme.text
 titleLabel.Text = "Giant Dance"
+titleLabel.TextScaled = true -- Auto-scale text
+titleLabel.TextWrapped = true -- Wrap text if needed
 titleLabel.Parent = popup
 
+-- Improved description label with better text handling
 local descLabel = Instance.new("TextLabel")
-descLabel.Size = UDim2.new(1, -20, 0, 60)
-descLabel.Position = UDim2.new(0, 10, 0, 60)
+descLabel.Size = UDim2.new(1, -40, 0, 60) -- More padding
+descLabel.Position = UDim2.new(0, 20, 0, 60)
 descLabel.BackgroundTransparency = 1
 descLabel.Font = Enum.Font.Arcade
-descLabel.TextSize = 16
+descLabel.TextSize = 14 -- Smaller text for better fit
 descLabel.TextColor3 = colorScheme.subtext
 descLabel.TextWrapped = true
+descLabel.TextScaled = true -- Auto-scale text
 descLabel.Text = "I do not own Krystal Dance V3, press 'Click Me!' button for more details."
 descLabel.Parent = popup
 
@@ -121,9 +140,11 @@ local function createButton(name, text, color, position)
     button.Size = UDim2.new(1, 0, 1, 0)
     button.BackgroundColor3 = color
     button.Font = Enum.Font.Arcade
-    button.TextSize = 16
+    button.TextSize = 14 -- Smaller text for better fit
     button.TextColor3 = colorScheme.text
     button.Text = text
+    button.TextScaled = true -- Auto-scale text
+    button.TextWrapped = true -- Prevent text overflow
     button.Name = name
     button.ZIndex = 2
     button.Parent = buttonContainer
@@ -139,50 +160,93 @@ local creditsBtn = createButton("CreditsBtn", "Click Me!", colorScheme.accent, U
 local stopBtn = createButton("StopBtn", "Stop Script", colorScheme.danger, UDim2.new(0.05, 0, 0.75, 0))
 stopBtn.Parent.Size = UDim2.new(0.9, 0, 0, 40) 
 
+-- Improved footer label
 local footerLabel = Instance.new("TextLabel")
-footerLabel.Size = UDim2.new(1, 0, 0, 20)
-footerLabel.Position = UDim2.new(0, 0, 0.9, 0)
+footerLabel.Size = UDim2.new(1, -40, 0, 20) -- Reduced width
+footerLabel.Position = UDim2.new(0, 20, 0.9, 0)
 footerLabel.BackgroundTransparency = 1
 footerLabel.Font = Enum.Font.Sarpanch
-footerLabel.TextSize = 14
+footerLabel.TextSize = 12 -- Smaller text
 footerLabel.TextColor3 = colorScheme.subtext
 footerLabel.Text = "Made by StarFlow"
+footerLabel.TextScaled = true -- Auto-scale text
+footerLabel.TextWrapped = true -- Prevent overflow
 footerLabel.Parent = popup
 
-local uiEnabled = false
-
+-- Smooth toggle function with better state management
 local function toggleUI()
-    uiEnabled = not uiEnabled
+    uiState.enabled = not uiState.enabled
     
-    if uiEnabled then
+    if uiState.enabled then
         minimizer.Text = "Disable"
         popup.Visible = true
-        TweenService:Create(popup, TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 350, 0, 300)
+        
+        -- Smooth scale animation
+        local tweenInfo = TweenInfo.new(
+            0.6, 
+            Enum.EasingStyle.Quad, 
+            Enum.EasingDirection.Out,
+            0, -- RepeatCount
+            false, -- Reverses
+            0 -- Delay
+        )
+        
+        TweenService:Create(popup, tweenInfo, {
+            Size = uiState.lastSize
         }):Play()
     else
         minimizer.Text = "Enable"
-        local tween = TweenService:Create(popup, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+        
+        -- Store current size for next open
+        uiState.lastSize = popup.Size
+        
+        local tweenInfo = TweenInfo.new(
+            0.5, 
+            Enum.EasingStyle.Quad, 
+            Enum.EasingDirection.In,
+            0, -- RepeatCount
+            false, -- Reverses
+            0 -- Delay
+        )
+        
+        local tween = TweenService:Create(popup, tweenInfo, {
             Size = UDim2.new(0, 0, 0, 0)
         })
         tween:Play()
         tween.Completed:Connect(function()
-            popup.Visible = false
+            if not uiState.enabled then -- Only hide if still disabled
+                popup.Visible = false
+            end
         end)
     end
 end
 
 minimizer.MouseButton1Click:Connect(toggleUI)
 
+-- Improved close function with smooth animation
 local function closePopup()
-    local tween = TweenService:Create(popup, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+    uiState.enabled = false
+    uiState.lastSize = popup.Size
+    
+    local tweenInfo = TweenInfo.new(
+        0.5, 
+        Enum.EasingStyle.Quad, 
+        Enum.EasingDirection.In,
+        0, -- RepeatCount
+        false, -- Reverses
+        0 -- Delay
+    )
+    
+    local tween = TweenService:Create(popup, tweenInfo, {
         Size = UDim2.new(0, 0, 0, 0)
     })
     tween:Play()
     tween.Completed:Wait()
-    popup.Visible = false
-    uiEnabled = false
-    minimizer.Text = "Enable"
+    
+    if not uiState.enabled then -- Double check state
+        popup.Visible = false
+        minimizer.Text = "Enable"
+    end
 end
 
 stopBtn.MouseButton1Click:Connect(function()
@@ -401,6 +465,16 @@ creditsBtn.MouseButton1Click:Connect(function()
     print("------------------------------------------")
     Wait(.1)
     notify("Giant Dance", "Check Console!")
+end)
+
+-- Initialize UI state properly
+gui:GetPropertyChangedSignal("Enabled"):Connect(function()
+    if gui.Enabled and uiState.enabled then
+        -- Restore UI state when gui is re-enabled
+        popup.Visible = true
+        popup.Size = uiState.lastSize
+        minimizer.Text = "Disable"
+    end
 end)
 
 Wait(1)
