@@ -115,7 +115,7 @@ KillGui["Loop_10"]["TextScaled"] = true
 KillGui["Loop_10"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
 KillGui["Loop_10"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
 KillGui["Loop_10"]["Size"] = UDim2.new(0.4252, 0, 0.30769, 0)
-KillGui["Loop_10"]["Text"] = [[Looped: Off]]
+KillGui["Loop_10"]["Text"] = [[Looped: false]]
 KillGui["Loop_10"]["Name"] = [[Loop]]
 KillGui["Loop_10"]["Position"] = UDim2.new(0.53543, 0, 0.63077, 0)
 
@@ -379,7 +379,7 @@ KillGui["Loop_10"].MouseButton1Click:Connect(function()
     if loopKillEnabled then
         targetPlayer = gplr(KillGui["TextBox_d"].Text)[1]
         if targetPlayer then
-            KillGui["Loop_10"].Text = "Looped: On"
+            KillGui["Loop_10"].Text = "Looped: true"
             KillGui["Loop_10"].BackgroundColor3 = Color3.fromRGB(80, 0, 160)
             notify("Loop kill activated")
             startLoopKill()
