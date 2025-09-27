@@ -6,6 +6,7 @@
 88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    
  Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P'  
 ]]--
+
 local G2L = {}
 
 G2L["ScreenGui"] = Instance.new("ScreenGui", game.Players.LocalPlayer:WaitForChild("PlayerGui"))
@@ -67,14 +68,14 @@ G2L["Button2Corner"] = Instance.new("UICorner", G2L["V2"])
 G2L["Button2Corner"]["CornerRadius"] = UDim.new(0, 4)
 
 G2L["V1"].MouseButton1Click:Connect(function()
-    G2L["WelcomeText"].Text = "Loading Version 1..."
+    G2L["WelcomeText"].Text = "Loading Rayfield-UI..."
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/LunarHub/Rayfield-UI.lua"))()
     wait(0.5)
     G2L["ScreenGui"]:Destroy()
 end)
 
 G2L["V2"].MouseButton1Click:Connect(function()
-    G2L["WelcomeText"].Text = "Loading Version 2..."
+    G2L["WelcomeText"].Text = "Loading Custom UI..."
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/LunarHub/G2L.lua"))()
     wait(0.5)
     G2L["ScreenGui"]:Destroy()
