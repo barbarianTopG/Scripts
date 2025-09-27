@@ -24,6 +24,7 @@ local KillGui = {}
 
 KillGui["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
 KillGui["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
+KillGui["ScreenGui_1"]["ResetOnSpawn"] = false
 CollectionService:AddTag(KillGui["ScreenGui_1"], [[main]])
 
 KillGui["Frame_2"] = Instance.new("Frame", KillGui["ScreenGui_1"])
