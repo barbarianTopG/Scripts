@@ -8,7 +8,7 @@ local playerGui = plr:WaitForChild("PlayerGui")
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
 
-local bruh = task.wait
+local Wait = task.wait
 
 local function Chat(message)
     TextChatService.TextChannels.RBXGeneral:SendAsync(message)
@@ -146,7 +146,7 @@ footerLabel.BackgroundTransparency = 1
 footerLabel.Font = Enum.Font.Sarpanch
 footerLabel.TextSize = 14
 footerLabel.TextColor3 = colorScheme.subtext
-footerLabel.Text = "Made by PlasmaByte"
+footerLabel.Text = "Made by StarFlow"
 footerLabel.Parent = popup
 
 local uiEnabled = false
@@ -179,7 +179,7 @@ local function closePopup()
         Size = UDim2.new(0, 0, 0, 0)
     })
     tween:Play()
-    tween.Completed:bruh()
+    tween.Completed:Wait()
     popup.Visible = false
     uiEnabled = false
     minimizer.Text = "Enable"
@@ -194,7 +194,7 @@ end)
 reanimateBtn.MouseButton1Click:Connect(function()
     closePopup()
     Chat("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
-    bruh(3)
+    Wait(3)
     local reps = "4602533885,"
     local repped = reps:rep(13)
     local base = "-gh 6202063049,"
@@ -205,8 +205,8 @@ reanimateBtn.MouseButton1Click:Connect(function()
     else
         print(done)
     end
-    repeat bruh() until plr.Character:FindFirstChild("Smile")
-    bruh(.8)
+    repeat Wait() until plr.Character:FindFirstChild("Smile")
+    Wait(.8)
     local char = plr.Character
     local cons = {}
     local ti = table.insert
@@ -215,7 +215,7 @@ reanimateBtn.MouseButton1Click:Connect(function()
     local heartbeat = rs.Heartbeat
     local oldpos = char.HumanoidRootPart.CFrame
     char.HumanoidRootPart.CFrame = oldpos + Vector3.new(0,10000,0)
-    bruh(.3)
+    Wait(.3)
     local reanimstorage = Instance.new("Folder",char)
     reanimstorage.Name = "ReanimStorage"
     local reanim = game:GetObjects("rbxassetid://9678834251")[1]
@@ -357,7 +357,7 @@ reanimateBtn.MouseButton1Click:Connect(function()
     plr.Character = reanim
     anim.Disabled = true
     anim.Disabled = false
-    bruh(.3)
+    Wait(.3)
     plr.Character.HumanoidRootPart.CFrame = oldpos + Vector3.new(0,6,0)
     for i,v in pairs(bighats) do
         v.Handle.CFrame = plr.Character.HumanoidRootPart.CFrame
@@ -378,7 +378,7 @@ reanimateBtn.MouseButton1Click:Connect(function()
         notify("Resetting","Please wait " .. tostring(Players.RespawnTime) .. " seconds", Players.RespawnTime)
     end))
     StarterGui:SetCore("ResetButtonCallback", reset)
-    bruh(5)
+    Wait(5)
     
 loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 end)
@@ -387,68 +387,32 @@ creditsBtn.MouseButton1Click:Connect(function()
     closePopup()
     print("------------------------------------------")
     print("Krystal Dance V3 - Made by NITRO-GT")
-    bruh(.1)
+    Wait(.1)
     print("Krystal Dance V3 - Fixed by MrY7zz")
-    bruh(.1)
+    Wait(.1)
     print("Krystal Dance V3 - Credits goes to them!!")
-    bruh(.1)
-    print("------------------Controls------------------")
-    bruh(.1)
-    print("Q - Page 1: Rat Dance, Page 2: XO, Page 3: Criss Cross")
-    bruh(.1)
-    print("E - Page 1: Boogie, Page 2: Ric Flair Drip, Page 3: BRAIN")
-    bruh(.1)
-    print("R - Page 1: Unlock it, Page 2: Idk, Page 3: Shuba Duck")
-    bruh(.1)
-    print("T - Page 1: Hypnotic Data, Page 2: , Page 3: ")
-    bruh(.1)
-    print("Y - Page 1: Sturdy V2, Page 2: , Page 3: ")
-    bruh(.1)
-    print("U - Page 1: CaramellaDansen, Page 2: , Page 3: ")
-    bruh(.1)
-    print("P - Page 1: Pogo, Page 2: , Page 3: ")
-    bruh(.1)
-    print("F - Page 1: Billy Bounce, Page 2: , Page 3: ")
-    bruh(.1)
-    print("G - Page 1: Gangnam Style, Page 2: , Page 3: ")
-    bruh(.1)
-    print("H - Page 1: Stadium Rave, Page 2: , Page 3: ")
-    bruh(.1)
-    print("J - Page 1: Dancin, Page 2: , Page 3: ")
-    bruh(.1)
-    print("K - Page 1: Dr Livesey, Page 2: , Page 3: ")
-    bruh(.1)
-    print("L - Page 1: Griddy, Page 2: , Page 3: ")
-    bruh(.1)
-    print("Z - Page 1: Idk, Page 2: , Page 3: ")
-    bruh(.1)
-    print("X - Page 1: Kazotsky Kick, Page 2: , Page 3: ")
-    bruh(.1)
-    print("am still adding the names it takes time, also 'idk'")
-    bruh(.1)
-    print("means that i couldnt find the name.")
-    bruh(.1)
+    Wait(.1)
     print("------------------Changelog------------------")
-    bruh(.1)
+    Wait(.1)
     print("Renamed from Giant Krystal Dance to Giant Dance.")
-    bruh(.1)
-    print("Love from PlasmaByte 💖")
-    bruh(.1)
+    Wait(.1)
+    print("Love from StarFlow 💖")
+    Wait(.1)
     print("------------------------------------------")
-    bruh(.1)
+    Wait(.1)
     notify("Giant Dance", "Check Console!")
 end)
 
-bruh(1)
+Wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Keyboards"))()
 notify("Giant Dance", "Please, choose a keyboard,")
-bruh(.95)
+Wait(.95)
 notify("Giant Dance", "bc without one you")
-bruh(.95)
+Wait(.95)
 notify("Giant Dance", "won't be able to use this")
-bruh(.95)
+Wait(.95)
 notify("Giant Dance", "Supported games:")
-bruh(.95)
+Wait(.95)
 notify("Giant Dance", "Just a baseplate,")
-bruh(.95)
+Wait(.95)
 notify("Giant Dance", "Green Baseplate.")
