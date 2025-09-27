@@ -35,7 +35,6 @@ local colorScheme = {
     subtext = Color3.fromRGB(180, 180, 190)  -- Light Gray
 }
 
--- Store UI state for persistence
 local uiState = {
     enabled = false,
     minimized = false,
@@ -46,7 +45,6 @@ local gui = Instance.new("ScreenGui")
 gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
--- Improved minimizer button with better text handling
 local minimizer = Instance.new("TextButton")
 minimizer.Size = UDim2.new(0, 100, 0, 40)
 minimizer.Position = UDim2.new(0, 10, 0, 10) 
@@ -55,8 +53,8 @@ minimizer.Font = Enum.Font.Arcade
 minimizer.TextSize = 16
 minimizer.TextColor3 = colorScheme.text
 minimizer.Text = "Enable"
-minimizer.TextScaled = true -- Allow text to scale
-minimizer.TextWrapped = true -- Prevent text overflow
+minimizer.TextScaled = true 
+minimizer.TextWrapped = true
 minimizer.Parent = gui
 minimizer.ZIndex = 10
 
@@ -73,13 +71,12 @@ minimizerBg.Parent = minimizer
 local cornerBg = Instance.new("UICorner", minimizerBg)
 cornerBg.CornerRadius = UDim.new(0, 23)
 
--- Improved popup with better text handling
 local popup = Instance.new("Frame")
 popup.Size = uiState.lastSize
 popup.Position = UDim2.new(0.5, -175, 0.5, -150)
 popup.BackgroundColor3 = colorScheme.background
 popup.Visible = false
-popup.ClipsDescendants = true -- Prevent text from overflowing
+popup.ClipsDescendants = true 
 popup.Parent = gui
 
 local corner = Instance.new("UICorner", popup)
@@ -93,9 +90,8 @@ gradient.Color = ColorSequence.new{
 gradient.Rotation = 90
 gradient.Parent = popup
 
--- Improved title label with auto-scaling
 local titleLabel = Instance.new("TextLabel")
-titleLabel.Size = UDim2.new(1, -40, 0, 40) -- Reduced width to prevent overflow
+titleLabel.Size = UDim2.new(1, -40, 0, 40)
 titleLabel.Position = UDim2.new(0, 20, 0, 20)
 titleLabel.BackgroundTransparency = 1
 titleLabel.Font = Enum.Font.Arcade
