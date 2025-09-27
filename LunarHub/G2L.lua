@@ -244,6 +244,42 @@ pcall(function()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
 end)
 
+local player = Players.LocalPlayer
+local preventToolsEnabled = false
+local toolFriend = nil
+local charFriend = nil
+
+function setupToolListener(char)
+    if toolFriend then
+        toolFriend:Disconnect()
+    end
+    toolFriend = char.ChildAdded:Connect(function(child)
+        if preventToolsEnabled and child:IsA("Tool") then
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:UnequipTools()
+            end
+        end
+    end)
+end
+
+function onCharacterAdded(char)
+    setupToolListener(char)
+end
+
+if player.Character then
+    onCharacterAdded(player.Character)
+end
+
+charFriend = player.CharacterAdded:Connect(onCharacterAdded)
+
+local Place = game.PlaceId
+
+local ReadTab = Window:AddTab("READ", 1)
+if Place ~= 88308889239232 and Place ~= 17574618959 then
+  ReadTab:CreateButton("Click me!", function()
+    notify("❗︱Game Not Supported", "Some features from this hub are removed.")
+    end)
 
 
 return G2L["ScreenGui_1"], LunarHub
