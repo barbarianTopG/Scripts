@@ -7,7 +7,7 @@ local Wait = task.wait
 
 
 function notify(title, text, duration)
-    game:GetService("StarterGui"):SetCore("ChatNotification", {
+    game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = title,
         Text = text,
         Duration = duration or 5
