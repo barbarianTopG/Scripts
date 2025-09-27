@@ -60,18 +60,14 @@ G2L["Button2Corner"]["CornerRadius"] = UDim.new(0, 4)
 
 G2L["V1"].MouseButton1Click:Connect(function()
     G2L["WelcomeText"].Text = "Loading Version 1..."
-    
-    -- loadstring(game:HttpGet("YOUR_VERSION_1_URL"))()
-    
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/LunarHub/Rayfield-UI.lua"))()
     wait(0.5)
     G2L["ScreenGui"]:Destroy()
 end)
 
 G2L["V2"].MouseButton1Click:Connect(function()
     G2L["WelcomeText"].Text = "Loading Version 2..."
-    
-    -- loadstring(game:HttpGet("YOUR_VERSION_2_URL"))()
-    
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/LunarHub/G2L.lua"))()
     wait(0.5)
     G2L["ScreenGui"]:Destroy()
 end)
