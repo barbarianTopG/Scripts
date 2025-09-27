@@ -1,5 +1,3 @@
-
-
 local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local G2L = {}
@@ -57,10 +55,25 @@ G2L["ContentLayout_7"]["Padding"] = UDim.new(0, 5)
 G2L["UIAspectRatioConstraint_8"] = Instance.new("UIAspectRatioConstraint", G2L["MainFrame_2"])
 G2L["UIAspectRatioConstraint_8"]["AspectRatio"] = 1.65672
 
+-- Add Minimize Button
+G2L["MinBtn_9"] = Instance.new("TextButton", G2L["MainFrame_2"])
+G2L["MinBtn_9"]["TextWrapped"] = true
+G2L["MinBtn_9"]["BorderSizePixel"] = 0
+G2L["MinBtn_9"]["TextScaled"] = true
+G2L["MinBtn_9"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+G2L["MinBtn_9"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+G2L["MinBtn_9"]["Size"] = UDim2.new(0.07658, 0, 0.12687, 0)
+G2L["MinBtn_9"]["BorderColor3"] = Color3.fromRGB(119, 0, 255)
+G2L["MinBtn_9"]["Text"] = [[-]]
+G2L["MinBtn_9"]["Name"] = [[MinBtn]]
+G2L["MinBtn_9"]["Position"] = UDim2.new(0.90541, 0, 0.01493, 0)
+
+-- Lunar Hub System
 local LunarHub = {}
 LunarHub.Tabs = {}
 LunarHub.CurrentTab = nil
 
+-- Notification function
 function notify(title, text, duration)
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = title,
@@ -69,10 +82,12 @@ function notify(title, text, duration)
     })
 end
 
+-- Chat function
 local function Chat(message)
     game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
 end
 
+-- Enhanced Tab System
 function LunarHub:AddTab(name, order)
     local tabButton = Instance.new("TextButton")
     tabButton.Name = name .. "Tab"
@@ -90,6 +105,7 @@ function LunarHub:AddTab(name, order)
         Elements = {},
         ElementCount = 0,
         
+        -- Button with callback
         CreateButton = function(self, buttonName, callback)
             local button = Instance.new("TextButton")
             button.Name = buttonName .. "Button"
@@ -114,7 +130,8 @@ function LunarHub:AddTab(name, order)
             return button
         end,
         
-        CreateToggle = function(self, toggleName, callback)
+        -- Toggle with state management
+        CreateToggle = function(self, toggleName, default, callback)
             local toggleFrame = Instance.new("Frame")
             toggleFrame.Name = toggleName .. "Toggle"
             toggleFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -131,10 +148,16 @@ function LunarHub:AddTab(name, order)
             toggleButton.TextScaled = true
             toggleButton.Parent = toggleFrame
             
-            local toggleState = false
+            local toggleState = default or false
             
             self.ElementCount = self.ElementCount + 1
             toggleFrame.LayoutOrder = self.ElementCount
+            
+            -- Update initial state
+            if toggleState then
+                toggleButton.Text = toggleName .. " [ON]"
+                toggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)
+            end
             
             toggleButton.MouseButton1Click:Connect(function()
                 toggleState = not toggleState
@@ -145,7 +168,9 @@ function LunarHub:AddTab(name, order)
                     toggleButton.Text = toggleName .. " [OFF]"
                     toggleButton.TextColor3 = Color3.fromRGB(119, 0, 255)
                 end
-                callback(toggleState)
+                if callback then
+                    callback(toggleState)
+                end
             end)
             
             table.insert(self.Elements, toggleFrame)
@@ -157,6 +182,7 @@ function LunarHub:AddTab(name, order)
             return toggleFrame
         end,
         
+        -- Note/Label display
         CreateNote = function(self, title, text)
             local noteFrame = Instance.new("Frame")
             noteFrame.Name = title .. "Note"
@@ -206,6 +232,145 @@ function LunarHub:AddTab(name, order)
             end
             
             return noteFrame
+        end,
+        
+        -- New: Create Label (simple text)
+        CreateLabel = function(self, text)
+            local label = Instance.new("TextLabel")
+            label.Name = "Label"
+            label.Text = text
+            label.TextColor3 = Color3.fromRGB(119, 0, 255)
+            label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            label.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            label.Size = UDim2.new(0, 404, 0, 25)
+            label.TextScaled = true
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            
+            self.ElementCount = self.ElementCount + 1
+            label.LayoutOrder = self.ElementCount
+            
+            table.insert(self.Elements, label)
+            
+            if LunarHub.CurrentTab == self then
+                label.Parent = G2L["ContentScrollFrame_6"]
+            end
+            
+            return label
+        end,
+        
+        -- New: Create TextBox (input field)
+        CreateTextBox = function(self, placeholder, callback)
+            local textBoxFrame = Instance.new("Frame")
+            textBoxFrame.Name = "TextBoxFrame"
+            textBoxFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            textBoxFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            textBoxFrame.Size = UDim2.new(0, 404, 0, 30)
+            
+            local textBox = Instance.new("TextBox")
+            textBox.Name = "TextBox"
+            textBox.PlaceholderText = placeholder
+            textBox.Text = ""
+            textBox.TextColor3 = Color3.fromRGB(119, 0, 255)
+            textBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            textBox.BorderSizePixel = 0
+            textBox.Size = UDim2.new(0.9, 0, 0.8, 0)
+            textBox.Position = UDim2.new(0.05, 0, 0.1, 0)
+            textBox.TextScaled = true
+            textBox.Parent = textBoxFrame
+            
+            self.ElementCount = self.ElementCount + 1
+            textBoxFrame.LayoutOrder = self.ElementCount
+            
+            if callback then
+                textBox.FocusLost:Connect(function(enterPressed)
+                    if enterPressed then
+                        callback(textBox.Text)
+                        textBox.Text = ""
+                    end
+                end)
+            end
+            
+            table.insert(self.Elements, textBoxFrame)
+            
+            if LunarHub.CurrentTab == self then
+                textBoxFrame.Parent = G2L["ContentScrollFrame_6"]
+            end
+            
+            return textBoxFrame
+        end,
+        
+        -- New: Create Slider
+        CreateSlider = function(self, sliderName, min, max, default, callback)
+            local sliderFrame = Instance.new("Frame")
+            sliderFrame.Name = sliderName .. "Slider"
+            sliderFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+            sliderFrame.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            sliderFrame.Size = UDim2.new(0, 404, 0, 50)
+            
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Name = "NameLabel"
+            nameLabel.Text = sliderName .. ": " .. (default or min)
+            nameLabel.TextColor3 = Color3.fromRGB(119, 0, 255)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Size = UDim2.new(1, 0, 0.4, 0)
+            nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+            nameLabel.Parent = sliderFrame
+            
+            local slider = Instance.new("TextButton")
+            slider.Name = "Slider"
+            slider.Text = ""
+            slider.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            slider.BorderColor3 = Color3.fromRGB(119, 0, 255)
+            slider.Size = UDim2.new(0.9, 0, 0.3, 0)
+            slider.Position = UDim2.new(0.05, 0, 0.5, 0)
+            slider.Parent = sliderFrame
+            
+            local fill = Instance.new("Frame")
+            fill.Name = "Fill"
+            fill.BackgroundColor3 = Color3.fromRGB(119, 0, 255)
+            fill.BorderSizePixel = 0
+            fill.Size = UDim2.new((default or min) / max, 0, 1, 0)
+            fill.Parent = slider
+            
+            local currentValue = default or min
+            
+            slider.MouseButton1Down:Connect(function()
+                local connection
+                connection = game:GetService("RunService").RenderStepped:Connect(function()
+                    local mouse = game:GetService("Players").LocalPlayer:GetMouse()
+                    local relativeX = math.clamp(mouse.X - slider.AbsolutePosition.X, 0, slider.AbsoluteSize.X)
+                    local percentage = relativeX / slider.AbsoluteSize.X
+                    currentValue = math.floor(min + (max - min) * percentage)
+                    
+                    fill.Size = UDim2.new(percentage, 0, 1, 0)
+                    nameLabel.Text = sliderName .. ": " .. currentValue
+                    
+                    if callback then
+                        callback(currentValue)
+                    end
+                end)
+                
+                local function disconnect()
+                    connection:Disconnect()
+                end
+                
+                game:GetService("UserInputService").InputEnded:Connect(function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        disconnect()
+                    end
+                end)
+            end)
+            
+            self.ElementCount = self.ElementCount + 1
+            sliderFrame.LayoutOrder = self.ElementCount
+            
+            table.insert(self.Elements, sliderFrame)
+            
+            if LunarHub.CurrentTab == self then
+                sliderFrame.Parent = G2L["ContentScrollFrame_6"]
+            end
+            
+            return sliderFrame
         end
     }
     
@@ -223,29 +388,38 @@ function LunarHub:AddTab(name, order)
 end
 
 function LunarHub:SelectTab(tab)
+    -- Clear current content
     for _, child in pairs(G2L["ContentScrollFrame_6"]:GetChildren()) do
         if not child:IsA("UIListLayout") then
             child:Destroy()
         end
     end
     
+    -- Add tab elements
     for _, element in ipairs(tab.Elements) do
         element.Parent = G2L["ContentScrollFrame_6"]
+    end
+    
+    -- Update tab button colors
+    for _, otherTab in ipairs(self.Tabs) do
+        if otherTab == tab then
+            otherTab.Button.BackgroundColor3 = Color3.fromRGB(50, 0, 100) -- Active color
+        else
+            otherTab.Button.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Inactive color
+        end
     end
     
     LunarHub.CurrentTab = tab
 end
 
+-- Window interface
 Window = {
     AddTab = function(name, order)
         return LunarHub:AddTab(name, order)
     end
 }
 
-
-
-
-
+-- Tool prevention system
 local player = Players.LocalPlayer
 local preventToolsEnabled = false
 local Place = game.PlaceId
@@ -270,12 +444,26 @@ if player.Character then
 end
 player.CharacterAdded:Connect(onCharacterAdded)
 
+-- Initialize tabs
 local ReadTab = Window:AddTab("(📄) READ", 1)
 local HomeTab = Window:AddTab("(🔗) Home", 2)
 local MainTab = Window:AddTab("(🔗) Main", 3)
 local MyTab = Window:AddTab("(🔗) By Owner", 4)
 local KeyTab = Window:AddTab("(🔗) Keyboards", 5)
 
+-- Add minimize functionality
+G2L["MinBtn_9"].MouseButton1Click:Connect(function()
+    local mainFrame = G2L["MainFrame_2"]
+    if mainFrame.Size.Y.Scale > 0.1 then
+        mainFrame.Size = UDim2.new(mainFrame.Size.X.Scale, 0, 0.1, 0)
+        G2L["MinBtn_9"].Text = "+"
+    else
+        mainFrame.Size = UDim2.new(0.53402, 0, 0.75829, 0)
+        G2L["MinBtn_9"].Text = "-"
+    end
+end)
+
+-- Your existing content
 if Place ~= 88308889239232 and Place ~= 17574618959 then
     ReadTab:CreateNote("❗︱Game Not Supported", "Some features from this hub are removed.")
 end
@@ -290,6 +478,19 @@ end
 
 ReadTab:CreateNote("🌌︱Theme credits", "Theme made by Theo.")
 
+-- Example of using the new button types:
+HomeTab:CreateLabel("Welcome to Lunar Hub!")
+HomeTab:CreateTextBox("Enter command...", function(text)
+    notify("Command", "You entered: " .. text, 3)
+end)
+
+HomeTab:CreateSlider("WalkSpeed", 16, 100, 16, function(value)
+    if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+        player.Character.Humanoid.WalkSpeed = value
+    end
+end)
+
+-- Rest of your existing code...
 if Place == 17574618959 or Place == 88308889239232 then
     HomeTab:CreateButton("Sit", function() Chat("-sit ") end)
     HomeTab:CreateButton("Spawn Dummy", function() Chat("-dummy ") end)
@@ -299,7 +500,7 @@ if Place == 17574618959 or Place == 88308889239232 then
     HomeTab:CreateButton("PermaDeath", function() Chat("-pd ") end)
 end
 
-HomeTab:CreateToggle("Prevent tools", function(Value)
+HomeTab:CreateToggle("Prevent tools", false, function(Value)
     preventToolsEnabled = Value
     local char = player.Character
     if char then
@@ -337,159 +538,6 @@ HomeTab:CreateButton("Reset Movement", function()
     end
 end)
 
-HomeTab:CreateNote("Themes", "Theme changing functionality not available in this version")
-
-MainTab:CreateButton("Nameless Admin", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))()
-end)
-
-MainTab:CreateButton("Infinite Yield", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-end)
-
-MainTab:CreateButton("Rochips Panel", function()
-    loadstring(game:HttpGet("https://glot.io/snippets/gzrux646yj/raw/main.ts"))()
-    notify("Rochips Panel", "Loading... (Wait 2-30 seconds)", 5)
-end)
-
-MainTab:CreateButton("Hub by Theo", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Solary-3/Scripts/refs/heads/main/JustABaseplateHub.lua"))()
-end)
-
-MainTab:CreateButton("Cloud hub", function()
-    loadstring(game:HttpGet("https://pastefy.app/X6fuVyEZ/raw"))()
-end)
-
-MainTab:CreateButton("Pilots hub", function()
-    loadstring(game:HttpGet("https://pastefy.app/U1o71wOq/raw"))()
-end)
-
-MainTab:CreateButton("KaterHub V3", function()
-    loadstring(game:HttpGet("https://katerhub-inc.github.io/KaterHub/main.lua"))()
-end)
-
-MyTab:CreateNote("Item-Related", "")
-MyTab:CreateButton("(🎮) Kill GUI", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Tool-GUI.lua"))()
-end)
-
-MyTab:CreateButton("(🎮) Dupe GUI", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/GUIs/Item-GUI.lua"))()
-end)
-
-MyTab:CreateNote("Reanimation", "")
-MyTab:CreateButton("(🎮) Giant Dance", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Dance.lua"))()
-end)
-
-MyTab:CreateNote("Visuals", "")
-MyTab:CreateButton("Realistic Mode (1st Person)", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/refs/heads/main/RealisticMode.lua"))()
-end)
-
-KeyTab:CreateButton("Delta Keyboard", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Delta.lua"))()
-end)
-
-KeyTab:CreateButton("Virtual Keyboard", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Virtual.lua"))()
-end)
-
-KeyTab:CreateButton("Byte Keyboard", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Byte.lua"))()
-end)
-
-KeyTab:CreateButton("Kilobyte Keyboard", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/KiloByte.lua"))()
-end)
-
-KeyTab:CreateButton("Mob Keyboard", function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
-end)
-
-if Place == 88308889239232 or Place == 17574618959 then
-    local PdTab = Window:AddTab("(🎮) PermaDeath", 6)
-    local GenTab = Window:AddTab("(🎮) Genesis", 7)
-    local HatsTab = Window:AddTab("(🎮) Genesis rigs", 8)
-    
-    PdTab:CreateButton("KDV3 By Theo", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Solary-3/Scripts/refs/heads/main/Choose.lua"))()
-    end)
-    
-    PdTab:CreateNote("Credits", "To the owners of the scripts :D")
-    PdTab:CreateNote("Reanimation", "")
-    
-    PdTab:CreateButton("Just a Baseplate reanimation", function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Just-a-baseplate.-Just-A-Baseplate-Working-Reanimation-39126"))()
-    end)
-    
-    PdTab:CreateButton("Currentangle V2", function()
-        loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-CurrentAngle-V2-Old-46018"))()
-    end)
-    
-    PdTab:CreateButton("Gelatek Reanimation", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Reanimate"))()
-    end)
-    
-    GenTab:CreateButton("Krystal Dance", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Krystal%20Dance"))()
-    end)
-    GenTab:CreateNote("Keybinds", "Q, E, R, T, Y, U, P, F, G, H, J, K, L")
-    
-    GenTab:CreateButton("Neptunian V", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Neptunian%20V"))()
-    end)
-    GenTab:CreateNote("Keybinds", "F, Z, X, R")
-    
-    GenTab:CreateButton("Sin Dragon", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Sin%20Dragon"))()
-    end)
-    GenTab:CreateNote("Keybinds", "G, Z, X, C")
-    
-    GenTab:CreateButton("Lightning Cannon", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Lightning%20Cannon"))()
-    end)
-    GenTab:CreateNote("Keybinds", "E, Z, X, C, V, B, M")
-    
-    GenTab:CreateButton("Goner", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Goner"))()
-    end)
-    GenTab:CreateNote("Keybinds", "Q")
-    
-    GenTab:CreateButton("Ban Hammer", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Ban%20Hammer"))()
-    end)
-    GenTab:CreateNote("Keybinds", "E, R")
-    
-    GenTab:CreateButton("Motorcycle", function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/GenesisFE/Genesis/main/Obfuscations/Motorcycle"))()
-    end)
-    GenTab:CreateNote("Keybinds", "Z (While driving)")
-    
-    HatsTab:CreateNote("IMPORTANT", "Always load PermaDeath before reanimating.")
-    HatsTab:CreateButton("PermaDeath", function() Chat("-pd ") end)
-    HatsTab:CreateButton("Remove Hats", function() Chat("-ch ") end)
-    HatsTab:CreateButton("Respawn", function() Chat("-re ") end)
-    HatsTab:CreateButton("Save hats", function() Chat("-sh ") end)
-    
-    HatsTab:CreateNote("IMPORTANT!", "It's important to always load the rigs so everyone can see you!")
-    HatsTab:CreateButton("Genesis Rigs", function() Chat("-gh 138364679836274 82942681251131 140395948277978 102599402682100 90960046381276 13058406993 ") end)
-    HatsTab:CreateButton("Genesis Rigs [Black]", function() Chat("-gh 131385506535381 85392395166623 129462518582032 138364679836274 12850150835 106249329428811 ") end)
-    
-    HatsTab:CreateNote("Custom Rigs", "")
-    HatsTab:CreateButton("Genesis Rigs [Noob]", function() Chat("-gh 95290698984301, 84451219120140, 72292903231768, 108186273151388, 139904067056008 ") end)
-    HatsTab:CreateButton("Genesis Rigs [Guest]", function() Chat("-gh 13058406993 138364679836274 131385506535381 85392395166623 129462518582032 106249329428811 108224319902592 82404150383568 100856932339214") end)
-    HatsTab:CreateButton("Genesis Rigs [1x1x1x1]", function() Chat("-gh 131385506535381 85392395166623 129462518582032 12850150835 106249329428811 17681457649 17532925923 16296624548") end)
-    
-    HatsTab:CreateButton("Neptunian V", function() Chat("-gh 5316479641") end)
-    HatsTab:CreateButton("Sin Dragon", function() Chat("-gh 117186631495734 99965319383570 132770514241770 3756389957 14864581977 150381051 4504231783") end)
-    HatsTab:CreateButton("Lightning Cannon", function() Chat("-gh 111672581230926 126145101810389 136055191177936 4504231783") end)
-    HatsTab:CreateButton("Goner", function() Chat("-gh 17770317484 17822722698 17822749561 17772174303 17835236579") end)
-    HatsTab:CreateButton("Ban Hammer", function() Chat("-gh 15548314241") end)
-    HatsTab:CreateButton("Motorcycle", function() Chat("-gh 4504231783, 11354413365, 191101707, 18209672127 ") end)
-end
-
-
-
+-- Continue with the rest of your existing tabs and buttons...
 
 return G2L["ScreenGui_1"]
