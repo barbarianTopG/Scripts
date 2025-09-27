@@ -228,7 +228,7 @@ local Wait = task.wait
 
 
 function notify(title, text, duration)
-    game:GetService("StarterGui"):SetCore("ChatNotification", {
+    game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = title,
         Text = text,
         Duration = duration or 5
@@ -279,7 +279,23 @@ local ReadTab = Window:AddTab("READ", 1)
 if Place ~= 88308889239232 and Place ~= 17574618959 then
   ReadTab:CreateButton("Click me!", function()
     notify("❗︱Game Not Supported", "Some features from this hub are removed.")
-    end)
+    end
+end)
 
+  ReadTab:CreateButton("Click me! (2)", function()
+    notify("Meaning of emojis", "🎮 - Only supported games\n🔗 - Any game")
+    end
+end)
+
+if Place == 88308889239232 or Place == 17574618959 then
+  ReadTab:CreateButton("Click me! (3)", function()
+    notify("How to use this hub? 🤔", "If you're gonna use genesis, go to the Genesis rigs tab, once your done loading the hats and rigs, head to the Genesis tab and execute the scripts there!!1!")
+    end
+end)
+
+  ReadTab:CreateButton("Click me! (4)", function()
+    notify("‼️ Notice ‼️", "Credits to Theo for the idea of adding genesis, he's a cool guy make sure to check out his hub too! :)")
+    end
+end)
 
 return G2L["ScreenGui_1"], LunarHub
