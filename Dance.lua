@@ -25,8 +25,6 @@ function notify(title, text, duration)
     })
 end
 
-
-
 local colorScheme = {
     primary = Color3.fromRGB(75, 0, 130),
     secondary = Color3.fromRGB(148, 0, 211),
@@ -175,7 +173,8 @@ local function toggleUI()
     if uiState.enabled then
         minimizer.Text = "Disable"
         popup.Visible = true
-        local tweenInfo = TweenInfo.new(0.6, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        -- Sped up the opening animation from 0.6 to 0.3 seconds
+        local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         TweenService:Create(popup, tweenInfo, {Size = uiState.lastSize}):Play()
     else
         minimizer.Text = "Enable"
@@ -192,8 +191,6 @@ local function toggleUI()
 end
 
 minimizer.MouseButton1Click:Connect(toggleUI)
-
-
 
 local function closePopup()
     uiState.enabled = false
@@ -456,8 +453,6 @@ gui:GetPropertyChangedSignal("Enabled"):Connect(function()
         minimizer.Text = "Disable"
     end
 end)
-
-
 
 Wait(1)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Keyboards"))()
