@@ -151,7 +151,7 @@ DupeGUI["Send_12"]["TextScaled"] = true;
 DupeGUI["Send_12"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
 DupeGUI["Send_12"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
 DupeGUI["Send_12"]["Size"] = UDim2.new(0.41732, 0, 0.32308, 0);
-DupeGUI["Send_12"]["Text"] = [[Send: ON]];
+DupeGUI["Send_12"]["Text"] = [[Send: true]];
 DupeGUI["Send_12"]["Name"] = [[Send]];
 DupeGUI["Send_12"]["Position"] = UDim2.new(0.54331, 0, 0.63077, 0);
 
@@ -316,7 +316,7 @@ end)
 
 DupeGUI["Send_12"].MouseButton1Click:Connect(function()
     textChatEnabled = not textChatEnabled
-    DupeGUI["Send_12"].Text = textChatEnabled and "Send: ON" or "Send: OFF"
+    DupeGUI["Send_12"].Text = textChatEnabled and "Send: true" or "Send: false"
     DupeGUI["Send_12"].BackgroundColor3 = textChatEnabled and Color3.fromRGB(31, 31, 31) or Color3.fromRGB(50, 0, 0)
 end)
 
