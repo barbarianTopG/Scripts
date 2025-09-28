@@ -21,7 +21,8 @@ local DupeGUI = {};
 
 DupeGUI["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
 DupeGUI["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
-DupeGUI["ScreenGui_1"]["Name"] = "StarFlowDupeGUI"
+DupeGUI["ScreenGui_1"]["ResetOnSpawn"] = false
+DupeGUI["ScreenGui_1"]["Name"] = "ItemDupeGUI"
 
 CollectionService:AddTag(DupeGUI["ScreenGui_1"], [[main]]);
 
@@ -230,7 +231,7 @@ end
 
 local function notify(text)
     StarterGui:SetCore("SendNotification", {
-        Title = "• Dupe GUI •",
+        Title = "Dupe GUI",
         Text = text,
         Duration = 3,
     })
@@ -390,7 +391,7 @@ DupeGUI["Dupe_6"].MouseButton1Click:Connect(function()
                             wait(0.4)
                             lp.Character:SetPrimaryPartCFrame(previous)
                         else
-                            notify("Error: Dupe failed - player health too high")
+                            notify("Successfully duped item to player!")
                         end
                     end)
                 else
