@@ -29,7 +29,7 @@ DupeGUI["Frame_2"] = Instance.new("Frame", DupeGUI["ScreenGui_1"]);
 DupeGUI["Frame_2"]["BorderSizePixel"] = 0;
 DupeGUI["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
 DupeGUI["Frame_2"]["Size"] = UDim2.new(0.3055, 0, 0.36783, 0);
-DupeGUI["Frame_2"]["Position"] = UDim2.new(0.35481, 0, 0.26314, 0);
+DupeGUI["Frame_2"]["Position"] = UDim2.new(0.34038, 0, 0.24616, 0);
 DupeGUI["Frame_2"]["Active"] = true
 DupeGUI["Frame_2"]["Draggable"] = true
 
@@ -44,10 +44,10 @@ DupeGUI["Creator_4"]["BorderSizePixel"] = 0;
 DupeGUI["Creator_4"]["TextScaled"] = true;
 DupeGUI["Creator_4"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
 DupeGUI["Creator_4"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
-DupeGUI["Creator_4"]["Size"] = UDim2.new(0.45669, 0, 0.18462, 0);
-DupeGUI["Creator_4"]["Text"] = [[Made by StarFlow]];
+DupeGUI["Creator_4"]["Size"] = UDim2.new(0.43307, 0, 0.16923, 0);
+DupeGUI["Creator_4"]["Text"] = [[By StarFlow]];
 DupeGUI["Creator_4"]["Name"] = [[Creator]];
-DupeGUI["Creator_4"]["Position"] = UDim2.new(0.4252, 0, 0.01538, 0);
+DupeGUI["Creator_4"]["Position"] = UDim2.new(0.41732, 0, 0.03077, 0);
 
 
 DupeGUI["UICorner_5"] = Instance.new("UICorner", DupeGUI["Creator_4"]);
@@ -60,10 +60,10 @@ DupeGUI["Dupe_6"]["BorderSizePixel"] = 0;
 DupeGUI["Dupe_6"]["TextScaled"] = true;
 DupeGUI["Dupe_6"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
 DupeGUI["Dupe_6"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-DupeGUI["Dupe_6"]["Size"] = UDim2.new(0.9685, 0, 0.35385, 0);
+DupeGUI["Dupe_6"]["Size"] = UDim2.new(0.49606, 0, 0.32308, 0);
 DupeGUI["Dupe_6"]["Text"] = [[Dupe]];
 DupeGUI["Dupe_6"]["Name"] = [[Dupe]];
-DupeGUI["Dupe_6"]["Position"] = UDim2.new(0.01575, 0, 0.61538, 0);
+DupeGUI["Dupe_6"]["Position"] = UDim2.new(0.0315, 0, 0.63077, 0);
 
 
 DupeGUI["UICorner_7"] = Instance.new("UICorner", DupeGUI["Dupe_6"]);
@@ -76,10 +76,10 @@ DupeGUI["ScriptName_8"]["BorderSizePixel"] = 0;
 DupeGUI["ScriptName_8"]["TextScaled"] = true;
 DupeGUI["ScriptName_8"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
 DupeGUI["ScriptName_8"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
-DupeGUI["ScriptName_8"]["Size"] = UDim2.new(0.40157, 0, 0.18462, 0);
+DupeGUI["ScriptName_8"]["Size"] = UDim2.new(0.38583, 0, 0.18462, 0);
 DupeGUI["ScriptName_8"]["Text"] = [[Dupe GUI]];
 DupeGUI["ScriptName_8"]["Name"] = [[ScriptName]];
-DupeGUI["ScriptName_8"]["Position"] = UDim2.new(0.00787, 0, 0.01538, 0);
+DupeGUI["ScriptName_8"]["Position"] = UDim2.new(0.02362, 0, 0.01538, 0);
 
 
 DupeGUI["UICorner_9"] = Instance.new("UICorner", DupeGUI["ScriptName_8"]);
@@ -91,10 +91,10 @@ DupeGUI["List_a"]["TextWrapped"] = true;
 DupeGUI["List_a"]["BorderSizePixel"] = 0;
 DupeGUI["List_a"]["TextScaled"] = true;
 DupeGUI["List_a"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-DupeGUI["List_a"]["Size"] = UDim2.new(0.18898, 0, 0.32308, 0);
+DupeGUI["List_a"]["Size"] = UDim2.new(0.17323, 0, 0.30769, 0);
 DupeGUI["List_a"]["Text"] = [[📋]];
 DupeGUI["List_a"]["Name"] = [[List]];
-DupeGUI["List_a"]["Position"] = UDim2.new(0.7874, 0, 0.24615, 0);
+DupeGUI["List_a"]["Position"] = UDim2.new(0.7874, 0, 0.26154, 0);
 
 
 DupeGUI["UICorner_b"] = Instance.new("UICorner", DupeGUI["List_a"]);
@@ -114,8 +114,8 @@ DupeGUI["TextBox_d"]["TextColor3"] = Color3.fromRGB(113, 113, 113);
 DupeGUI["TextBox_d"]["TextScaled"] = true;
 DupeGUI["TextBox_d"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
 DupeGUI["TextBox_d"]["PlaceholderText"] = [[DisplayName or Username]];
-DupeGUI["TextBox_d"]["Size"] = UDim2.new(0.75591, 0, 0.35385, 0);
-DupeGUI["TextBox_d"]["Position"] = UDim2.new(0.01575, 0, 0.23077, 0);
+DupeGUI["TextBox_d"]["Size"] = UDim2.new(0.74803, 0, 0.35385, 0);
+DupeGUI["TextBox_d"]["Position"] = UDim2.new(0.02362, 0, 0.23077, 0);
 DupeGUI["TextBox_d"]["Text"] = [[]];
 DupeGUI["TextBox_d"]["ClearTextOnFocus"] = false
 
@@ -128,41 +128,45 @@ DupeGUI["UIDragDetector_f"] = Instance.new("UIDragDetector", DupeGUI["Frame_2"])
 
 
 
-DupeGUI["TextButton_10"] = Instance.new("TextButton", DupeGUI["Frame_2"]);
-DupeGUI["TextButton_10"]["TextWrapped"] = true;
-DupeGUI["TextButton_10"]["BorderSizePixel"] = 0;
-DupeGUI["TextButton_10"]["TextScaled"] = true;
-DupeGUI["TextButton_10"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
-DupeGUI["TextButton_10"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-DupeGUI["TextButton_10"]["Size"] = UDim2.new(0.10236, 0, 0.18462, 0);
-DupeGUI["TextButton_10"]["Text"] = [[×]];
-DupeGUI["TextButton_10"]["Position"] = UDim2.new(0.88189, 0, 0.01538, 0);
+DupeGUI["Close_10"] = Instance.new("TextButton", DupeGUI["Frame_2"]);
+DupeGUI["Close_10"]["TextWrapped"] = true;
+DupeGUI["Close_10"]["BorderSizePixel"] = 0;
+DupeGUI["Close_10"]["TextScaled"] = true;
+DupeGUI["Close_10"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
+DupeGUI["Close_10"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+DupeGUI["Close_10"]["Size"] = UDim2.new(0.09449, 0, 0.16923, 0);
+DupeGUI["Close_10"]["Text"] = [[×]];
+DupeGUI["Close_10"]["Name"] = [[Close]];
+DupeGUI["Close_10"]["Position"] = UDim2.new(0.86614, 0, 0.03077, 0);
 
 
-DupeGUI["UICorner_11"] = Instance.new("UICorner", DupeGUI["TextButton_10"]);
+DupeGUI["UICorner_11"] = Instance.new("UICorner", DupeGUI["Close_10"]);
 
 
 
-DupeGUI["UIAspectRatioConstraint_12"] = Instance.new("UIAspectRatioConstraint", DupeGUI["Frame_2"]);
-DupeGUI["UIAspectRatioConstraint_12"]["AspectRatio"] = 1.95385;
+DupeGUI["Send_12"] = Instance.new("TextButton", DupeGUI["Frame_2"]);
+DupeGUI["Send_12"]["TextWrapped"] = true;
+DupeGUI["Send_12"]["BorderSizePixel"] = 0;
+DupeGUI["Send_12"]["TextScaled"] = true;
+DupeGUI["Send_12"]["TextColor3"] = Color3.fromRGB(62, 255, 0);
+DupeGUI["Send_12"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+DupeGUI["Send_12"]["Size"] = UDim2.new(0.41732, 0, 0.32308, 0);
+DupeGUI["Send_12"]["Text"] = [[Send: ON]];
+DupeGUI["Send_12"]["Name"] = [[Send]];
+DupeGUI["Send_12"]["Position"] = UDim2.new(0.54331, 0, 0.63077, 0);
 
-DupeGUI["ToggleChat"] = Instance.new("TextButton", DupeGUI["Frame_2"])
-DupeGUI["ToggleChat"]["TextWrapped"] = true
-DupeGUI["ToggleChat"]["BorderSizePixel"] = 0
-DupeGUI["ToggleChat"]["TextScaled"] = true
-DupeGUI["ToggleChat"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
-DupeGUI["ToggleChat"]["TextColor3"] = Color3.fromRGB(62, 255, 0)
-DupeGUI["ToggleChat"]["Size"] = UDim2.new(0.9685, 0, 0.18462, 0)
-DupeGUI["ToggleChat"]["Text"] = "Send Text: ON"
-DupeGUI["ToggleChat"]["Name"] = "ToggleChat"
-DupeGUI["ToggleChat"]["Position"] = UDim2.new(0.01575, 0, 0.81538, 0)
 
-DupeGUI["UICorner_toggle"] = Instance.new("UICorner", DupeGUI["ToggleChat"])
+DupeGUI["UICorner_13"] = Instance.new("UICorner", DupeGUI["Send_12"]);
+
+
+
+DupeGUI["UIAspectRatioConstraint_14"] = Instance.new("UIAspectRatioConstraint", DupeGUI["Frame_2"]);
+DupeGUI["UIAspectRatioConstraint_14"]["AspectRatio"] = 1.95385;
 
 DupeGUI["PlayerListBG"] = Instance.new("Frame", DupeGUI["ScreenGui_1"])
 DupeGUI["PlayerListBG"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
 DupeGUI["PlayerListBG"]["Size"] = UDim2.new(0.25, 0, 0.4, 0)
-DupeGUI["PlayerListBG"]["Position"] = UDim2.new(0.65, 0, 0.26314, 0)
+DupeGUI["PlayerListBG"]["Position"] = UDim2.new(0.65, 0, 0.24616, 0)
 DupeGUI["PlayerListBG"]["BorderSizePixel"] = 0
 DupeGUI["PlayerListBG"]["Visible"] = false
 
@@ -226,7 +230,7 @@ end
 
 local function notify(text)
     StarterGui:SetCore("SendNotification", {
-        Title = "Dupe GUI",
+        Title = "• Dupe GUI •",
         Text = text,
         Duration = 3,
     })
@@ -310,10 +314,10 @@ DupeGUI["List_a"].MouseButton1Click:Connect(function()
     end
 end)
 
-DupeGUI["ToggleChat"].MouseButton1Click:Connect(function()
+DupeGUI["Send_12"].MouseButton1Click:Connect(function()
     textChatEnabled = not textChatEnabled
-    DupeGUI["ToggleChat"].Text = textChatEnabled and "Send Text: ON" or "Send Text: OFF"
-    DupeGUI["ToggleChat"].BackgroundColor3 = textChatEnabled and Color3.fromRGB(31, 31, 31) or Color3.fromRGB(50, 0, 0)
+    DupeGUI["Send_12"].Text = textChatEnabled and "Send: ON" or "Send: OFF"
+    DupeGUI["Send_12"].BackgroundColor3 = textChatEnabled and Color3.fromRGB(31, 31, 31) or Color3.fromRGB(50, 0, 0)
 end)
 
 DupeGUI["Dupe_6"].MouseButton1Click:Connect(function()
@@ -403,7 +407,7 @@ DupeGUI["Dupe_6"].MouseButton1Click:Connect(function()
     end
 end)
 
-DupeGUI["TextButton_10"].MouseButton1Click:Connect(function()
+DupeGUI["Close_10"].MouseButton1Click:Connect(function()
     DupeGUI["ScreenGui_1"]:Destroy()
 end)
 
