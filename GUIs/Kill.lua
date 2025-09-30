@@ -1,12 +1,3 @@
---[=[
- d888b  db    db d888888b      .d888b.      db      db    db  .d8b.  
-88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
-88      88    88    88            odD'      88      88    88 88ooo88 
-88  ooo 88    88    88          .88'        88      88    88 88~~~88 
-88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    
- Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  
-]=]
-
 local CollectionService = game:GetService("CollectionService");
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
@@ -18,183 +9,193 @@ local targetPlayer = nil
 local killInProgress = false
 local playerListVisible = false
 
-local KillGUI = {};
+local ToolKill = {};
 
-KillGUI["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
-KillGUI["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
-KillGUI["ScreenGui_1"]["ResetOnSpawn"] = false;
+ToolKill["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
+ToolKill["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
+ToolKill["ScreenGui_1"]["ResetOnSpawn"] = false;
 
-CollectionService:AddTag(KillGUI["ScreenGui_1"], [[main]]);
+CollectionService:AddTag(ToolKill["ScreenGui_1"], [[main]]);
 
-KillGUI["Frame_2"] = Instance.new("Frame", KillGUI["ScreenGui_1"]);
-KillGUI["Frame_2"]["BorderSizePixel"] = 0;
-KillGUI["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
-KillGUI["Frame_2"]["Size"] = UDim2.new(0.3055, 0, 0.36783, 0);
-KillGUI["Frame_2"]["Position"] = UDim2.new(0.36924, 0, 0.21221, 0);
-
-
-KillGUI["FrameCorner_3"] = Instance.new("UICorner", KillGUI["Frame_2"]);
-KillGUI["FrameCorner_3"]["Name"] = [[FrameCorner]];
+ToolKill["Frame_2"] = Instance.new("Frame", ToolKill["ScreenGui_1"]);
+ToolKill["Frame_2"]["BorderSizePixel"] = 0;
+ToolKill["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+ToolKill["Frame_2"]["Size"] = UDim2.new(0.3055, 0, 0.36783, 0);
+ToolKill["Frame_2"]["Position"] = UDim2.new(0.38007, 0, 0.27162, 0);
 
 
-KillGUI["Creator_4"] = Instance.new("TextLabel", KillGUI["Frame_2"]);
-KillGUI["Creator_4"]["TextWrapped"] = true;
-KillGUI["Creator_4"]["BorderSizePixel"] = 0;
-KillGUI["Creator_4"]["TextScaled"] = true;
-KillGUI["Creator_4"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["Creator_4"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["Creator_4"]["Size"] = UDim2.new(0.58268, 0, 0.18462, 0);
-KillGUI["Creator_4"]["Text"] = [[Made by StarFlow]];
-KillGUI["Creator_4"]["Name"] = [[Creator]];
-KillGUI["Creator_4"]["Position"] = UDim2.new(0.29921, 0, 0.01538, 0);
+ToolKill["FrameCorner_3"] = Instance.new("UICorner", ToolKill["Frame_2"]);
+ToolKill["FrameCorner_3"]["Name"] = [[FrameCorner]];
 
 
-KillGUI["UICorner_5"] = Instance.new("UICorner", KillGUI["Creator_4"]);
+ToolKill["Creator_4"] = Instance.new("TextLabel", ToolKill["Frame_2"]);
+ToolKill["Creator_4"]["TextWrapped"] = true;
+ToolKill["Creator_4"]["BorderSizePixel"] = 0;
+ToolKill["Creator_4"]["TextScaled"] = true;
+ToolKill["Creator_4"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["Creator_4"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
+ToolKill["Creator_4"]["Size"] = UDim2.new(0.35433, 0, 0.18462, 0);
+ToolKill["Creator_4"]["Text"] = [[By StarFlow]];
+ToolKill["Creator_4"]["Name"] = [[Creator]];
+ToolKill["Creator_4"]["Position"] = UDim2.new(0.41732, 0, 0.01538, 0);
 
 
-
-KillGUI["Kill_6"] = Instance.new("TextButton", KillGUI["Frame_2"]);
-KillGUI["Kill_6"]["TextWrapped"] = true;
-KillGUI["Kill_6"]["BorderSizePixel"] = 0;
-KillGUI["Kill_6"]["TextScaled"] = true;
-KillGUI["Kill_6"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["Kill_6"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["Kill_6"]["Size"] = UDim2.new(0.48819, 0, 0.29231, 0);
-KillGUI["Kill_6"]["Text"] = [[Kill]];
-KillGUI["Kill_6"]["Name"] = [[Kill]];
-KillGUI["Kill_6"]["Position"] = UDim2.new(0.0315, 0, 0.63077, 0);
-
-
-KillGUI["UICorner_7"] = Instance.new("UICorner", KillGUI["Kill_6"]);
+ToolKill["UICorner_5"] = Instance.new("UICorner", ToolKill["Creator_4"]);
 
 
 
-KillGUI["ScriptName_8"] = Instance.new("TextLabel", KillGUI["Frame_2"]);
-KillGUI["ScriptName_8"]["TextWrapped"] = true;
-KillGUI["ScriptName_8"]["BorderSizePixel"] = 0;
-KillGUI["ScriptName_8"]["TextScaled"] = true;
-KillGUI["ScriptName_8"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["ScriptName_8"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["ScriptName_8"]["Size"] = UDim2.new(0.28346, 0, 0.18462, 0);
-KillGUI["ScriptName_8"]["Text"] = [[Kill Gui]];
-KillGUI["ScriptName_8"]["Name"] = [[ScriptName]];
-KillGUI["ScriptName_8"]["Position"] = UDim2.new(0.00787, 0, 0.01538, 0);
+ToolKill["Kill_6"] = Instance.new("TextButton", ToolKill["Frame_2"]);
+ToolKill["Kill_6"]["TextWrapped"] = true;
+ToolKill["Kill_6"]["BorderSizePixel"] = 0;
+ToolKill["Kill_6"]["TextScaled"] = true;
+ToolKill["Kill_6"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
+ToolKill["Kill_6"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["Kill_6"]["Size"] = UDim2.new(0.48819, 0, 0.29231, 0);
+ToolKill["Kill_6"]["Text"] = [[Kill]];
+ToolKill["Kill_6"]["Name"] = [[Kill]];
+ToolKill["Kill_6"]["Position"] = UDim2.new(0.0315, 0, 0.63077, 0);
 
 
-KillGUI["UICorner_9"] = Instance.new("UICorner", KillGUI["ScriptName_8"]);
-
-
-
-KillGUI["List_a"] = Instance.new("TextButton", KillGUI["Frame_2"]);
-KillGUI["List_a"]["TextWrapped"] = true;
-KillGUI["List_a"]["BorderSizePixel"] = 0;
-KillGUI["List_a"]["TextScaled"] = true;
-KillGUI["List_a"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["List_a"]["Size"] = UDim2.new(0.17323, 0, 0.30769, 0);
-KillGUI["List_a"]["Text"] = [[📋]];
-KillGUI["List_a"]["Name"] = [[List]];
-KillGUI["List_a"]["Position"] = UDim2.new(0.7874, 0, 0.26154, 0);
-
-
-KillGUI["UICorner_b"] = Instance.new("UICorner", KillGUI["List_a"]);
+ToolKill["UICorner_7"] = Instance.new("UICorner", ToolKill["Kill_6"]);
 
 
 
-KillGUI["FrameStroke_c"] = Instance.new("UIStroke", KillGUI["Frame_2"]);
-KillGUI["FrameStroke_c"]["Name"] = [[FrameStroke]];
-KillGUI["FrameStroke_c"]["Color"] = Color3.fromRGB(119, 0, 255);
+ToolKill["ScriptName_8"] = Instance.new("TextLabel", ToolKill["Frame_2"]);
+ToolKill["ScriptName_8"]["TextWrapped"] = true;
+ToolKill["ScriptName_8"]["BorderSizePixel"] = 0;
+ToolKill["ScriptName_8"]["TextScaled"] = true;
+ToolKill["ScriptName_8"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["ScriptName_8"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
+ToolKill["ScriptName_8"]["Size"] = UDim2.new(0.37795, 0, 0.18462, 0);
+ToolKill["ScriptName_8"]["Text"] = [[Kill Gui]];
+ToolKill["ScriptName_8"]["Name"] = [[ScriptName]];
+ToolKill["ScriptName_8"]["Position"] = UDim2.new(0.02362, 0, 0.01538, 0);
 
 
-KillGUI["Loop_d"] = Instance.new("TextButton", KillGUI["Frame_2"]);
-KillGUI["Loop_d"]["TextWrapped"] = true;
-KillGUI["Loop_d"]["BorderSizePixel"] = 0;
-KillGUI["Loop_d"]["TextScaled"] = true;
-KillGUI["Loop_d"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["Loop_d"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["Loop_d"]["Size"] = UDim2.new(0.4252, 0, 0.30769, 0);
-KillGUI["Loop_d"]["Text"] = [[Looped: false]];
-KillGUI["Loop_d"]["Name"] = [[Loop]];
-KillGUI["Loop_d"]["Position"] = UDim2.new(0.53543, 0, 0.63077, 0);
-
-
-KillGUI["UICorner_e"] = Instance.new("UICorner", KillGUI["Loop_d"]);
+ToolKill["UICorner_9"] = Instance.new("UICorner", ToolKill["ScriptName_8"]);
 
 
 
-KillGUI["TextBox_f"] = Instance.new("TextBox", KillGUI["Frame_2"]);
-KillGUI["TextBox_f"]["CursorPosition"] = -1;
-KillGUI["TextBox_f"]["BorderSizePixel"] = 0;
-KillGUI["TextBox_f"]["TextWrapped"] = true;
-KillGUI["TextBox_f"]["TextColor3"] = Color3.fromRGB(113, 113, 113);
-KillGUI["TextBox_f"]["TextScaled"] = true;
-KillGUI["TextBox_f"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["TextBox_f"]["PlaceholderText"] = [[DisplayName or Username]];
-KillGUI["TextBox_f"]["Size"] = UDim2.new(0.74803, 0, 0.35385, 0);
-KillGUI["TextBox_f"]["Position"] = UDim2.new(0.02362, 0, 0.23077, 0);
-KillGUI["TextBox_f"]["Text"] = [[]];
+ToolKill["List_a"] = Instance.new("TextButton", ToolKill["Frame_2"]);
+ToolKill["List_a"]["TextWrapped"] = true;
+ToolKill["List_a"]["BorderSizePixel"] = 0;
+ToolKill["List_a"]["TextScaled"] = true;
+ToolKill["List_a"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["List_a"]["Size"] = UDim2.new(0.17323, 0, 0.35385, 0);
+ToolKill["List_a"]["Text"] = [[📋]];
+ToolKill["List_a"]["Name"] = [[List]];
+ToolKill["List_a"]["Position"] = UDim2.new(0.7874, 0, 0.23077, 0);
 
 
-KillGUI["UICorner_10"] = Instance.new("UICorner", KillGUI["TextBox_f"]);
-
-
-
-KillGUI["UIDragDetector_11"] = Instance.new("UIDragDetector", KillGUI["Frame_2"]);
-KillGUI["UIDragDetector_11"]["DragUDim2"] = UDim2.new(0, -35, 0, 28);
-
-
-KillGUI["TextButton_12"] = Instance.new("TextButton", KillGUI["Frame_2"]);
-KillGUI["TextButton_12"]["TextWrapped"] = true;
-KillGUI["TextButton_12"]["BorderSizePixel"] = 0;
-KillGUI["TextButton_12"]["TextScaled"] = true;
-KillGUI["TextButton_12"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-KillGUI["TextButton_12"]["BackgroundColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["TextButton_12"]["Size"] = UDim2.new(0.10236, 0, 0.2, -1);
-KillGUI["TextButton_12"]["Text"] = [[×]];
-KillGUI["TextButton_12"]["Position"] = UDim2.new(0.88189, 1, 0.01538, 0);
-
-
-KillGUI["UICorner_13"] = Instance.new("UICorner", KillGUI["TextButton_12"]);
+ToolKill["UICorner_b"] = Instance.new("UICorner", ToolKill["List_a"]);
 
 
 
-KillGUI["UIAspectRatioConstraint_14"] = Instance.new("UIAspectRatioConstraint", KillGUI["Frame_2"]);
-KillGUI["UIAspectRatioConstraint_14"]["AspectRatio"] = 1.95385;
+ToolKill["FrameStroke_c"] = Instance.new("UIStroke", ToolKill["Frame_2"]);
+ToolKill["FrameStroke_c"]["Name"] = [[FrameStroke]];
+ToolKill["FrameStroke_c"]["Color"] = Color3.fromRGB(119, 0, 255);
 
-KillGUI["PlayerListFrame"] = Instance.new("Frame", KillGUI["ScreenGui_1"]);
-KillGUI["PlayerListFrame"]["BorderSizePixel"] = 0;
-KillGUI["PlayerListFrame"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
-KillGUI["PlayerListFrame"]["Size"] = UDim2.new(0.25, 0, 0.4, 0);
-KillGUI["PlayerListFrame"]["Position"] = UDim2.new(0.65, 0, 0.26597, 0);
-KillGUI["PlayerListFrame"]["Visible"] = false;
 
-KillGUI["PlayerListCorner"] = Instance.new("UICorner", KillGUI["PlayerListFrame"]);
+ToolKill["Loop_d"] = Instance.new("TextButton", ToolKill["Frame_2"]);
+ToolKill["Loop_d"]["TextWrapped"] = true;
+ToolKill["Loop_d"]["BorderSizePixel"] = 0;
+ToolKill["Loop_d"]["TextScaled"] = true;
+ToolKill["Loop_d"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
+ToolKill["Loop_d"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["Loop_d"]["Size"] = UDim2.new(0.4252, 0, 0.29231, 0);
+ToolKill["Loop_d"]["Text"] = [[Looped: false]];
+ToolKill["Loop_d"]["Name"] = [[Loop]];
+ToolKill["Loop_d"]["Position"] = UDim2.new(0.53543, 0, 0.63077, 0);
 
-KillGUI["PlayerListStroke"] = Instance.new("UIStroke", KillGUI["PlayerListFrame"]);
-KillGUI["PlayerListStroke"]["Color"] = Color3.fromRGB(119, 0, 255);
 
-KillGUI["PlayerListTitle"] = Instance.new("TextLabel", KillGUI["PlayerListFrame"]);
-KillGUI["PlayerListTitle"]["TextWrapped"] = true;
-KillGUI["PlayerListTitle"]["BorderSizePixel"] = 0;
-KillGUI["PlayerListTitle"]["TextScaled"] = true;
-KillGUI["PlayerListTitle"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-KillGUI["PlayerListTitle"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["PlayerListTitle"]["Size"] = UDim2.new(0.9, 0, 0.1, 0);
-KillGUI["PlayerListTitle"]["Text"] = [[Player List]];
-KillGUI["PlayerListTitle"]["Position"] = UDim2.new(0.05, 0, 0.02, 0);
+ToolKill["UICorner_e"] = Instance.new("UICorner", ToolKill["Loop_d"]);
 
-KillGUI["PlayerListUICorner"] = Instance.new("UICorner", KillGUI["PlayerListTitle"]);
 
-KillGUI["PlayerListScrollingFrame"] = Instance.new("ScrollingFrame", KillGUI["PlayerListFrame"]);
-KillGUI["PlayerListScrollingFrame"]["BorderSizePixel"] = 0;
-KillGUI["PlayerListScrollingFrame"]["BackgroundColor3"] = Color3.fromRGB(20, 20, 20);
-KillGUI["PlayerListScrollingFrame"]["Size"] = UDim2.new(0.9, 0, 0.8, 0);
-KillGUI["PlayerListScrollingFrame"]["Position"] = UDim2.new(0.05, 0, 0.15, 0);
-KillGUI["PlayerListScrollingFrame"]["ScrollBarThickness"] = 8;
 
-KillGUI["PlayerListScrollingCorner"] = Instance.new("UICorner", KillGUI["PlayerListScrollingFrame"]);
+ToolKill["TextBox_f"] = Instance.new("TextBox", ToolKill["Frame_2"]);
+ToolKill["TextBox_f"]["CursorPosition"] = -1;
+ToolKill["TextBox_f"]["BorderSizePixel"] = 0;
+ToolKill["TextBox_f"]["TextWrapped"] = true;
+ToolKill["TextBox_f"]["TextColor3"] = Color3.fromRGB(113, 113, 113);
+ToolKill["TextBox_f"]["TextScaled"] = true;
+ToolKill["TextBox_f"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["TextBox_f"]["PlaceholderText"] = [[DisplayName or Username]];
+ToolKill["TextBox_f"]["Size"] = UDim2.new(0.74803, 0, 0.35385, 0);
+ToolKill["TextBox_f"]["Position"] = UDim2.new(0.02362, 0, 0.23077, 0);
+ToolKill["TextBox_f"]["Text"] = [[]];
 
-KillGUI["PlayerListLayout"] = Instance.new("UIListLayout", KillGUI["PlayerListScrollingFrame"]);
-KillGUI["PlayerListLayout"]["Padding"] = UDim.new(0, 5);
+
+ToolKill["UICorner_10"] = Instance.new("UICorner", ToolKill["TextBox_f"]);
+
+
+
+ToolKill["UIDragDetector_11"] = Instance.new("UIDragDetector", ToolKill["Frame_2"]);
+ToolKill["UIDragDetector_11"]["DragUDim2"] = UDim2.new(0, -1, 0, -26);
+
+
+ToolKill["Close_12"] = Instance.new("TextButton", ToolKill["Frame_2"]);
+ToolKill["Close_12"]["TextWrapped"] = true;
+ToolKill["Close_12"]["BorderSizePixel"] = 0;
+ToolKill["Close_12"]["TextScaled"] = true;
+ToolKill["Close_12"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
+ToolKill["Close_12"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["Close_12"]["Size"] = UDim2.new(0.16535, 0, 0.18462, 0);
+ToolKill["Close_12"]["Text"] = [[×]];
+ToolKill["Close_12"]["Name"] = [[Close]];
+ToolKill["Close_12"]["Position"] = UDim2.new(0.7874, 0, 0.01538, 0);
+
+
+ToolKill["UICorner_13"] = Instance.new("UICorner", ToolKill["Close_12"]);
+
+
+
+ToolKill["UIAspectRatioConstraint_14"] = Instance.new("UIAspectRatioConstraint", ToolKill["Frame_2"]);
+ToolKill["UIAspectRatioConstraint_14"]["AspectRatio"] = 1.95385;
+
+ToolKill["PlayerListFrame"] = Instance.new("Frame", ToolKill["ScreenGui_1"]);
+ToolKill["PlayerListFrame"]["BorderSizePixel"] = 0;
+ToolKill["PlayerListFrame"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
+ToolKill["PlayerListFrame"]["Size"] = UDim2.new(0.25, 0, 0.4, 0);
+ToolKill["PlayerListFrame"]["Visible"] = false;
+
+ToolKill["PlayerListCorner"] = Instance.new("UICorner", ToolKill["PlayerListFrame"]);
+
+ToolKill["PlayerListStroke"] = Instance.new("UIStroke", ToolKill["PlayerListFrame"]);
+ToolKill["PlayerListStroke"]["Color"] = Color3.fromRGB(119, 0, 255);
+
+ToolKill["PlayerListTitle"] = Instance.new("TextLabel", ToolKill["PlayerListFrame"]);
+ToolKill["PlayerListTitle"]["TextWrapped"] = true;
+ToolKill["PlayerListTitle"]["BorderSizePixel"] = 0;
+ToolKill["PlayerListTitle"]["TextScaled"] = true;
+ToolKill["PlayerListTitle"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
+ToolKill["PlayerListTitle"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
+ToolKill["PlayerListTitle"]["Size"] = UDim2.new(0.9, 0, 0.1, 0);
+ToolKill["PlayerListTitle"]["Text"] = [[Player List]];
+ToolKill["PlayerListTitle"]["Position"] = UDim2.new(0.05, 0, 0.02, 0);
+
+ToolKill["PlayerListUICorner"] = Instance.new("UICorner", ToolKill["PlayerListTitle"]);
+
+ToolKill["PlayerListScrollingFrame"] = Instance.new("ScrollingFrame", ToolKill["PlayerListFrame"]);
+ToolKill["PlayerListScrollingFrame"]["BorderSizePixel"] = 0;
+ToolKill["PlayerListScrollingFrame"]["BackgroundColor3"] = Color3.fromRGB(20, 20, 20);
+ToolKill["PlayerListScrollingFrame"]["Size"] = UDim2.new(0.9, 0, 0.8, 0);
+ToolKill["PlayerListScrollingFrame"]["Position"] = UDim2.new(0.05, 0, 0.15, 0);
+ToolKill["PlayerListScrollingFrame"]["ScrollBarThickness"] = 8;
+
+ToolKill["PlayerListScrollingCorner"] = Instance.new("UICorner", ToolKill["PlayerListScrollingFrame"]);
+
+ToolKill["PlayerListLayout"] = Instance.new("UIListLayout", ToolKill["PlayerListScrollingFrame"]);
+ToolKill["PlayerListLayout"]["Padding"] = UDim.new(0, 5);
+
+local function updatePlayerListPosition()
+    local mainFrame = ToolKill["Frame_2"]
+    local playerListFrame = ToolKill["PlayerListFrame"]
+    
+    local mainFrameRight = mainFrame.AbsolutePosition.X + mainFrame.AbsoluteSize.X
+    local mainFrameTop = mainFrame.AbsolutePosition.Y
+    
+    playerListFrame.Position = UDim2.new(0, mainFrameRight + 10, 0, mainFrameTop)
+end
 
 local function gplr(String)
     local Found = {}
@@ -246,7 +247,7 @@ local function isPlayerAlive(player)
 end
 
 local function updatePlayerList()
-    local scrollingFrame = KillGUI["PlayerListScrollingFrame"]
+    local scrollingFrame = ToolKill["PlayerListScrollingFrame"]
     
     for _, child in pairs(scrollingFrame:GetChildren()) do
         if child:IsA("TextButton") then
@@ -273,9 +274,9 @@ local function updatePlayerList()
         corner.Parent = playerButton
         
         playerButton.MouseButton1Click:Connect(function()
-            KillGUI["TextBox_f"].Text = player.Name
+            ToolKill["TextBox_f"].Text = player.Name
             if playerListVisible then
-                KillGUI["PlayerListFrame"].Visible = false
+                ToolKill["PlayerListFrame"].Visible = false
                 playerListVisible = false
             end
         end)
@@ -291,7 +292,7 @@ local function performKill()
         return false
     end
 
-    local Player = gplr(KillGUI["TextBox_f"].Text)[1]
+    local Player = gplr(ToolKill["TextBox_f"].Text)[1]
     if not Player then
         notify("Player not found")
         return false
@@ -396,27 +397,30 @@ local function startLoopKill()
     end)
 end
 
-KillGUI["List_a"].MouseButton1Click:Connect(function()
+ToolKill["List_a"].MouseButton1Click:Connect(function()
     playerListVisible = not playerListVisible
-    KillGUI["PlayerListFrame"].Visible = playerListVisible
     if playerListVisible then
+        updatePlayerListPosition() 
         updatePlayerList()
+        ToolKill["PlayerListFrame"].Visible = true
+    else
+        ToolKill["PlayerListFrame"].Visible = false
     end
 end)
 
-KillGUI["Kill_6"].MouseButton1Click:Connect(function()
+ToolKill["Kill_6"].MouseButton1Click:Connect(function()
     if not killInProgress then
         performKill()
     end
 end)
 
-KillGUI["Loop_d"].MouseButton1Click:Connect(function()
+ToolKill["Loop_d"].MouseButton1Click:Connect(function()
     loopKillEnabled = not loopKillEnabled
     if loopKillEnabled then
-        targetPlayer = gplr(KillGUI["TextBox_f"].Text)[1]
+        targetPlayer = gplr(ToolKill["TextBox_f"].Text)[1]
         if targetPlayer then
-            KillGUI["Loop_d"].Text = "Looped: true"
-            KillGUI["Loop_d"].BackgroundColor3 = Color3.fromRGB(80, 0, 160)
+            ToolKill["Loop_d"].Text = "Looped: true"
+            ToolKill["Loop_d"].BackgroundColor3 = Color3.fromRGB(80, 0, 160)
             notify("Loop kill activated")
             startLoopKill()
         else
@@ -424,14 +428,22 @@ KillGUI["Loop_d"].MouseButton1Click:Connect(function()
             notify("Invalid target for loop")
         end
     else
-        KillGUI["Loop_d"].Text = "Looped: false"
-        KillGUI["Loop_d"].BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+        ToolKill["Loop_d"].Text = "Looped: false"
+        ToolKill["Loop_d"].BackgroundColor3 = Color3.fromRGB(31, 31, 31)
         notify("Loop kill deactivated")
     end
 end)
 
-KillGUI["TextButton_12"].MouseButton1Click:Connect(function()
-    KillGUI["ScreenGui_1"]:Destroy()
+ToolKill["Close_12"].MouseButton1Click:Connect(function()
+    ToolKill["ScreenGui_1"]:Destroy()
+end)
+
+ToolKill["Frame_2"].Changed:Connect(function(property)
+    if property == "Position" or property == "Size" then
+        if playerListVisible then
+            updatePlayerListPosition()
+        end
+    end
 end)
 
 Players.PlayerAdded:Connect(updatePlayerList)
@@ -439,4 +451,4 @@ Players.PlayerRemoving:Connect(updatePlayerList)
 
 updatePlayerList()
 
-return KillGUI["ScreenGui_1"], require
+return ToolKill["ScreenGui_1"], require
