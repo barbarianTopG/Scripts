@@ -148,9 +148,9 @@ KillGUI["TextButton_12"]["BorderSizePixel"] = 0;
 KillGUI["TextButton_12"]["TextScaled"] = true;
 KillGUI["TextButton_12"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
 KillGUI["TextButton_12"]["BackgroundColor3"] = Color3.fromRGB(119, 0, 255);
-KillGUI["TextButton_12"]["Size"] = UDim2.new(0.10236, 0, 0.2, 0);
+KillGUI["TextButton_12"]["Size"] = UDim2.new(0.10236, 0, 0.2, -1);
 KillGUI["TextButton_12"]["Text"] = [[×]];
-KillGUI["TextButton_12"]["Position"] = UDim2.new(0.88189, 0, 0.01538, 0);
+KillGUI["TextButton_12"]["Position"] = UDim2.new(0.88189, 1, 0.01538, 0);
 
 
 KillGUI["UICorner_13"] = Instance.new("UICorner", KillGUI["TextButton_12"]);
