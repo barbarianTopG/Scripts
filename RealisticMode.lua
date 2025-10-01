@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
+local CollectionService = game:GetService("CollectionService")
 
 local player = Players.LocalPlayer
 local char = player.Character or player.CharacterAdded:Wait()
@@ -21,64 +22,55 @@ local blur = Instance.new("BlurEffect")
 blur.Size = 0
 blur.Parent = cam
 
-local shadowPart = Instance.new("Part")
-shadowPart.Size = Vector3.new(4, 0.1, 4)
-shadowPart.Anchored = false
-shadowPart.CanCollide = false
-shadowPart.Transparency = 0.7
-shadowPart.Color = Color3.new(0, 0, 0)
-shadowPart.Material = Enum.Material.SmoothPlastic
-shadowPart.Parent = char
+local UI = {}
 
-local shadowWeld = Instance.new("WeldConstraint")
-shadowWeld.Part0 = shadowPart
-shadowWeld.Part1 = hrp
-shadowWeld.Parent = shadowPart
+UI["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
+UI["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
 
-local gui = Instance.new("ScreenGui")
-gui.Name = "SprintSystem"
-gui.ResetOnSpawn = false
-gui.Parent = player:WaitForChild("PlayerGui")
+CollectionService:AddTag(UI["ScreenGui_1"], "main")
 
-local byText = Instance.new("TextLabel", gui)
-byText.Size = UDim2.new(0.5,0,0.05,0)
-byText.Position = UDim2.new(0.25,0,0,10)
-byText.BackgroundTransparency = 1
-byText.TextColor3 = Color3.new(1,1,1)
-byText.TextTransparency = 0.5
-byText.TextScaled = true
-byText.Text = "Made by PlasmaByte"
+UI["Sprint_2"] = Instance.new("ImageButton", UI["ScreenGui_1"])
+UI["Sprint_2"]["BorderSizePixel"] = 0
+UI["Sprint_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+UI["Sprint_2"]["Image"] = "rbxassetid://101834665443157"
+UI["Sprint_2"]["Size"] = UDim2.new(0.08419, 0, 0.19806, 0)
+UI["Sprint_2"]["Name"] = "Sprint"
+UI["Sprint_2"]["Position"] = UDim2.new(0.79141, 0, 0.70736, 0)
 
-local barBack = Instance.new("Frame", gui)
-barBack.Size = UDim2.new(0.3,0,0,15)
-barBack.Position = UDim2.new(0.35,0,1,-25)
-barBack.BackgroundColor3 = Color3.fromRGB(50,50,50)
-local barOutline = Instance.new("UIStroke", barBack)
-barOutline.Color = Color3.fromRGB(100, 100, 100)
-barOutline.Thickness = 2
+UI["UIStroke_3"] = Instance.new("UIStroke", UI["Sprint_2"])
+UI["UIStroke_3"]["Color"] = Color3.fromRGB(255, 255, 255)
 
-local barFill = Instance.new("Frame", barBack)
-barFill.Size = UDim2.new(1,0,1,0)
-barFill.BackgroundColor3 = Color3.fromRGB(0,120,255)
+UI["UICorner_4"] = Instance.new("UICorner", UI["Sprint_2"])
+UI["UICorner_4"]["CornerRadius"] = UDim.new(8, 8)
 
-local sprintBtn
-if UserInputService.TouchEnabled then
-    sprintBtn = Instance.new("TextButton", gui)
-    sprintBtn.Size = UDim2.new(0,60,0,60)
-    sprintBtn.Position = UDim2.new(0.7,88,1,-82)
-    sprintBtn.RichText = true
-    sprintBtn.Text = "<b><font size='24'>S</font></b>"
-    sprintBtn.BackgroundColor3 = Color3.fromRGB(0,170,255)
-    sprintBtn.TextColor3 = Color3.new(1,1,1)
-    sprintBtn.AutoButtonColor = false
-    Instance.new("UICorner", sprintBtn).CornerRadius = UDim.new(1,0)
-else
-    game.StarterGui:SetCore("SendNotification", {
-        Title = "Controls";
-        Text = "Hold SHIFT to sprint.";
-        Duration = 5;
-    })
-end
+UI["UIAspectRatioConstraint_5"] = Instance.new("UIAspectRatioConstraint", UI["Sprint_2"])
+
+UI["StaminaBG_6"] = Instance.new("Frame", UI["ScreenGui_1"])
+UI["StaminaBG_6"]["BorderSizePixel"] = 0
+UI["StaminaBG_6"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+UI["StaminaBG_6"]["Size"] = UDim2.new(0.46186, 0, 0.04527, 0)
+UI["StaminaBG_6"]["Position"] = UDim2.new(0.2622, 0, 0.89976, 0)
+UI["StaminaBG_6"]["BorderColor3"] = Color3.fromRGB(255, 255, 255)
+UI["StaminaBG_6"]["Name"] = "StaminaBG"
+
+UI["UICorner_7"] = Instance.new("UICorner", UI["StaminaBG_6"])
+
+UI["StaminaBar_8"] = Instance.new("Frame", UI["StaminaBG_6"])
+UI["StaminaBar_8"]["BorderSizePixel"] = 0
+UI["StaminaBar_8"]["BackgroundColor3"] = Color3.fromRGB(0, 193, 255)
+UI["StaminaBar_8"]["Size"] = UDim2.new(0.97917, 0, 0.5, 0)
+UI["StaminaBar_8"]["Position"] = UDim2.new(0.01042, 0, 0.25, 0)
+UI["StaminaBar_8"]["Name"] = "StaminaBar"
+
+UI["UICorner_9"] = Instance.new("UICorner", UI["StaminaBar_8"])
+UI["UICorner_9"]["CornerRadius"] = UDim.new(8, 8)
+
+UI["UIAspectRatioConstraint_a"] = Instance.new("UIAspectRatioConstraint", UI["StaminaBG_6"])
+UI["UIAspectRatioConstraint_a"]["AspectRatio"] = 24
+
+local gui = UI["ScreenGui_1"]
+local sprintBtn = UI["Sprint_2"]
+local staminaBar = UI["StaminaBar_8"]
 
 local function setSprinting(state)
     if state and stamina > 0 then
@@ -105,10 +97,21 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
-if sprintBtn then
-    sprintBtn.MouseButton1Down:Connect(function() setSprinting(true) end)
-    sprintBtn.MouseButton1Up:Connect(function() setSprinting(false) end)
-end
+sprintBtn.MouseButton1Down:Connect(function() 
+    setSprinting(true) 
+end)
+
+sprintBtn.MouseButton1Up:Connect(function() 
+    setSprinting(false) 
+end)
+
+sprintBtn.TouchLongPress:Connect(function()
+    setSprinting(true)
+end)
+
+sprintBtn.TouchEnded:Connect(function()
+    setSprinting(false)
+end)
 
 local lastCFrame = cam.CFrame
 local bobIntensity = 0.2
@@ -117,6 +120,7 @@ local shakeIntensity = 0.2
 local rsConn
 rsConn = RunService.RenderStepped:Connect(function(dt)
     if not hum or hum.Health <= 0 then return end
+    
     if sprinting then
         stamina = math.max(0, stamina - 20 * dt)
         if stamina <= 0 then
@@ -125,22 +129,40 @@ rsConn = RunService.RenderStepped:Connect(function(dt)
     else
         stamina = math.min(maxStamina, stamina + 10 * dt)
     end
-    barFill.Size = UDim2.new(stamina/maxStamina,0,1,0)
-
+    
+    staminaBar.Size = UDim2.new(stamina/maxStamina, 0, 0.5, 0)
+    
     if hum.MoveDirection.Magnitude > 0 then
-        local bob = math.sin(tick()*10) * bobIntensity
-        cam.CFrame = cam.CFrame * CFrame.new(0,bob,0)
+        local bob = math.sin(tick() * 10) * bobIntensity
+        cam.CFrame = cam.CFrame * CFrame.new(bob, 0, 0)
+        
         if sprinting then
-            cam.CFrame = cam.CFrame * CFrame.Angles(0, math.random(-shakeIntensity,shakeIntensity)/100,0)
+            cam.CFrame = cam.CFrame * CFrame.Angles(0, math.random(-shakeIntensity, shakeIntensity)/100, 0)
         end
     end
     lastCFrame = cam.CFrame
 end)
 
 hum.Died:Connect(function()
-    if rsConn then rsConn:Disconnect() end
-    if gui then gui:Destroy() end
-    if shadowPart then shadowPart:Destroy() end
-    if blur then blur:Destroy() end
+    if rsConn then 
+        rsConn:Disconnect() 
+    end
+    if gui then 
+        gui:Destroy() 
+    end
+    if blur then 
+        blur:Destroy() 
+    end
     player.CameraMode = Enum.CameraMode.Classic
 end)
+
+player.CharacterAdded:Connect(function(newChar)
+    char = newChar
+    hum = char:WaitForChild("Humanoid")
+    hrp = char:WaitForChild("HumanoidRootPart")
+    
+    stamina = maxStamina
+    sprinting = false
+end)
+
+return UI["ScreenGui_1"]
