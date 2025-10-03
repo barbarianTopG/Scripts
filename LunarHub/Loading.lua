@@ -1,141 +1,192 @@
---[=[
- d888b  db    db d888888b      .d888b.      db      db    db  .d8b.  
-88' Y8b 88    88   `88'        VP  `8D      88      88    88 d8' `8b 
-88      88    88    88            odD'      88      88    88 88ooo88 
-88  ooo 88    88    88          .88'        88      88    88 88~~~88 
-88. ~8~ 88b  d88   .88.        j88.         88booo. 88b  d88 88   88    
- Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP
-]=]
+local CollectionService = game:GetService("CollectionService")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 
-local CollectionService = game:GetService("CollectionService");
-local TweenService = game:GetService("TweenService");
-local G2L = {};
+local LSpopup = {}
 
-G2L["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"));
-G2L["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling;
+LSpopup["ScreenGui_1"] = Instance.new("ScreenGui", game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui"))
+LSpopup["ScreenGui_1"]["ZIndexBehavior"] = Enum.ZIndexBehavior.Sibling
 
-CollectionService:AddTag(G2L["ScreenGui_1"], [[main]]);
+CollectionService:AddTag(LSpopup["ScreenGui_1"], [[main]])
 
-G2L["Frame_2"] = Instance.new("Frame", G2L["ScreenGui_1"]);
-G2L["Frame_2"]["BorderSizePixel"] = 0;
-G2L["Frame_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
-G2L["Frame_2"]["Size"] = UDim2.new(0.5701, 0, 0.70736, 0);
-G2L["Frame_2"]["Position"] = UDim2.new(0.20687, 0, 0.00566, 0);
-G2L["Frame_2"]["BorderColor3"] = Color3.fromRGB(119, 0, 255);
+LSpopup["Popup_2"] = Instance.new("Frame", LSpopup["ScreenGui_1"])
+LSpopup["Popup_2"]["BorderSizePixel"] = 0
+LSpopup["Popup_2"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+LSpopup["Popup_2"]["Size"] = UDim2.new(0.22852, 0, 0.14713, 0)
+LSpopup["Popup_2"]["Position"] = UDim2.new(0.38729, 0, 0.03961, 0)
+LSpopup["Popup_2"]["Name"] = [[Popup]]
 
-G2L["UICorner_3"] = Instance.new("UICorner", G2L["Frame_2"]);
+LSpopup["UICorner_3"] = Instance.new("UICorner", LSpopup["Popup_2"])
 
-G2L["UIStroke_4"] = Instance.new("UIStroke", G2L["Frame_2"]);
-G2L["UIStroke_4"]["Thickness"] = 2;
-G2L["UIStroke_4"]["Color"] = Color3.fromRGB(119, 0, 255);
+LSpopup["TextLabel_4"] = Instance.new("TextLabel", LSpopup["Popup_2"])
+LSpopup["TextLabel_4"]["BorderSizePixel"] = 0
+LSpopup["TextLabel_4"]["TextSize"] = 12
+LSpopup["TextLabel_4"]["TextXAlignment"] = Enum.TextXAlignment.Left
+LSpopup["TextLabel_4"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31)
+LSpopup["TextLabel_4"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+LSpopup["TextLabel_4"]["Size"] = UDim2.new(0.97895, 0, 0.92308, 0)
+LSpopup["TextLabel_4"]["Text"] = [[Loading Sounds...]]
+LSpopup["TextLabel_4"]["Position"] = UDim2.new(0.01053, 0, 0.03846, 0)
 
-G2L["WelcomeTitle_5"] = Instance.new("TextLabel", G2L["Frame_2"]);
-G2L["WelcomeTitle_5"]["TextWrapped"] = true;
-G2L["WelcomeTitle_5"]["BorderSizePixel"] = 0;
-G2L["WelcomeTitle_5"]["TextScaled"] = true;
-G2L["WelcomeTitle_5"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-G2L["WelcomeTitle_5"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-G2L["WelcomeTitle_5"]["Size"] = UDim2.new(0.32911, 0, 0.152, 0);
-G2L["WelcomeTitle_5"]["Text"] = [[Welcome!]];
-G2L["WelcomeTitle_5"]["Name"] = [[WelcomeTitle]];
-G2L["WelcomeTitle_5"]["Position"] = UDim2.new(0.33755, 0, 0.192, 0);
+LSpopup["UICorner_5"] = Instance.new("UICorner", LSpopup["TextLabel_4"])
 
-G2L["UICorner_6"] = Instance.new("UICorner", G2L["WelcomeTitle_5"]);
+LSpopup["UIStroke_6"] = Instance.new("UIStroke", LSpopup["Popup_2"])
+LSpopup["UIStroke_6"]["Color"] = Color3.fromRGB(119, 0, 255)
 
-G2L["ScriptName_7"] = Instance.new("TextLabel", G2L["Frame_2"]);
-G2L["ScriptName_7"]["TextWrapped"] = true;
-G2L["ScriptName_7"]["BorderSizePixel"] = 0;
-G2L["ScriptName_7"]["TextScaled"] = true;
-G2L["ScriptName_7"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
-G2L["ScriptName_7"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-G2L["ScriptName_7"]["Size"] = UDim2.new(0.36709, 0, 0.152, 0);
-G2L["ScriptName_7"]["Text"] = [[Lunar Hub ]];
-G2L["ScriptName_7"]["Name"] = [[ScriptName]];
-G2L["ScriptName_7"]["Position"] = UDim2.new(0.00422, 0, 0.008, 0);
+LSpopup["UIAspectRatioConstraint_7"] = Instance.new("UIAspectRatioConstraint", LSpopup["Popup_2"])
+LSpopup["UIAspectRatioConstraint_7"]["AspectRatio"] = 3.65385
 
-G2L["UICorner_8"] = Instance.new("UICorner", G2L["ScriptName_7"]);
+LSpopup["Title_8"] = Instance.new("Frame", LSpopup["ScreenGui_1"])
+LSpopup["Title_8"]["BorderSizePixel"] = 0
+LSpopup["Title_8"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+LSpopup["Title_8"]["Size"] = UDim2.new(0.44742, 0, 0.11884, 0)
+LSpopup["Title_8"]["Position"] = UDim2.new(0.27423, 0, -0.11318, 0)
+LSpopup["Title_8"]["BorderColor3"] = Color3.fromRGB(119, 0, 255)
+LSpopup["Title_8"]["Name"] = [[Title]]
 
-G2L["Description_9"] = Instance.new("TextLabel", G2L["Frame_2"]);
-G2L["Description_9"]["TextWrapped"] = true;
-G2L["Description_9"]["BorderSizePixel"] = 0;
-G2L["Description_9"]["TextScaled"] = true;
-G2L["Description_9"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0);
-G2L["Description_9"]["TextColor3"] = Color3.fromRGB(119, 0, 255);
-G2L["Description_9"]["Size"] = UDim2.new(0.98312, 0, 0.544, 0);
-G2L["Description_9"]["Text"] = [[Loading Lunar Hub...]];
-G2L["Description_9"]["Name"] = [[Description]];
-G2L["Description_9"]["Position"] = UDim2.new(0.00422, 0, 0.352, 0);
+LSpopup["ScriptName_9"] = Instance.new("TextLabel", LSpopup["Title_8"])
+LSpopup["ScriptName_9"]["TextWrapped"] = true
+LSpopup["ScriptName_9"]["BorderSizePixel"] = 0
+LSpopup["ScriptName_9"]["TextSize"] = 1
+LSpopup["ScriptName_9"]["TextXAlignment"] = Enum.TextXAlignment.Left
+LSpopup["ScriptName_9"]["TextScaled"] = true
+LSpopup["ScriptName_9"]["BackgroundColor3"] = Color3.fromRGB(0, 0, 0)
+LSpopup["ScriptName_9"]["TextColor3"] = Color3.fromRGB(119, 0, 255)
+LSpopup["ScriptName_9"]["Size"] = UDim2.new(0.99462, 0, 0.80952, 0)
+LSpopup["ScriptName_9"]["Text"] = "LunarHub・Welcome, " .. game.Players.LocalPlayer.Name .. "!"
+LSpopup["ScriptName_9"]["Name"] = [[ScriptName]]
+LSpopup["ScriptName_9"]["Position"] = UDim2.new(0, 0, 0.09524, 0)
 
-G2L["UICorner_a"] = Instance.new("UICorner", G2L["Description_9"]);
+LSpopup["UICorner_a"] = Instance.new("UICorner", LSpopup["ScriptName_9"])
 
-G2L["TopbarLine_b"] = Instance.new("Frame", G2L["Frame_2"]);
-G2L["TopbarLine_b"]["BorderSizePixel"] = 0;
-G2L["TopbarLine_b"]["BackgroundColor3"] = Color3.fromRGB(119, 0, 255);
-G2L["TopbarLine_b"]["Size"] = UDim2.new(1.00422, 0, 0.008, 0);
-G2L["TopbarLine_b"]["Position"] = UDim2.new(0, 0, 0.152, 0);
-G2L["TopbarLine_b"]["Name"] = [[TopbarLine]];
+LSpopup["UICorner_b"] = Instance.new("UICorner", LSpopup["Title_8"])
 
-G2L["Frame_c"] = Instance.new("Frame", G2L["Frame_2"]);
-G2L["Frame_c"]["BorderSizePixel"] = 0;
-G2L["Frame_c"]["BackgroundColor3"] = Color3.fromRGB(31, 31, 31);
-G2L["Frame_c"]["Size"] = UDim2.new(0.98312, 0, 0.112, 0);
-G2L["Frame_c"]["Position"] = UDim2.new(0.00844, 0, 0.872, 0);
+LSpopup["UIStroke_c"] = Instance.new("UIStroke", LSpopup["Title_8"])
+LSpopup["UIStroke_c"]["Thickness"] = 2
+LSpopup["UIStroke_c"]["Color"] = Color3.fromRGB(119, 0, 255)
 
-G2L["UICorner_d"] = Instance.new("UICorner", G2L["Frame_c"]);
+LSpopup["UIAspectRatioConstraint_d"] = Instance.new("UIAspectRatioConstraint", LSpopup["Title_8"])
+LSpopup["UIAspectRatioConstraint_d"]["AspectRatio"] = 8.85714
 
-G2L["TimerLine"] = Instance.new("Frame", G2L["Frame_c"]);
-G2L["TimerLine"]["BorderSizePixel"] = 0;
-G2L["TimerLine"]["BackgroundColor3"] = Color3.fromRGB(119, 0, 255);
-G2L["TimerLine"]["Size"] = UDim2.new(0, 0, 1, 0); 
-G2L["TimerLine"]["Position"] = UDim2.new(0, 0, 0, 0);
-G2L["TimerLine"]["Name"] = [[TimerLine]];
-
-G2L["UICorner_timer"] = Instance.new("UICorner", G2L["TimerLine"]);
-
-G2L["UIAspectRatioConstraint_e"] = Instance.new("UIAspectRatioConstraint", G2L["Frame_2"]);
-G2L["UIAspectRatioConstraint_e"]["AspectRatio"] = 1.896;
-
-local function startLoadingAnimation()
+local function Animationz()
     local tweenInfo = TweenInfo.new(
-        4, -- seconds
-        Enum.EasingStyle.Linear,
+        0.5,
+        Enum.EasingStyle.Quad,
+        Enum.EasingDirection.Out
+    )
+    
+    local pulseTweenInfo = TweenInfo.new(
+        0.8,
+        Enum.EasingStyle.Quad,
         Enum.EasingDirection.InOut,
-        0,
-        false,
-        0
+        -1,
+        true
     )
     
-    local tween = TweenService:Create(
-        G2L["TimerLine"],
+    local titleSlideIn = TweenService:Create(
+        LSpopup["Title_8"],
         tweenInfo,
-        {Size = UDim2.new(1, 0, 1, 0)} 
+        {Position = UDim2.new(0.27423, 0, 0.11318, 0)}
     )
     
-    local loadingSteps = {
-        "Initializing Lunar Hub...",
-        "Loading modules...", 
-        "Setting up interface...",
-        "Almost ready..."
+    local strokePulse = TweenService:Create(
+        LSpopup["UIStroke_c"],
+        pulseTweenInfo,
+        {Color = Color3.fromRGB(170, 85, 255)}
+    )
+    
+    local textPulse = TweenService:Create(
+        LSpopup["ScriptName_9"],
+        pulseTweenInfo,
+        {TextColor3 = Color3.fromRGB(170, 85, 255)}
+    )
+    
+    local popupStrokePulse = TweenService:Create(
+        LSpopup["UIStroke_6"],
+        pulseTweenInfo,
+        {Color = Color3.fromRGB(170, 85, 255)}
+    )
+    
+    local popupTextPulse = TweenService:Create(
+        LSpopup["TextLabel_4"],
+        pulseTweenInfo,
+        {TextColor3 = Color3.fromRGB(170, 85, 255)}
+    )
+    
+    titleSlideIn:Play()
+    strokePulse:Play()
+    textPulse:Play()
+    popupStrokePulse:Play()
+    popupTextPulse:Play()
+    
+    local loadingMessages = {
+        "Loading Sounds...",
+        "Loading Scripts...", 
+        "Loading UI...",
+        "Loading Assets...",
+        "Initializing...",
+        "Executing LunarHub..."
     }
     
-    for i, text in ipairs(loadingSteps) do
-        G2L["Description_9"].Text = text
-        wait(1) 
+    local currentMessage = 1
+    
+    local function updateLoadingText()
+        LSpopup["TextLabel_4"].Text = loadingMessages[currentMessage]
+        currentMessage = currentMessage + 1
+        
+        if currentMessage > #loadingMessages then
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/LunarHub/Main.lua"))()
+            
+            wait(0.5)
+            
+            strokePulse:Cancel()
+            textPulse:Cancel()
+            popupStrokePulse:Cancel()
+            popupTextPulse:Cancel()
+            
+            LSpopup["UIStroke_c"].Color = Color3.fromRGB(119, 0, 255)
+            LSpopup["ScriptName_9"].TextColor3 = Color3.fromRGB(119, 0, 255)
+            LSpopup["UIStroke_6"].Color = Color3.fromRGB(119, 0, 255)
+            LSpopup["TextLabel_4"].TextColor3 = Color3.fromRGB(119, 0, 255)
+            LSpopup["TextLabel_4"].Text = "LunarHub Loaded!"
+            
+            local fadeOutInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+            
+            local titleFadeOut = TweenService:Create(
+                LSpopup["Title_8"],
+                fadeOutInfo,
+                {Position = UDim2.new(0.27423, 0, -0.11318, 0)}
+            )
+            
+            local popupFadeOut = TweenService:Create(
+                LSpopup["Popup_2"],
+                fadeOutInfo,
+                {Position = UDim2.new(0.38729, 0, -0.14713, 0)}
+            )
+            
+            titleFadeOut:Play()
+            popupFadeOut:Play()
+            
+            titleFadeOut.Completed:Connect(function()
+                wait(0.2)
+                LSpopup["ScreenGui_1"]:Destroy()
+            end)
+            
+            return 
+        end
     end
     
-    tween:Play()
-    
-    tween.Completed:Connect(function()
-        G2L["Description_9"].Text = "Loading complete!"
-        wait(0.5)
-        
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/LunarHub/Main.lua"))()
-        
-        wait(1)
-        G2L["ScreenGui_1"]:Destroy()
+    local textChangeConnection
+    textChangeConnection = RunService.Heartbeat:Connect(function()
+        wait(0.8)
+        if LSpopup["ScreenGui_1"].Parent then 
+            updateLoadingText()
+        else
+            textChangeConnection:Disconnect()
+        end
     end)
 end
 
-startLoadingAnimation()
+Animationz()
 
-return G2L["ScreenGui_1"], require;
+return LSpopup["ScreenGui_1"], require
