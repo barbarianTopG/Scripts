@@ -1,11 +1,3 @@
---discord.gg/boronide, code generated using luamin.js™
-
-
-
---discord.gg/boronide, code generated using luamin.js™
-
-
-
 local Players = game:GetService("Players")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TweenService = game:GetService("TweenService")
