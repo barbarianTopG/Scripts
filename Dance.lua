@@ -7,12 +7,6 @@ local TextChatService = game:GetService("TextChatService")
 local plr = Players.LocalPlayer
 local playerGui = plr:WaitForChild("PlayerGui")
 
-pcall(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/main/Tag"))()
-end)
-
-local Wait = task.wait
-
 local function Chat(message)
     TextChatService.TextChannels.RBXGeneral:SendAsync(message)
 end
@@ -214,7 +208,7 @@ end)
 reanimateBtn.MouseButton1Click:Connect(function()
     closePopup()
     Chat("-gh 6202063049,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885,4602533885")
-    Wait(3)
+    task.wait(3)
     local reps = "4602533885,"
     local repped = reps:rep(13)
     local base = "-gh 6202063049,"
@@ -225,8 +219,8 @@ reanimateBtn.MouseButton1Click:Connect(function()
     else
         print(done)
     end
-    repeat Wait() until plr.Character:FindFirstChild("Smile")
-    Wait(.8)
+    repeat task.wait() until plr.Character:FindFirstChild("Smile")
+    task.wait(.8)
 
     local char = plr.Character
     local cons = {}
@@ -236,7 +230,7 @@ reanimateBtn.MouseButton1Click:Connect(function()
     local heartbeat = rs.Heartbeat
     local oldpos = char.HumanoidRootPart.CFrame
     char.HumanoidRootPart.CFrame = oldpos + Vector3.new(0, 10000, 0)
-    Wait(.3)
+    task.wait(.3)
 
     local reanimstorage = Instance.new("Folder", char)
     reanimstorage.Name = "ReanimStorage"
@@ -397,7 +391,7 @@ reanimateBtn.MouseButton1Click:Connect(function()
     plr.Character = reanim
     anim.Disabled = true
     anim.Disabled = false
-    Wait(.3)
+    task.wait(.3)
     plr.Character.HumanoidRootPart.CFrame = oldpos + Vector3.new(0, 6, 0)
 
     for i, v in pairs(bighats) do
@@ -422,7 +416,7 @@ reanimateBtn.MouseButton1Click:Connect(function()
     end))
     StarterGui:SetCore("ResetButtonCallback", reset)
 
-    Wait(5)
+    task.wait(5)
     loadstring(game:HttpGet("https://raw.githubusercontent.com/somethingsimade/KDV3-Fixed/refs/heads/main/KrystalDance3"))()
 end)
 
@@ -430,19 +424,19 @@ creditsBtn.MouseButton1Click:Connect(function()
     closePopup()
     print("------------------------------------------")
     print("Krystal Dance V3 - Made by NITRO-GT")
-    Wait(.1)
+    task.wait(.1)
     print("Krystal Dance V3 - Fixed by MrY7zz")
-    Wait(.1)
+    task.wait(.1)
     print("Krystal Dance V3 - Credits goes to them!!")
-    Wait(.1)
+    task.wait(.1)
     print("------------------Changelog------------------")
-    Wait(.1)
+    task.wait(.1)
     print("Renamed from Giant Krystal Dance to Giant Dance.")
-    Wait(.1)
+    task.wait(.1)
     print("Love from StarFlow 💖")
-    Wait(.1)
+    task.wait(.1)
     print("------------------------------------------")
-    Wait(.1)
+    task.wait(.1)
     notify("Giant Dance", "Check Console!")
 end)
 
@@ -454,16 +448,279 @@ gui:GetPropertyChangedSignal("Enabled"):Connect(function()
     end
 end)
 
-Wait(1)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/DevTools/refs/heads/main/Keyboards"))()
+task.wait(1)
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local plr = Players.LocalPlayer
+local playerGui = plr:WaitForChild("PlayerGui")
+
+local gui = Instance.new("ScreenGui")
+gui.Name = "KeyboardSelector"
+gui.ResetOnSpawn = false
+gui.Parent = playerGui
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+local function scaleValue(value)
+    return value * (math.min(playerGui.AbsoluteSize.X, playerGui.AbsoluteSize.Y) / 1080)
+end
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, scaleValue(350), 0, scaleValue(400))
+frame.Position = UDim2.new(0.5, -scaleValue(175), 1.5, 0)
+frame.AnchorPoint = Vector2.new(0.5, 0.5)
+frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+frame.BorderSizePixel = 0
+frame.Parent = gui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, scaleValue(12))
+corner.Parent = frame
+
+local outline = Instance.new("UIStroke")
+outline.Thickness = 2
+outline.Color = Color3.fromRGB(80, 0, 120)
+outline.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+outline.Parent = frame
+
+local header = Instance.new("Frame")
+header.Size = UDim2.new(1, 0, 0, scaleValue(40))
+header.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+header.BorderSizePixel = 0
+header.Parent = frame
+
+local headerCorner = Instance.new("UICorner")
+headerCorner.CornerRadius = UDim.new(0, scaleValue(12))
+headerCorner.Parent = header
+
+local headerGradient = Instance.new("UIGradient")
+headerGradient.Rotation = 90
+headerGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 0, 90)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(40, 0, 60))
+}
+headerGradient.Parent = header
+
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1, 0, 1, 0)
+title.BackgroundTransparency = 1
+title.Text = "SELECT KEYBOARD"
+title.Font = Enum.Font.Fantasy
+title.TextSize = scaleValue(18)
+title.TextColor3 = Color3.fromRGB(220, 220, 220)
+title.Parent = header
+
+local closeBtn = Instance.new("ImageButton")
+closeBtn.Size = UDim2.new(0, scaleValue(24), 0, scaleValue(24))
+closeBtn.Position = UDim2.new(1, -scaleValue(32), 0, scaleValue(8))
+closeBtn.BackgroundTransparency = 1
+closeBtn.Image = "rbxassetid://3926305904"
+closeBtn.ImageRectOffset = Vector2.new(924, 724)
+closeBtn.ImageRectSize = Vector2.new(36, 36)
+closeBtn.ImageColor3 = Color3.fromRGB(180, 180, 180)
+closeBtn.Parent = header
+
+closeBtn.MouseEnter:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        ImageColor3 = Color3.fromRGB(220, 100, 220)
+    }):Play()
+end)
+
+closeBtn.MouseLeave:Connect(function()
+    TweenService:Create(closeBtn, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        ImageColor3 = Color3.fromRGB(180, 180, 180)
+    }):Play()
+end)
+
+closeBtn.MouseButton1Click:Connect(function()
+    TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint, Enum.EasingDirection.In), {
+        Position = UDim2.new(0.5, -scaleValue(175), 1.5, 0)
+    }):Play()
+    task.wait(0.65)
+    gui:Destroy()
+end)
+
+local buttonContainer = Instance.new("ScrollingFrame")
+buttonContainer.Size = UDim2.new(1, 0, 1, -scaleValue(50))
+buttonContainer.Position = UDim2.new(0, 0, 0, scaleValue(50))
+buttonContainer.BackgroundTransparency = 1
+buttonContainer.BorderSizePixel = 0
+buttonContainer.ScrollBarThickness = scaleValue(4)
+buttonContainer.ScrollBarImageColor3 = Color3.fromRGB(80, 0, 120)
+buttonContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+buttonContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
+buttonContainer.Parent = frame
+
+local uiListLayout = Instance.new("UIListLayout")
+uiListLayout.Padding = UDim.new(0, scaleValue(10))
+uiListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+uiListLayout.Parent = buttonContainer
+
+local function createButton(name, layoutOrder, func)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0.9, 0, 0, scaleValue(50))
+    button.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    button.AutoButtonColor = false
+    button.Text = ""
+    button.LayoutOrder = layoutOrder
+    button.Parent = buttonContainer
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(0, scaleValue(8))
+    btnCorner.Parent = button
+
+    local btnStroke = Instance.new("UIStroke")
+    btnStroke.Thickness = 1
+    btnStroke.Color = Color3.fromRGB(60, 0, 90)
+    btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    btnStroke.Parent = button
+
+    local buttonTitle = Instance.new("TextLabel")
+    buttonTitle.Size = UDim2.new(1, 0, 1, 0)
+    buttonTitle.BackgroundTransparency = 1
+    buttonTitle.Text = name
+    buttonTitle.Font = Enum.Font.Fantasy
+    buttonTitle.TextSize = scaleValue(16)
+    buttonTitle.TextColor3 = Color3.fromRGB(220, 220, 220)
+    buttonTitle.Parent = button
+
+    local buttonHighlight = Instance.new("Frame")
+    buttonHighlight.Size = UDim2.new(1, 0, 1, 0)
+    buttonHighlight.BackgroundColor3 = Color3.fromRGB(80, 0, 120)
+    buttonHighlight.BackgroundTransparency = 0.9
+    buttonHighlight.BorderSizePixel = 0
+    buttonHighlight.ZIndex = -1
+    buttonHighlight.Parent = button
+
+    local highlightCorner = Instance.new("UICorner")
+    highlightCorner.CornerRadius = UDim.new(0, scaleValue(8))
+    highlightCorner.Parent = buttonHighlight
+
+     Hover effects
+    button.MouseEnter:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        }):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Color = Color3.fromRGB(120, 0, 180)
+        }):Play()
+        TweenService:Create(buttonHighlight, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.7
+        }):Play()
+    end)
+
+    button.MouseLeave:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        }):Play()
+        TweenService:Create(btnStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Color = Color3.fromRGB(60, 0, 90)
+        }):Play()
+        TweenService:Create(buttonHighlight, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.9
+        }):Play()
+    end)
+
+    button.MouseButton1Down:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        }):Play()
+        TweenService:Create(buttonHighlight, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5
+        }):Play()
+    end)
+
+    button.MouseButton1Up:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        }):Play()
+        TweenService:Create(buttonHighlight, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.7
+        }):Play()
+    end)
+
+    button.MouseButton1Click:Connect(function()
+        TweenService:Create(button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundColor3 = Color3.fromRGB(30, 30, 30),
+            Size = UDim2.new(0.85, 0, 0, scaleValue(50))
+        }):Play()
+        TweenService:Create(buttonHighlight, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.8
+        }):Play()
+        
+        for _, child in ipairs(buttonContainer:GetChildren()) do
+            if child:IsA("TextButton") then
+                TweenService:Create(child, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                    BackgroundTransparency = 1,
+                    TextTransparency = 1
+                }):Play()
+            end
+        end
+        
+        TweenService:Create(frame, TweenInfo.new(0.6, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Position = UDim2.new(0.5, -scaleValue(175), -0.5, 0)
+        }):Play()
+        task.wait(0.65)
+        func()
+        gui:Destroy()
+    end)
+end
+
+createButton("Byte Keyboard", 1, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Byte.lua"))()
+end)
+
+createButton("Kilobyte Keyboard", 2, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/KiloByte.lua"))()
+end)
+
+createButton("Delta Keyboard", 3, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Delta.lua"))()
+end)
+
+createButton("Virtual Keyboard", 4, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Something478/Scripts/main/Keyboards/Virtual.lua"))()
+end)
+
+createButton("Mob Keyboard", 5, function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+end)
+
+TweenService:Create(frame, TweenInfo.new(0.8, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+    Position = UDim2.new(0.5, -scaleValue(175), 0.5, -scaleValue(200))
+}):Play()
+
+playerGui:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+    frame.Size = UDim2.new(0, scaleValue(350), 0, scaleValue(400))
+    frame.Position = UDim2.new(0.5, -scaleValue(175), 0.5, -scaleValue(200))
+    corner.CornerRadius = UDim.new(0, scaleValue(12))
+    header.Size = UDim2.new(1, 0, 0, scaleValue(40))
+    title.TextSize = scaleValue(18)
+    closeBtn.Size = UDim2.new(0, scaleValue(24), 0, scaleValue(24))
+    closeBtn.Position = UDim2.new(1, -scaleValue(32), 0, scaleValue(8))
+    buttonContainer.Size = UDim2.new(1, 0, 1, -scaleValue(50))
+    buttonContainer.Position = UDim2.new(0, 0, 0, scaleValue(50))
+    buttonContainer.ScrollBarThickness = scaleValue(4)
+    uiListLayout.Padding = UDim.new(0, scaleValue(10))
+    
+    for _, button in ipairs(buttonContainer:GetChildren()) do
+        if button:IsA("TextButton") then
+            button.Size = UDim2.new(0.9, 0, 0, scaleValue(50))
+            button:FindFirstChildWhichIsA("UICorner").CornerRadius = UDim.new(0, scaleValue(8))
+            button:FindFirstChildWhichIsA("TextLabel").TextSize = scaleValue(16)
+        end
+    end
+end)
 notify("Giant Dance", "Please, choose a keyboard,")
-Wait(.95)
+task.wait(0.95)
 notify("Giant Dance", "bc without one you")
-Wait(.95)
+task.wait(0.95)
 notify("Giant Dance", "won't be able to use this")
-Wait(.95)
+task.wait(0.95)
 notify("Giant Dance", "Supported games:")
-Wait(.95)
+task.wait(0.95)
 notify("Giant Dance", "Just a baseplate,")
-Wait(.95)
+task.wait(0.95)
 notify("Giant Dance", "Green Baseplate.")
